@@ -1,0 +1,10 @@
+{
+    "name": "fixture-express",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}
