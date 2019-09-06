@@ -1,6 +1,96 @@
 {
     "name": "@plurid/elementql-server",
-    "version": "1.0.0",
-    "main": "index.js",
-    "license": "MIT"
+    "version": "0.0.1",
+    "description": "",
+    "keywords": [
+        "elementql",
+        "server"
+    ],
+    "main": "dist/elementql-server.umd.js",
+    "module": "dist/elementql-server.es5.js",
+    "typings": "dist/types/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com/)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/elementql"
+    },
+    "license": "MIT",
+    "engines": {
+        "node": ">=6.0.0"
+    },
+    "scripts": {
+        "prebuild": "rimraf dist",
+        "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src && yarn build.removeSpecs",
+        "build.dev": "tsc --module commonjs && rollup -c rollup.config.ts && yarn build.removeSpecs",
+        "build.rollup": "rollup -c rollup.config.ts",
+        "build.removeSpecs": "rm -rf `find ./dist/ -type d -name __specs__`",
+        "start": "rollup -c rollup.config.ts -w",
+        "spec": "jest --coverage",
+        "spec.watch": "jest --coverage --watch",
+        "report-coverage": "cat ./coverage/lcov.info | coveralls",
+        "prepublishOnly": "yarn build"
+    },
+    "jest": {
+        "transform": {
+            ".(ts|tsx)": "ts-jest"
+        },
+        "testEnvironment": "node",
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js"
+        ],
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "/test/"
+        ],
+        "coverageThreshold": {
+            "global": {
+                "branches": 90,
+                "functions": 95,
+                "lines": 95,
+                "statements": 95
+            }
+        },
+        "collectCoverageFrom": [
+            "src/*.{js,ts}"
+        ]
+    },
+    "dependencies": {
+        "open": "^6.4.0",
+        "portscanner": "^2.2.0"
+    },
+    "devDependencies": {
+        "@types/archiver": "^3.0.0",
+        "@types/jest": "^24.0.18",
+        "@types/node": "^12.7.2",
+        "@types/portscanner": "^2.1.0",
+        "colors": "^1.3.3",
+        "coveralls": "^3.0.6",
+        "cross-env": "^5.2.0",
+        "jest": "^24.9.0",
+        "jest-config": "^24.9.0",
+        "lodash.camelcase": "^4.3.0",
+        "prompt": "^1.0.0",
+        "replace-in-file": "^4.1.3",
+        "rimraf": "^3.0.0",
+        "rollup": "^1.20.3",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-json": "^4.0.0",
+        "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-node-globals": "^1.4.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-peer-deps-external": "^2.2.0",
+        "rollup-plugin-sourcemaps": "^0.4.2",
+        "rollup-plugin-typescript2": "^0.24.0",
+        "shelljs": "^0.8.3",
+        "ts-jest": "^24.0.2",
+        "ts-node": "^8.3.0",
+        "typedoc": "^0.15.0",
+        "typescript": "^3.6.2"
+    }
 }
