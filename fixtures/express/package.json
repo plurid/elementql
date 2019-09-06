@@ -5,6 +5,7 @@
     "license": "UNLICENSED",
     "private": true,
     "dependencies": {
+        "@plurid/elementql-express": "*",
         "express": "^4.17.1"
     }
 }
