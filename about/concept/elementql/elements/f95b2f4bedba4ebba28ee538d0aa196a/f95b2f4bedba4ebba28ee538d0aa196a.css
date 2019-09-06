@@ -1,0 +1,15 @@
+input {
+    background: hsl(240, 40%, 50%);
+    height: 50px;
+    width: 300px;
+    outline: none;
+    border: none;
+    padding: 20px;
+    color: white;
+    font-size: 14px;
+    box-shadow: inset 0px 0px 10px 1px black;
+}
+
+input::placeholder {
+    color: #ccc;
+}
