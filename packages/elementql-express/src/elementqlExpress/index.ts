@@ -28,6 +28,7 @@ const elementqlExpress = (
 
     if (request.url === endpoint) {
         console.log('Serving ElementQL');
+        response.send('ElementQL');
     }
 
     next();
