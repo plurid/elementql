@@ -18,6 +18,7 @@ class ElementQLClient implements IElementQLClient {
     }
 
     public async get(elementLiteral: any) {
+        console.log(elementLiteral);
         // fetch from the server the element
         // that is
         // POST the element request from elementLiteral
