@@ -8,7 +8,7 @@ import {
 
 
 class ElementQLClientReact implements IElementQLClientReact {
-    private client: any;
+    private client: ElementQLClient;
 
     constructor(options: ElementQLClientReactOptions) {
         const clientOptions = {
