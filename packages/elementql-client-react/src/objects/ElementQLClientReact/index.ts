@@ -18,4 +18,4 @@ class ElementQLClientReact implements IElementQLClientReact {
 }
 
 
-export default ElementQLClient;
+export default ElementQLClientReact;
