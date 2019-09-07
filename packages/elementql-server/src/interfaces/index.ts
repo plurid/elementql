@@ -10,6 +10,8 @@ export interface ElementQLServerOptions {
     elementsDir?: string;
     plugins?: string[];
     endpoint?: string;
+    playground?: boolean;
+    playgroundURL?: string;
 }
 
 
