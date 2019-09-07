@@ -3,7 +3,7 @@ import ElementQLServer from '@plurid/elementql-server';
 
 
 const options = {
-    elementsDir: '/src/elements',
+    elementsDir: './src/elements',
 };
 
 const server = new ElementQLServer(options);

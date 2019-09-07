@@ -1,4 +1,5 @@
 import http from 'http';
+import path from 'path';
 import fs from 'fs';
 
 import open from 'open';
@@ -98,11 +99,13 @@ class ElementQLServer implements IElementQLServer {
             if (req.url === this.endpoint)  {
                 this.handleElements();
             }
+
+            // res.end('ElementQL');
         });
     }
 
     private handleElements() {
-        const elementsPath = process.cwd() + this.elementsDir;
+        const elementsPath = path.join(process.cwd(), this.elementsDir);
 
         console.log(process.cwd());
         console.log(elementsPath);
