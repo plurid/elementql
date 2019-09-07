@@ -31,37 +31,11 @@ class ElementQLServer implements IElementQLServer {
     private verbose: boolean = false;
     private elementsDir: string = DEFAULT_ELEMENTS_DIR;
     private endpoint: string = DEFAULT_ENDPOINT;
+    private plugins: string[] = [];
 
     constructor(options?: ElementQLServerOptions) {
-        if (options) {
-            if (options.port) {
-                this.port = options.port;
-            }
-
-            if (options.verbose) {
-                this.verbose = options.verbose;
-            }
-
-            if (options.elementsDir) {
-                this.elementsDir = options.elementsDir;
-            }
-
-            if (options.endpoint) {
-                this.endpoint = options.endpoint;
-            }
-        }
-
-        this.server = http.createServer((req: any, res: any) => {
-            if (req.url === '/favicon.ico') {
-                res.writeHead(200, {'Content-Type': 'image/x-icon'} );
-                fs.createReadStream(FAVICON).pipe(res);
-                return;
-            }
-
-            if (req.url === this.endpoint)  {
-                this.handleElements();
-            }
-        });
+        this.handleOptions(options);
+        this.createServer();
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -87,6 +61,44 @@ class ElementQLServer implements IElementQLServer {
         }
 
         this.server.close();
+    }
+
+    private handleOptions(options?: ElementQLServerOptions) {
+        if (options) {
+            if (options.port) {
+                this.port = options.port;
+            }
+
+            if (options.verbose) {
+                this.verbose = options.verbose;
+            }
+
+            if (options.elementsDir) {
+                this.elementsDir = options.elementsDir;
+            }
+
+            if (options.endpoint) {
+                this.endpoint = options.endpoint;
+            }
+
+            if (options.plugins) {
+                this.plugins = options.plugins;
+            }
+        }
+    }
+
+    private createServer() {
+        this.server = http.createServer((req: any, res: any) => {
+            if (req.url === '/favicon.ico') {
+                res.writeHead(200, {'Content-Type': 'image/x-icon'} );
+                fs.createReadStream(FAVICON).pipe(res);
+                return;
+            }
+
+            if (req.url === this.endpoint)  {
+                this.handleElements();
+            }
+        });
     }
 
     private handleElements() {
