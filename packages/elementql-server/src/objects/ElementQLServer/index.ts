@@ -1,4 +1,4 @@
-import http from 'http';
+import http, { IncomingMessage, ServerResponse } from 'http';
 import path from 'path';
 import fs from 'fs';
 
@@ -12,8 +12,12 @@ import {
 import {
     DEFAULT_PORT,
     DEFAULT_ELEMENTS_DIR,
-    DEFAULT_ENDPOINT,
+    DEFAULT_ELEMENTQL_ENDPOINT,
+    DEFAULT_PLAYGROUND_ENDPOINT,
     FAVICON,
+    METHOD_POST,
+    APPLICATION_ELEMENTQL,
+    APPLICATION_JSON,
 } from '../../constants';
 
 import {
@@ -31,7 +35,9 @@ class ElementQLServer implements IElementQLServer {
     private port: number = DEFAULT_PORT;
     private verbose: boolean = false;
     private elementsDir: string = DEFAULT_ELEMENTS_DIR;
-    private endpoint: string = DEFAULT_ENDPOINT;
+    private elementQLEndpoint: string = DEFAULT_ELEMENTQL_ENDPOINT;
+    private playgroundEndpoint: string = DEFAULT_PLAYGROUND_ENDPOINT;
+    private playground: boolean = false;
     private plugins: string[] = [];
 
     constructor(options?: ElementQLServerOptions) {
@@ -79,7 +85,15 @@ class ElementQLServer implements IElementQLServer {
             }
 
             if (options.endpoint) {
-                this.endpoint = options.endpoint;
+                this.elementQLEndpoint = options.endpoint;
+            }
+
+            if (options.playground) {
+                this.playground = options.playground;
+            }
+
+            if (options.playgroundURL) {
+                this.playgroundEndpoint = options.playgroundURL;
             }
 
             if (options.plugins) {
@@ -89,35 +103,75 @@ class ElementQLServer implements IElementQLServer {
     }
 
     private createServer() {
-        this.server = http.createServer((req: any, res: any) => {
+        this.server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
             if (req.url === '/favicon.ico') {
                 res.writeHead(200, {'Content-Type': 'image/x-icon'} );
                 fs.createReadStream(FAVICON).pipe(res);
                 return;
             }
 
-            if (req.url === this.endpoint)  {
-                this.handleElements();
+            if (this.playground && req.url === this.playgroundEndpoint) {
+                res.end('ElementQL Playground');
+            }
+
+            if (req.url === this.elementQLEndpoint)  {
+                this.handleElements(req, res);
             }
 
             // res.end('ElementQL');
         });
     }
 
-    private handleElements() {
-        const elementsPath = path.join(process.cwd(), this.elementsDir);
+    private async handleElements(request: IncomingMessage, response: ServerResponse) {
+        if (request.method === METHOD_POST
+            && request.headers['content-type'] === APPLICATION_ELEMENTQL
+        ) {
+            const bodyData = (): Promise<string> => {
+                let body = '';
+                return new Promise((resolve, reject) => {
+                    request.on('data', (chunk: Buffer) => {
+                        body += chunk.toString();
+                    });
 
-        console.log(process.cwd());
-        console.log(elementsPath);
+                    request.on('error', (error) => {
+                        reject(error);
+                    });
 
-        fs.readdir(elementsPath, (_, items) => {
-            console.log(items);
-            if (items) {
-                for (var i=0; i<items.length; i++) {
-                    console.log(items[i]);
-                }
+                    request.on('end', () => {
+                        resolve(body)
+                    });
+                });
             }
-        });
+
+            const body = await bodyData();
+            console.log('body', body);
+
+            // parse the body
+            // get element files and return them as json
+            const responseElements = {
+                js: 'element-js-file.js',
+                css: 'element-css-file.css',
+            }
+
+            response.setHeader('Content-Type', APPLICATION_JSON);
+            response.end(JSON.stringify(responseElements));
+        } else {
+            response.end('Not A Valid ElementQL Query.');
+        }
+
+        // const elementsPath = path.join(process.cwd(), this.elementsDir);
+
+        // console.log(process.cwd());
+        // console.log(elementsPath);
+
+        // fs.readdir(elementsPath, (_, items) => {
+        //     console.log(items);
+        //     if (items) {
+        //         for (var i=0; i<items.length; i++) {
+        //             console.log(items[i]);
+        //         }
+        //     }
+        // });
     }
 }
 
