@@ -10,6 +10,8 @@ import {
 
 import {
     DEFAULT_PORT,
+    DEFAULT_ELEMENTS_DIR,
+    DEFAULT_ENDPOINT,
     FAVICON,
 } from '../../constants';
 
@@ -27,6 +29,8 @@ class ElementQLServer implements IElementQLServer {
     private server: http.Server;
     private port: number = DEFAULT_PORT;
     private verbose: boolean = false;
+    private elementsDir: string = DEFAULT_ELEMENTS_DIR;
+    private endpoint: string = DEFAULT_ENDPOINT;
 
     constructor(options?: ElementQLServerOptions) {
         if (options) {
@@ -37,6 +41,14 @@ class ElementQLServer implements IElementQLServer {
             if (options.verbose) {
                 this.verbose = options.verbose;
             }
+
+            if (options.elementsDir) {
+                this.elementsDir = options.elementsDir;
+            }
+
+            if (options.endpoint) {
+                this.endpoint = options.endpoint;
+            }
         }
 
         this.server = http.createServer((req: any, res: any) => {
@@ -44,6 +56,10 @@ class ElementQLServer implements IElementQLServer {
                 res.writeHead(200, {'Content-Type': 'image/x-icon'} );
                 fs.createReadStream(FAVICON).pipe(res);
                 return;
+            }
+
+            if (req.url === this.endpoint)  {
+                this.handleElements();
             }
         });
 
@@ -71,6 +87,22 @@ class ElementQLServer implements IElementQLServer {
         }
 
         this.server.close();
+    }
+
+    private handleElements() {
+        const elementsPath = process.cwd() + this.elementsDir;
+
+        console.log(process.cwd());
+        console.log(elementsPath);
+
+        fs.readdir(elementsPath, (_, items) => {
+            console.log(items);
+            if (items) {
+                for (var i=0; i<items.length; i++) {
+                    console.log(items[i]);
+                }
+            }
+        });
     }
 }
 
