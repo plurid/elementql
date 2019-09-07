@@ -1,0 +1,32 @@
+.App {
+    background-color: #1c232d;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: calc(10px + 3vmin);
+}
+
+
+.ElementQLMark {
+    margin: 50px;
+}
+
+.ElementQL {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.Element {
+    color: #e44d26;
+}
+
+.QL {
+    color: #1c59a5;
+}
+
+.Link {
+    filter: invert(0.8);
+    margin-left: 10px;
+}

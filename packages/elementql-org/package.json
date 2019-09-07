@@ -1,0 +1,45 @@
+{
+    "name": "@plurid/elementql-org",
+    "version": "0.0.1",
+    "description": "ElementQL Documentation Application",
+    "keywords": [
+        "elementql"
+    ],
+    "author": "Jan Cavel <caveljan@plurid.com> (https://plurid.com/)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/plurid/elementql"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@types/jest": "24.0.18",
+        "@types/node": "12.7.4",
+        "@types/react": "16.9.2",
+        "@types/react-dom": "16.9.0",
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0",
+        "react-scripts": "3.1.1",
+        "typescript": "3.6.2"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}
