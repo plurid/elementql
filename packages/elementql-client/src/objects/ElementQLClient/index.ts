@@ -3,9 +3,14 @@ import {
     ElementQLClientOptions,
 } from '../../interfaces';
 
+import {
+    injectScript,
+    injectStyle,
+} from '../../utilities';
 
 
-class ElementQLServer implements IElementQLClient {
+
+class ElementQLClient implements IElementQLClient {
     private url: string;
 
     constructor(options: ElementQLClientOptions) {
@@ -13,8 +18,11 @@ class ElementQLServer implements IElementQLClient {
     }
 
     public async get(elementLiteral: any) {
-        return fetch(
-            this.url,
+        // fetch from the server the element
+        // that is
+        // POST the element request from elementLiteral
+        // and get back the filename of the element script
+        const elementFiles = await fetch(this.url,
             {
                 method: 'POST',
                 body: JSON.stringify(elementLiteral),
@@ -23,8 +31,17 @@ class ElementQLServer implements IElementQLClient {
                 }
             }).then(res => res.json())
             .catch(error => console.error('Error:', error));
+
+        if (elementFiles.js) {
+            await injectScript(elementFiles.js);
+        }
+        if (elementFiles.css) {
+            await injectStyle(elementFiles.css);
+        }
+
+        return true;
     }
 }
 
 
-export default ElementQLServer;
+export default ElementQLClient;
