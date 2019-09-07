@@ -47,6 +47,16 @@ ElementQL is a query language specification and implementation to query a server
 
 
 
+<a target="_blank" href="https://www.npmjs.com/package/@plurid/elementql-parser">
+    <img src="https://img.shields.io/npm/v/@plurid/elementql-parser.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/elementql-parser][elementql-parser]
+
+[elementql-parser]: https://github.com/plurid/elementql/tree/master/packages/elementql-parser
+
+
+
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/elementql-server">
     <img src="https://img.shields.io/npm/v/@plurid/elementql-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
