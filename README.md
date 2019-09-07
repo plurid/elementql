@@ -67,12 +67,6 @@ ElementQL is a query language specification and implementation to query a server
 
 
 
-[@plurid/elementql-spec][elementql-spec]
-
-[elementql-spec]: https://github.com/plurid/elementql/tree/master/packages/elementql-spec
-
-
-
 <a target="_blank" href="https://www.npmjs.com/package/@plurid/elementql-tag">
     <img src="https://img.shields.io/npm/v/@plurid/elementql-tag.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
@@ -80,3 +74,15 @@ ElementQL is a query language specification and implementation to query a server
 [@plurid/elementql-tag][elementql-tag]
 
 [elementql-tag]: https://github.com/plurid/elementql/tree/master/packages/elementql-tag
+
+
+
+[@plurid/elementql-spec][elementql-spec] • specification
+
+[elementql-spec]: https://github.com/plurid/elementql/tree/master/packages/elementql-spec
+
+
+
+[@plurid/elementql-org][elementql-org] • documentation
+
+[elementql-org]: https://github.com/plurid/elementql/tree/master/packages/elementql-org
