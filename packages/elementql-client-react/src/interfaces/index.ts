@@ -6,3 +6,10 @@ export interface ElementQLClientReact {
 export interface ElementQLClientReactOptions {
     url: string;
 }
+
+
+declare global {
+    interface Window {
+        elementQL: any;
+    }
+}

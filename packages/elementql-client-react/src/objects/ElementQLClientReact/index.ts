@@ -1,3 +1,5 @@
+import ElementQLClient from '@plurid/elementql-client';
+
 import {
     ElementQLClientReact as IElementQLClientReact,
     ElementQLClientReactOptions,
@@ -6,14 +8,25 @@ import {
 
 
 class ElementQLClientReact implements IElementQLClientReact {
-    private url: string;
+    private client: any;
 
     constructor(options: ElementQLClientReactOptions) {
-        this.url = options.url;
+        const clientOptions = {
+            url: options.url,
+        };
+
+        this.client = new ElementQLClient(clientOptions);
     }
 
     public async get(elementLiteral: any) {
-        // use @plurid/elementql-client
+        // get element name/id from elementLiteral
+        await this.client.get(elementLiteral);
+
+        if (window.elementQL) {
+            console.log('Return Element based on Id/Name');
+
+            return window.elementQL;
+        }
     }
 }
 
