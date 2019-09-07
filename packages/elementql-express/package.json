@@ -28,11 +28,9 @@
         "prebuild": "rimraf dist",
         "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src && yarn build.removeSpecs",
         "build.dev": "tsc --module commonjs && rollup -c rollup.config.ts && yarn build.removeSpecs",
-        "build.rollup": "rollup -c rollup.config.ts",
         "build.removeSpecs": "rm -rf `find ./dist/ -type d -name __specs__`",
         "start": "rollup -c rollup.config.ts -w",
         "spec": "jest --coverage",
-        "spec.watch": "jest --coverage --watch",
         "report-coverage": "cat ./coverage/lcov.info | coveralls",
         "prepublishOnly": "yarn build"
     },
