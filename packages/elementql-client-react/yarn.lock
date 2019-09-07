@@ -292,6 +292,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@plurid/elementql-client@*":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.1.tgz#f735b3df7805c44e81f17edb6412ad9274e42aa1"
+  integrity sha512-xa6EVi46C1jGH0MMxYbDh6INS7VKW/m1RH2ZkQAYomwPUFNdxLUd8oqGFxZ2qIpYzX1c7QBoqOlH3oWoFGszpA==
+
 "@types/babel__core@^7.1.0":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.3.tgz#e441ea7df63cd080dfcd02ab199e6d16a735fc30"
