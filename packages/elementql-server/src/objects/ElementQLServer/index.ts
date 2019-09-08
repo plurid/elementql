@@ -114,14 +114,18 @@ class ElementQLServer implements IElementQLServer {
             }
 
             if (this.playground && req.url === this.playgroundEndpoint) {
-                res.end('ElementQL Playground');
+                this.renderPlayground(req, res);
             }
 
             if (req.url === this.elementQLEndpoint)  {
                 this.handleElements(req, res);
             }
 
-            // res.end('ElementQL');
+            if (req.url && this.elementsRoutes.includes(req.url)) {
+                this.handleElementRequest(req, res);
+            }
+
+            res.end('ElementQL');
         });
     }
 
@@ -147,10 +151,10 @@ class ElementQLServer implements IElementQLServer {
             }
 
             const body = await bodyData();
-            console.log('body', body);
+            // console.log('body', body);
 
             const parsedBody = new ElementQLParser(body).parse();
-            console.log(parsedBody);
+            // console.log(parsedBody);
 
             const elementsPath = path.join(process.cwd(), this.elementsDir);
 
@@ -159,9 +163,6 @@ class ElementQLServer implements IElementQLServer {
                 const {
                     name,
                 } = parsedElement;
-
-                // console.log(process.cwd());
-                // console.log(elementsPath);
 
                 await new Promise ((resolve, reject) => {
                     fs.readdir(elementsPath, (error, items) => {
@@ -194,6 +195,14 @@ class ElementQLServer implements IElementQLServer {
 
     private registerElementRoute(route: string) {
         this.elementsRoutes.push(route);
+    }
+
+    private handleElementRequest(request: IncomingMessage, response: ServerResponse) {
+        response.end(`Return file for ${request.url}`);
+    }
+
+    private renderPlayground(request: IncomingMessage, response: ServerResponse) {
+        response.end('ElementQL Playground');
     }
 }
 
