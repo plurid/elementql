@@ -20,6 +20,7 @@ const globals = {
     'path': 'path',
     'open': 'open',
     'portscanner': 'portscanner',
+    '@plurid/elementql-parser': 'ElementQLParser',
 };
 
 

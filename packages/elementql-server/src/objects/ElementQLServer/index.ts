@@ -4,6 +4,8 @@ import fs from 'fs';
 
 import open from 'open';
 
+import ElementQLParser from '@plurid/elementql-parser';
+
 import {
     IElementQLServer,
     ElementQLServerOptions,
@@ -146,11 +148,31 @@ class ElementQLServer implements IElementQLServer {
             const body = await bodyData();
             console.log('body', body);
 
-            // parse the body
-            // get element files and return them as json
-            const responseElements = {
-                js: 'element-js-file.js',
-                css: 'element-css-file.css',
+            const parsedBody = new ElementQLParser(body).parse();
+            console.log(parsedBody);
+
+            const elementsPath = path.join(process.cwd(), this.elementsDir);
+
+            const responseElements: any[] = [];
+            for (let parsedElement of parsedBody) {
+                const {
+                    name,
+                } = parsedElement;
+
+                // console.log(process.cwd());
+                // console.log(elementsPath);
+                fs.readdir(elementsPath, (_, items) => {
+                    console.log(items);
+                    if (items.includes(name)) {
+                        console.log(name);
+                    }
+                });
+                // based on the name get the element
+
+                // const responseElement = {
+                //     js: `${parsedElement.name}.js`,
+                //     css: `${parsedElement.name}.css`,
+                // };
             }
 
             response.setHeader('Content-Type', APPLICATION_JSON);
@@ -158,20 +180,6 @@ class ElementQLServer implements IElementQLServer {
         } else {
             response.end('Not A Valid ElementQL Query.');
         }
-
-        // const elementsPath = path.join(process.cwd(), this.elementsDir);
-
-        // console.log(process.cwd());
-        // console.log(elementsPath);
-
-        // fs.readdir(elementsPath, (_, items) => {
-        //     console.log(items);
-        //     if (items) {
-        //         for (var i=0; i<items.length; i++) {
-        //             console.log(items[i]);
-        //         }
-        //     }
-        // });
     }
 }
 
