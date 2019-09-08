@@ -41,6 +41,7 @@ class ElementQLServer implements IElementQLServer {
     private playgroundEndpoint: string = DEFAULT_PLAYGROUND_ENDPOINT;
     private playground: boolean = false;
     private plugins: string[] = [];
+    private elementsRoutes: string[] = [];
 
     constructor(options?: ElementQLServerOptions) {
         this.handleOptions(options);
@@ -161,18 +162,27 @@ class ElementQLServer implements IElementQLServer {
 
                 // console.log(process.cwd());
                 // console.log(elementsPath);
-                fs.readdir(elementsPath, (_, items) => {
-                    console.log(items);
-                    if (items.includes(name)) {
-                        console.log(name);
-                    }
-                });
-                // based on the name get the element
 
-                // const responseElement = {
-                //     js: `${parsedElement.name}.js`,
-                //     css: `${parsedElement.name}.css`,
-                // };
+                await new Promise ((resolve, reject) => {
+                    fs.readdir(elementsPath, (error, items) => {
+                        if (error) {
+                            reject(error);
+                        }
+
+                        if (items.includes(name)) {
+                            const jsRoute = `/elementql/${parsedElement.name}.js`;
+                            this.registerElementRoute(jsRoute);
+                            const cssRoute = `/elementql/${parsedElement.name}.css`;
+                            this.registerElementRoute(cssRoute);
+                            const responseElement = {
+                                js: jsRoute,
+                                css: cssRoute,
+                            };
+                            responseElements.push(responseElement);
+                            resolve();
+                        }
+                    });
+                });
             }
 
             response.setHeader('Content-Type', APPLICATION_JSON);
@@ -180,6 +190,10 @@ class ElementQLServer implements IElementQLServer {
         } else {
             response.end('Not A Valid ElementQL Query.');
         }
+    }
+
+    private registerElementRoute(route: string) {
+        this.elementsRoutes.push(route);
     }
 }
 
