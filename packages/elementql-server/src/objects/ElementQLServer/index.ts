@@ -9,6 +9,7 @@ import ElementQLParser from '@plurid/elementql-parser';
 import {
     IElementQLServer,
     ElementQLServerOptions,
+    RegisteredElementQL,
 } from '../../interfaces';
 
 import {
@@ -42,6 +43,7 @@ class ElementQLServer implements IElementQLServer {
     private playground: boolean = false;
     private plugins: string[] = [];
     private elementsRoutes: string[] = [];
+    private elements: RegisteredElementQL[] = [];
 
     constructor(options?: ElementQLServerOptions) {
         this.handleOptions(options);
@@ -189,6 +191,17 @@ class ElementQLServer implements IElementQLServer {
                                 css: cssPath,
                             };
                             responseElements.push(responseElement);
+
+                            const registerElement: RegisteredElementQL = {
+                                name,
+                                routes: responseElement,
+                                paths: {
+                                    js: `/src/elements/${name}/index.js`,
+                                    css: `/src/elements/${name}/index.css`,
+                                },
+                            };
+                            this.registerElement(registerElement);
+
                             resolve();
                         }
                     });
@@ -206,9 +219,31 @@ class ElementQLServer implements IElementQLServer {
         this.elementsRoutes.push(route);
     }
 
-    private handleElementRequest(request: IncomingMessage, response: ServerResponse) {
-        response.setHeader('content-type', 'text/plain');
-        response.end(`Return file for ${request.url}`);
+    private registerElement(element: RegisteredElementQL) {
+        this.elements.push(element);
+    }
+
+    private async handleElementRequest(request: IncomingMessage, response: ServerResponse) {
+        // search in
+        const element = this.elements.filter(element => {
+            if (element.routes.js === request.url || element.routes.css === request.url) {
+                return element;
+            }
+        })[0];
+
+        if (element) {
+            // read file from
+            const file = await new Promise((resolve, reject) => {
+                fs.readFile(element.paths.js, (error, data) => {
+                    resolve(data.toString());
+                });
+            });
+            response.setHeader('content-type', 'text/plain');
+            response.end(file);
+        } else {
+            response.setHeader('content-type', 'text/plain');
+            response.end(`Could not find element for ${request.url}`);
+        }
     }
 
     private renderPlayground(request: IncomingMessage, response: ServerResponse) {

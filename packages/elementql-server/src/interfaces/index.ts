@@ -18,3 +18,16 @@ export interface ElementQLServerOptions {
 export interface ElementQLServerStartOptions {
     open: boolean;
 }
+
+
+export interface RegisteredElementQL {
+    name: string;
+    routes: {
+        js: string;
+        css: string;
+    },
+    paths: {
+        js: string;
+        css: string;
+    }
+}
