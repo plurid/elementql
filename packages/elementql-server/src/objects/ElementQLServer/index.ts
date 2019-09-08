@@ -239,11 +239,13 @@ class ElementQLServer implements IElementQLServer {
 
         if (element) {
             const file = await new Promise((resolve, reject) => {
-                const filePath = /js/.test(request.url || '')
+                const filePath = /\.js/.test(request.url || '')
                     ? element.paths.js
-                    : /css/.test(request.url || '')
+                    : /\.css/.test(request.url || '')
+                        ? element.paths.css
+                        : '';
 
-                fs.readFile(element.paths.css, (error, data) => {
+                fs.readFile(filePath, (error, data) => {
                     // console.log(data);
                     resolve(data);
                 });
