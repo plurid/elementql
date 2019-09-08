@@ -183,7 +183,7 @@ class ElementQLServer implements IElementQLServer {
                             const jsRoute = `/elementql/${parsedElement.name}.js`;
                             const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
                             this.registerElementRoute(jsRoute);
-                            const cssRoute = `/elementql/${parsedElement.name}.js`;
+                            const cssRoute = `/elementql/${parsedElement.name}.css`;
                             const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
                             this.registerElementRoute(cssRoute);
                             const responseElement = {
@@ -194,10 +194,13 @@ class ElementQLServer implements IElementQLServer {
 
                             const registerElement: RegisteredElementQL = {
                                 name,
-                                routes: responseElement,
+                                routes: {
+                                    js: jsRoute,
+                                    css: cssRoute,
+                                },
                                 paths: {
-                                    js: `/src/elements/${name}/index.js`,
-                                    css: `/src/elements/${name}/index.css`,
+                                    js: `${elementsPath}/${name}/index.js`,
+                                    css: `${elementsPath}/${name}/index.css`,
                                 },
                             };
                             this.registerElement(registerElement);
@@ -224,25 +227,33 @@ class ElementQLServer implements IElementQLServer {
     }
 
     private async handleElementRequest(request: IncomingMessage, response: ServerResponse) {
-        // search in
+        console.log(this.elements);
+
         const element = this.elements.filter(element => {
             if (element.routes.js === request.url || element.routes.css === request.url) {
                 return element;
             }
         })[0];
 
+        console.log(element);
+
         if (element) {
-            // read file from
             const file = await new Promise((resolve, reject) => {
-                fs.readFile(element.paths.js, (error, data) => {
-                    resolve(data.toString());
+                const filePath = /js/.test(request.url || '')
+                    ? element.paths.js
+                    : /css/.test(request.url || '')
+
+                fs.readFile(element.paths.css, (error, data) => {
+                    // console.log(data);
+                    resolve(data);
                 });
             });
+            // console.log(file);
             response.setHeader('content-type', 'text/plain');
             response.end(file);
         } else {
             response.setHeader('content-type', 'text/plain');
-            response.end(`Could not find element for ${request.url}`);
+            response.end(`Could not find element for ${request.url}.`);
         }
     }
 
