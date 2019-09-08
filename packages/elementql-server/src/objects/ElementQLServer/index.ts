@@ -168,10 +168,11 @@ class ElementQLServer implements IElementQLServer {
             }
 
             const body = await bodyData();
-            // console.log('body', body);
+            console.log('body', body);
+            console.log('body', body.replace(/"/g, ''));
 
-            const parsedBody = new ElementQLParser(body).parse();
-            // console.log(parsedBody);
+            const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
+            console.log('parsedBody', parsedBody);
 
             const elementsPath = path.join(process.cwd(), this.elementsDir);
 

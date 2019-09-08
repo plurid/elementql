@@ -18,23 +18,32 @@ class ElementQLClient implements IElementQLClient {
     }
 
     public async get(elementLiteral: any) {
-        console.log(elementLiteral);
+        console.log('elementLiteral', elementLiteral);
 
         const elementFiles = await fetch(this.url,
             {
                 method: 'POST',
-                body: JSON.stringify(elementLiteral),
+                body: JSON.stringify(elementLiteral[0]),
                 headers:{
                     'Content-Type': 'application/elementql'
                 }
-            }).then(res => res.json())
+            }).then(res => {
+                console.log(res);
+                return res.json();
+            })
             .catch(error => console.error('Error:', error));
 
-        if (elementFiles.js) {
-            await injectScript(elementFiles.js);
-        }
-        if (elementFiles.css) {
-            await injectStyle(elementFiles.css);
+        console.log('elementFiles', elementFiles);
+
+        for (let element of elementFiles) {
+            if (element.js) {
+                console.log('injected script');
+                await injectScript(element.js);
+            }
+            if (element.css) {
+                console.log('injected style');
+                await injectStyle(element.css);
+            }
         }
 
         return true;
