@@ -34,4 +34,15 @@ import {
 
         expect(result).toStrictEqual(elements);
     });
+
+    it.only('gets element', () => {
+        const query = '\n            import {\n                <element>\n            }\n';
+        const elements = [
+            {name: 'element'},
+        ];
+        const parser = new ElementQLParser(query);
+        const result = parser.parse();
+
+        expect(result).toStrictEqual(elements);
+    });
 });
