@@ -162,6 +162,9 @@ class ElementQLServer implements IElementQLServer {
 
             const elementsPath = path.join(process.cwd(), this.elementsDir);
 
+            const host = request.headers.host;
+            const protocol = 'http://';
+
             const responseElements: any[] = [];
             for (let parsedElement of parsedBody) {
                 const {
@@ -176,12 +179,14 @@ class ElementQLServer implements IElementQLServer {
 
                         if (items.includes(name)) {
                             const jsRoute = `/elementql/${parsedElement.name}.js`;
+                            const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
                             this.registerElementRoute(jsRoute);
-                            const cssRoute = `/elementql/${parsedElement.name}.css`;
+                            const cssRoute = `/elementql/${parsedElement.name}.js`;
+                            const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
                             this.registerElementRoute(cssRoute);
                             const responseElement = {
-                                js: jsRoute,
-                                css: cssRoute,
+                                js: jsPath,
+                                css: cssPath,
                             };
                             responseElements.push(responseElement);
                             resolve();
