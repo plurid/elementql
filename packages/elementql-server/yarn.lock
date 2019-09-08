@@ -292,6 +292,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@plurid/elementql-parser@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-parser/-/elementql-parser-0.0.1.tgz#0db9d088a83bac2115da9653101de76c387eec74"
+  integrity sha512-3w0K3ZSRo1LPLVHkNXgs1Ivo0GsWT6kIxeqBYcOj5h1x/6k7cQ1XIdLUNToDk03dbXVISj+qLb8qPg51jrLsbg==
+
 "@types/archiver@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/archiver/-/archiver-3.0.0.tgz#c0a53e0ed3b7aef626ce683d081d7821d8c638b4"

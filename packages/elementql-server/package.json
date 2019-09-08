@@ -67,6 +67,7 @@
         ]
     },
     "dependencies": {
+        "@plurid/elementql-parser": "^0.0.1",
         "open": "^6.4.0",
         "portscanner": "^2.2.0"
     },
