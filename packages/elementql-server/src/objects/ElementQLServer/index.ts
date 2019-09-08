@@ -115,17 +115,21 @@ class ElementQLServer implements IElementQLServer {
 
             if (this.playground && req.url === this.playgroundEndpoint) {
                 this.renderPlayground(req, res);
+                return;
             }
 
             if (req.url === this.elementQLEndpoint)  {
                 this.handleElements(req, res);
+                return;
             }
 
             if (req.url && this.elementsRoutes.includes(req.url)) {
                 this.handleElementRequest(req, res);
+                return;
             }
 
             res.end('ElementQL');
+            return;
         });
     }
 
@@ -198,6 +202,7 @@ class ElementQLServer implements IElementQLServer {
     }
 
     private handleElementRequest(request: IncomingMessage, response: ServerResponse) {
+        response.setHeader('content-type', 'text/plain');
         response.end(`Return file for ${request.url}`);
     }
 
