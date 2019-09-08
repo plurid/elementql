@@ -19,16 +19,13 @@ class ElementQLClient implements IElementQLClient {
 
     public async get(elementLiteral: any) {
         console.log(elementLiteral);
-        // fetch from the server the element
-        // that is
-        // POST the element request from elementLiteral
-        // and get back the filename of the element script
+
         const elementFiles = await fetch(this.url,
             {
                 method: 'POST',
                 body: JSON.stringify(elementLiteral),
                 headers:{
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/elementql'
                 }
             }).then(res => res.json())
             .catch(error => console.error('Error:', error));

@@ -109,6 +109,17 @@ class ElementQLServer implements IElementQLServer {
 
     private createServer() {
         this.server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
+            // Set CORS headers
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Request-Method', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+            res.setHeader('Access-Control-Allow-Headers', '*');
+            if (req.method === 'OPTIONS') {
+                res.writeHead(200);
+                res.end();
+                return;
+            }
+
             if (req.url === '/favicon.ico') {
                 res.writeHead(200, {'Content-Type': 'image/x-icon'} );
                 fs.createReadStream(FAVICON).pipe(res);
