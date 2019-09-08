@@ -251,11 +251,21 @@ class ElementQLServer implements IElementQLServer {
 
         if (element) {
             const file = await new Promise((resolve, reject) => {
-                const filePath = /\.js/.test(request.url || '')
+                const jsFile = /\.js/.test(request.url || '');
+                const cssFile = /\.css/.test(request.url || '');
+                const filePath = jsFile
                     ? element.paths.js
-                    : /\.css/.test(request.url || '')
+                    : cssFile
                         ? element.paths.css
                         : '';
+
+                if (jsFile) {
+                    response.setHeader('Content-Type', 'text/javascript');
+                }
+
+                if (cssFile) {
+                    response.setHeader('Content-Type', 'text/css');
+                }
 
                 fs.readFile(filePath, (error, data) => {
                     if (error) {
@@ -265,7 +275,6 @@ class ElementQLServer implements IElementQLServer {
                 });
             });
 
-            response.setHeader('content-type', 'text/plain');
             response.end(file);
         } else {
             response.setHeader('content-type', 'text/plain');
