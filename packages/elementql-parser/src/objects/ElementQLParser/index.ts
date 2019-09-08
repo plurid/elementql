@@ -17,13 +17,13 @@ class ElementQLParser implements IElementQLParser {
         // return this.query;
         const importRE = new RegExp('^import.*{((.|\\n)*)}$', 'm');
         const importMatch = this.query.trim().match(importRE);
-        console.log('importMatch', importMatch);
+        // console.log('importMatch', importMatch);
 
         if (importMatch) {
             const elementsString = importMatch[1];
             const elementsRE = new RegExp('<(.*)>', 'g');
             const elementsMatch = elementsString.trim().match(elementsRE);
-            console.log('elementsMatch', elementsMatch);
+            // console.log('elementsMatch', elementsMatch);
 
             if (elementsMatch) {
                 for (let elementMatch of elementsMatch) {
