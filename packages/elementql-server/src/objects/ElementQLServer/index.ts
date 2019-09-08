@@ -246,11 +246,13 @@ class ElementQLServer implements IElementQLServer {
                         : '';
 
                 fs.readFile(filePath, (error, data) => {
-                    // console.log(data);
+                    if (error) {
+                        reject(error);
+                    }
                     resolve(data);
                 });
             });
-            // console.log(file);
+
             response.setHeader('content-type', 'text/plain');
             response.end(file);
         } else {
