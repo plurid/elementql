@@ -5,7 +5,14 @@ import {
 
 
 class ElementQLParser implements IElementQLParser {
-    constructor(options?: any) {
+    private query: string;
+
+    constructor(query: string) {
+        this.query = query;
+    }
+
+    parse() {
+        return this.query;
     }
 }
 
