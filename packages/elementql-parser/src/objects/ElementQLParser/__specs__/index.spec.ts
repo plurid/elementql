@@ -3,15 +3,35 @@ import ElementQLParser from '../';
 
 
 describe('ElementQLParser basic', () => {
-    it('works', () => {
+    it('gets a single element', () => {
         const query = `
 import {
     <element>
 }
         `;
+        const elements = [ {name: 'element'} ];
         const parser = new ElementQLParser(query);
         const result = parser.parse();
-        console.log(result);
-        expect(true).toBe(true);
+
+        expect(result).toStrictEqual(elements);
+    });
+
+    it('gets multiple elements', () => {
+        const query = `
+import {
+    <element-1>
+    <element-2>
+    <element-3>
+}
+        `;
+        const elements = [
+            {name: 'element-1'},
+            {name: 'element-2'},
+            {name: 'element-3'},
+        ];
+        const parser = new ElementQLParser(query);
+        const result = parser.parse();
+
+        expect(result).toStrictEqual(elements);
     });
 });
