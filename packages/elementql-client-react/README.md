@@ -25,3 +25,7 @@
 @plurid/elementql-client-react uses @plurid/elementql-client under the hood to inject the script/style
 
 and returns window.elementQL.Div which is a React function component
+
+
+
+the React component should be exported wrapped around a HoC withElementQL which will make the component available on window
