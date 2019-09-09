@@ -1,11 +1,4 @@
-import ElementQLServer from '../';
-
-
-
-/**
-* ElementQLServer Server sanity test
-*/
-describe('ElementQLServer Server sanity test', () => {
+describe('sanity test', () => {
     it('works if true is truthy', () => {
         expect(true).toBeTruthy();
     });
