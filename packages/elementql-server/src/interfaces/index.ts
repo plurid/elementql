@@ -12,6 +12,8 @@ export interface ElementQLServerOptions {
     endpoint?: string;
     playground?: boolean;
     playgroundURL?: string;
+    schema: any;
+    resolvers: any;
 }
 
 
