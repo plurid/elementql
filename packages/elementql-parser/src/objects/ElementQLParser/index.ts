@@ -13,10 +13,14 @@ class ElementQLParser implements IElementQLParser {
     }
 
     public parse(): ElementQL[] {
+        let query = this.query
+        query = query.replace(/\\n/g, ' ');
+        query = query.replace(/\s+/g, ' ');
+        query = query.trim();
+
         const elements: ElementQL[] = [];
-        // return this.query;
         const importRE = new RegExp('^import.*{((.|\\n)*)}$', 'm');
-        const importMatch = this.query.trim().match(importRE);
+        const importMatch = query.match(importRE);
         // console.log('importMatch', importMatch);
 
         if (importMatch) {
