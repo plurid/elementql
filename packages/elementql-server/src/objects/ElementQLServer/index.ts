@@ -192,6 +192,9 @@ class ElementQLServer implements IElementQLServer {
                         }
 
                         if (items.includes(name)) {
+                            // based on plugins
+                            // to compile the element files
+
                             const jsRoute = `/elementql/${parsedElement.name}.js`;
                             const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
                             this.registerElementRoute(jsRoute);

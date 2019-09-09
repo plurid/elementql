@@ -1,8 +1,13 @@
 import ElementQLServer from '@plurid/elementql-server';
 
+import resolvers from './elementql/resolvers';
+import schema from './elementql/schema';
+
 
 
 const options = {
+    resolvers,
+    schema,
     elementsDir: './src/elements',
 };
 
