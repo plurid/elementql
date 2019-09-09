@@ -12,7 +12,11 @@ const elementQLClient = new ElementQLClientReact({
     url: 'http://localhost:33300/elementql',
 });
 
-const ELEMENT = elementql`import { <element> }`;
+const ELEMENT = elementql`
+    import {
+        <element>
+    }
+`;
 
 
 const App: React.FC = () => {

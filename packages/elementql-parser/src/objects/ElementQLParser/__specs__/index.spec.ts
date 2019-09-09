@@ -35,7 +35,7 @@ import {
         expect(result).toStrictEqual(elements);
     });
 
-    it.only('gets element', () => {
+    it('gets element', () => {
         const query = '\n            import {\n                <element>\n            }\n';
         const elements = [
             {name: 'element'},
