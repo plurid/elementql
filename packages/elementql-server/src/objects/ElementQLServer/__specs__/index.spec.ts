@@ -7,10 +7,10 @@ describe('ElementQL Server basic', () => {
         const options = {
             port: 3333,
             verbose: true,
+            schema: '',
+            resolvers: '',
         }
         const elementQLServer = new ElementQLServer(options);
-        elementQLServer.start();
-        elementQLServer.stop();
         expect(true).toBe(true);
     });
 });

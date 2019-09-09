@@ -45,7 +45,7 @@ class ElementQLServer implements IElementQLServer {
     private elementsRoutes: string[] = [];
     private elements: RegisteredElementQL[] = [];
 
-    constructor(options?: ElementQLServerOptions) {
+    constructor(options: ElementQLServerOptions) {
         this.handleOptions(options);
         this.createServer();
 
