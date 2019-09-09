@@ -1,6 +1,6 @@
-console.log('working element');
+const element = () => {
+    console.log('element works');
+}
 
-const element = () => 'foo';
-
-window.elementql = window.elementql || {};
-window.elementql.element = element;
+window.elementQL = window.elementQL || {};
+window.elementQL.element = element;
