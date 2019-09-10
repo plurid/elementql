@@ -2,5 +2,5 @@ const element = () => {
     console.log('element works');
 }
 
-window.elementQL = window.elementQL || {};
-window.elementQL.element = element;
+window.elementql = window.elementql || {};
+window.elementql.element = element;

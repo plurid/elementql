@@ -28,12 +28,12 @@ class ElementQLClientReact implements IElementQLClientReact {
         // get element name/id from elementLiteral
         await this.client.get(elementLiteral);
 
-        console.log(window.elementQL)
+        console.log(window.elementql)
 
-        if (window.elementQL) {
+        if (window.elementql) {
             console.log('Return Element based on Id/Name');
-            if (window.elementQL.element) {
-                return window.elementQL.element;
+            if (window.elementql.element) {
+                return window.elementql.element;
             }
         }
     }
