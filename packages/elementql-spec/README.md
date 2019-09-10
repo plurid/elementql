@@ -5,7 +5,7 @@
 
 Client-Side Usage
 
-    // imports the input element defined in the general space
+    // imports the input element defined in the root space
     // this input element is simply named input
     // it may or may not be the same as an HTML Input Element
     elementql`
@@ -26,106 +26,137 @@ Client-Side Usage
     `;
 
 
+Client Side with React
+
+    import React, {
+        useState,
+        useEffect,
+    } from 'react';
+    import ElementQLClient from '@plurid/elementql-client';
+    import elementql from '@plurid/elementql-tag';
+
+    const ELEMENTQL_API_URL = 'http://localhost:33300/elementql'
+
+    const elementQLClient = new ElementQLClient({
+        url: ELEMENTQL_API_URL,
+    });
+
+    const ELEMENT = elementql`
+        import {
+            <Element>
+        }
+    `;
+
+    const App: React.FC = () => {
+        const [Element, setElement] = useState(null);
+        useEffect(() => {
+            const fetchElement = async () => {
+                const FetchedElement = await elementQLClient.get(ELEMENT);
+                setElement(FetchedElement);
+            }
+            fetchElement();
+        });
+
+        return (
+            <div>
+                <Element />
+            </div>
+        );
+    }
+
+    export default App;
+
+
+
 Server-Side Usage
 
-    const input = document.createElement('input');
+    // files structure
+    elementql/
+        resolvers.ts
+        schema.ts
+    elements/
+        input/
+            index.ts
+        page1/
+            footer/
+                brand/
+                    index.ts
+    index.ts
 
-    const brand = document.createElement('div');
 
-    elementql`
-        <input> {
-            ${input}
-        }
+    // schema.ts
+    import elementql from '@plurid/elementql-tag';
 
-        space page1
+    const schema = elementql`
+        export {
+            element <input>
 
-        space page1 > footer {
-            <brand> {
-                ${brand}
+            space page1 {
+                space footer {
+                    element <brand>
+                }
             }
         }
-    `
+    `;
 
 
-the developer writes the components, say using React, and places them on the server
+    // resolvers.ts
+    import input from '../elements/input';
+    import brand from '../elements/page1/footer/brand';
 
-the developer must also write the server logic for answering to component requests
-
-the developer writes the client side which asks for components
-
-
-
-.elementql file extension
-
-
-
-
----
+    const resolvers = {
+        input: () => input,
+        page1: {
+            footer: {
+                brand: () => brand;
+            },
+        },
+    };
 
 
+    // elements
+    // input/index.ts - HTML Elements
+    const input = document.createElement('div');
+    input.textContent = 'the ElementQL input element is actually a div';
 
-initial :
-
-# ElementQL Specification
-
-api.domain.com/elementql
+    export default input;
 
 
-to hit the endpoint to request page components
-to hit the endpoint to save the local-current state of the component
+    // input/index.ts - React
+    import React from 'react';
+    import { withElementQL } from '@plurid/elementql-react';
 
-    import {
-        <custom-element> {
-        }
+    const Input: React.FC = () => {
+        return (
+            <div>
+                the ElementQL input element is actually a div
+            </div>
+        );
     }
 
-    import {
-        <my-input> {
-            data {
-                name: "email"
-                value: "app@expl.com"
-            }
-            style {
-                color: "red"
-            }
-            function {
-                onChange: $onChange
-                onFocus: $onFocus
-                onBlur: $onBlur
-            }
-        }
-    }
-
-    export {
-        <custom-element>
-    }
+    export default withElementQL(Input);
 
 
-    <div>
-        <virtual-custom-element>
-    </div>
+    // server (index.ts)
+    import ElementQLServer from '@plurid/elementql-server';
+    import resolvers from './elementql/resolvers';
+    import schema from './elementql/schema';
 
-    <div>
-        <custom-element>
-    </div>
+    const configuration = {
+        resolvers,
+        schema,
+    };
 
+    const server = new ElementQLServer(configuration);
 
-The user creates the components
-
-/component/button
-/component/input
-etc
-
-and the containers
-
-/containers/about-page
-/containers/contact-page
-etc
+    server.start();
 
 
-then sets the ElementsQL server which will take the containers and components
 
+## Workflow
 
-to able to store the code as files
+The developer writes the elements, say, using React, and places them on the server.
 
-or as text in database
+The developer writes the schema of the elements and the server logic for resolving the element requests.
+
+The developer writes the client side which asks for elements based on the user's needs (URL, state, and such).
