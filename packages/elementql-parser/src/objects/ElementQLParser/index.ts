@@ -5,6 +5,56 @@ import {
 
 
 
+
+/**
+ * https://matthiashager.com/converting-snake-case-to-camel-case-object-keys-with-javascript
+ *
+ * @param str
+ */
+const toCamel = (str: string) => {
+    return str.replace(/([-_]([a-z]|\d+))/ig, ($1) => {
+        return $1.toUpperCase()
+            .replace('-', '')
+            .replace('_', '');
+    });
+};
+
+
+const getElement = (query: string) => {
+    const elementRE = new RegExp('<(.*)>');
+    const elementMatch = query.match(elementRE);
+
+    if (elementMatch) {
+        return {
+            name: elementMatch[1],
+        };
+    }
+
+    return;
+}
+
+const getElementWithSubelements = (query: string, restOfQuery: string[]) => {
+    const element = getElement(query);
+
+    if (element) {
+        return {
+            self: element,
+        };
+    }
+
+    return;
+}
+
+const getSpace = () => {
+
+}
+
+const getSubspace = () => {
+
+}
+
+
+
 class ElementQLParser implements IElementQLParser {
     private query: string;
 
@@ -16,20 +66,44 @@ class ElementQLParser implements IElementQLParser {
         console.log('this.query', this.query);
         let query = this.query.split('\n');
         query = query.map(el => el.trim());
-        // console.log('query', query);
         query = query.filter(el => el !== '');
-        // console.log(query);
+
         // check if export or import
         let exporting = /export/.test(query[0]);
         let importing = /import/.test(query[0]);
         query = query.slice(1, query.length - 1);
-
         console.log(exporting, importing);
         console.log(query);
 
-        // from the query extract
-        // the root elements (with their subelements)
-        // the root spaces (with their subspaces and elements)
+        const elements: any = {};
+
+        for (let [index, queryString] of query.entries()) {
+            if (/^el(ement)?\s/.test(queryString)) {
+                if (queryString[queryString.length - 1] !== '{') {
+                    console.log('element', queryString);
+                    const element = getElement(queryString);
+                    if (element) {
+                         elements[toCamel(element.name)] = element;
+                    }
+                }
+
+                if (queryString[queryString.length - 1] === '{') {
+                    // look into the element for self, subelements and their subelements, recursively
+                    console.log('element with subelements', queryString);
+                    const element = getElementWithSubelements(queryString, query.slice(index,));
+                    if (element) {
+                        elements[toCamel(element.self.name)] = element;
+                    }
+                }
+            }
+
+            if (/^sp(ace)?\s/.test(queryString)) {
+                // look into space for elements with or without subelements, other spaces
+                console.log('space', queryString);
+            }
+        }
+
+        console.log('elements', elements);
 
 
         // let query = this.query;
