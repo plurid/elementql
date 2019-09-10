@@ -46,7 +46,14 @@ class ElementQLClient implements IElementQLClient {
             }
         }
 
-        return true;
+        console.log(window.elementql)
+
+        if (window.elementql) {
+            console.log('Return Element based on Id/Name');
+            if (window.elementql.element) {
+                return window.elementql.element;
+            }
+        }
     }
 }
 
