@@ -9,6 +9,7 @@ const options = {
     resolvers,
     schema,
     elementsDir: './src/elements',
+    // playground: true,
 };
 
 const server = new ElementQLServer(options);

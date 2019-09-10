@@ -1,6 +1,6 @@
 const resolvers = {
-    element: () => {
-
+    element: (args: any) => {
+        // return any type of element here - custom elements, react, vue, angular, etc.
     },
 
     page: {

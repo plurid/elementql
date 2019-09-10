@@ -1,0 +1,42 @@
+export {
+    el <element>
+    element <element> (arguments?)
+
+    sp page {
+        element <Header> {
+            self
+            element <Logo>
+            element <UserProfile>
+        }
+
+        element <Toolbar> {
+            element <ToolbarButton>
+        }
+    }
+    space page {
+        element <Header> {
+            self
+            element <Logo>
+            element <UserProfile>
+        }
+
+        element <Toolbar> {
+            element <ToolbarButton>
+        }
+    }
+
+    space productPage {
+        space productIcon {
+            element <Icon>
+            element <Title> {
+                self
+                element <Subtitle>
+            }
+        }
+    }
+}
+
+
+window.elementql.productPage.productIcon.Icon
+window.elementql.productPage.productIcon.Title.self
+window.elementql.productPage.productIcon.Title.Subtitle

@@ -8,8 +8,13 @@ export interface ElementQLClientReactOptions {
 }
 
 
+export interface ElementQLElements {
+    [key: string]: any;
+}
+
+
 declare global {
     interface Window {
-        elementQL: any;
+        elementql: ElementQLElements;
     }
 }
