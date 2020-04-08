@@ -10,7 +10,6 @@
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "declarationDir": "build",
         "outDir": "build",
         "typeRoots": [
             "node_modules/@types"
