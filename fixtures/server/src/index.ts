@@ -6,9 +6,9 @@ import schema from './elementql/schema';
 
 
 const options = {
-    resolvers,
-    schema,
-    elementsDir: './src/elements',
+    // resolvers,
+    // schema,
+    // elementsDir: './src/elements',
     // playground: true,
 };
 
