@@ -24,7 +24,7 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "prebuild": "rimraf dist",
+        "prebuild": "rimraf build",
         "build": "rollup -c rollup.config.ts",
         "start": "rollup -c rollup.config.ts -w",
         "spec": "jest ./src"
