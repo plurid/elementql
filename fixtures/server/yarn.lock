@@ -444,10 +444,10 @@
     open "^6.4.0"
     portscanner "^2.2.0"
 
-"@plurid/elementql-tag@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.1.tgz#df1e49db6aed81d6dea6c0d467b95f02c9c99bed"
-  integrity sha512-QnA5KJETBZhk2E51U20s0G5NajvotEhf+zNwQn63PXYKbnzIVusPiWPK8Soq6FR1RBtp/l/032KmlY5LKK+T+g==
+"@plurid/elementql-tag@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.3.tgz#2df11567767285f998e4ece5234b67a2d1022ef6"
+  integrity sha512-1aj5r2H7Pq3LEJJNIZG03ZelywQxic7TLyjMwCnaoX1omT1YBYhr8qGOqHsVsPJWMJ1CmXE6a7+Crv740vmmbQ==
 
 "@rollup/pluginutils@^3.0.1", "@rollup/pluginutils@^3.0.8":
   version "3.0.8"

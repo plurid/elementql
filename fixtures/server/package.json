@@ -58,7 +58,7 @@
     },
     "dependencies": {
         "@plurid/elementql-server": "*",
-        "@plurid/elementql-tag": "^0.0.1"
+        "@plurid/elementql-tag": "^0.0.3"
     },
     "devDependencies": {
         "@types/jest": "^25.2.1",
