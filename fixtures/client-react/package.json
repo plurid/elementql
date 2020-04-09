@@ -15,8 +15,8 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@plurid/elementql-client-react": "*",
-        "@plurid/elementql-tag": "^0.0.3",
+        "@plurid/elementql-client-react": "0.0.2",
+        "@plurid/elementql-tag": "0.0.3",
         "@types/jest": "25.2.1",
         "@types/node": "13.11.1",
         "@types/react": "16.9.33",
