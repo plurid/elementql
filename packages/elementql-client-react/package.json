@@ -33,7 +33,7 @@
         "build.local": "yarn clean && rollup -c --environment ENV_MODE:local",
         "build.development": "yarn clean && rollup -c --environment ENV_MODE:development",
         "build.production": "yarn clean && rollup -c --environment ENV_MODE:production",
-        "build": "yarn lint && yarn spec && yarn build.production",
+        "build": "yarn lint && yarn test && yarn build.production",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
