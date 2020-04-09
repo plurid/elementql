@@ -5,6 +5,8 @@ packages:
 package:
   manager: yarn
   publisher: npm
+  ignore:
+    - ./packages/elementql-spec
 
 yarnWorkspace: false
 
@@ -17,3 +19,9 @@ commit:
   message: 'setup: package'
 
 runFrom: ../
+
+development:
+  watchPackages: all
+  serverPort: 55000
+  watchDirectories: ['build', 'distribution', 'dist']
+  externalPackages: []
