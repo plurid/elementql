@@ -3,8 +3,9 @@
 
 
 
-const AnElement = () => {
-    return React.createElement('div', null, `Hello from element`);
+const AnotherElement = () => {
+    return React.createElement('div', null, `Hello from AnotherElement`);
 };
 
-export default AnElement;
+
+export default AnotherElement;
