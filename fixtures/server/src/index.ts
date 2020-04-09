@@ -8,7 +8,7 @@ import schema from './elementql/schema';
 const options = {
     resolvers,
     schema,
-    elementsDir: './src/elements',
+    elementsDir: './elements',
     playground: true,
     verbose: true,
 };
