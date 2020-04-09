@@ -267,7 +267,7 @@ class ElementQLServer implements IElementQLServer {
         request: IncomingMessage,
         response: ServerResponse,
     ) {
-        console.log('this.elements', this.elements);
+        // console.log('this.elements', this.elements);
 
         const element = this.elements.filter(element => {
             if (element.routes.js === request.url || element.routes.css === request.url) {
@@ -280,7 +280,7 @@ class ElementQLServer implements IElementQLServer {
 
         if (element) {
             const file = await new Promise((resolve, reject) => {
-                const jsFile = /\.js/.test(request.url || '');
+                const jsFile = /\.mjs/.test(request.url || '');
                 const cssFile = /\.css/.test(request.url || '');
                 const filePath = jsFile
                     ? element.paths.js
