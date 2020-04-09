@@ -1,7 +1,7 @@
 const AnElement = () => {
-    React.useEffect(() => {
-        console.log('Another Element');
-    }, []);
+    // React.useEffect(() => {
+    //     console.log('An Element');
+    // }, []);
 
     return React.createElement('div', null, `Hello from AnElement`);
 };
