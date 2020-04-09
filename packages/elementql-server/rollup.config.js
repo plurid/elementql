@@ -1,3 +1,5 @@
+import copy from 'rollup-plugin-copy';
+
 import plugins from '../rollup.plugins';
 
 import pkg from './package.json';
@@ -20,5 +22,12 @@ export default {
             sourcemap: true,
         }
     ],
-    plugins,
+    plugins: [
+        ...plugins,
+        copy({
+            targets: [
+                { src: 'source/assets', dest: 'distribution' },
+            ],
+        }),
+    ],
 }
