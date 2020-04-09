@@ -1,6 +1,6 @@
 {
     "name": "@plurid/elementql-express",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "ElementQL Express Middleware",
     "keywords": [
         "elementql",
