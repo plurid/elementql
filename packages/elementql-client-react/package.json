@@ -27,7 +27,7 @@
     },
     "scripts": {
         "clean": "rimraf ./distribution",
-        "spec": "jest ./source",
+        "test": "jest ./source --config ../jest.config.js --rootDir ./",
         "lint": "eslint ./source --ext .ts,.tsx",
         "start": "yarn clean && rollup -c -w --environment ENV_MODE:local",
         "build.local": "yarn clean && rollup -c --environment ENV_MODE:local",
