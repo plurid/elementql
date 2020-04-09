@@ -123,6 +123,12 @@ class ElementQLServer implements IElementQLServer {
                 return;
             }
 
+            if (!req.url) {
+                res.statusCode = 400;
+                res.end();
+                return;
+            }
+
             if (req.url === '/favicon.ico') {
                 res.writeHead(200, {'Content-Type': 'image/x-icon'} );
                 fs.createReadStream(FAVICON).pipe(res);
@@ -139,7 +145,7 @@ class ElementQLServer implements IElementQLServer {
                 return;
             }
 
-            if (req.url && this.elementsRoutes.includes(req.url)) {
+            if (this.elementsRoutes.includes(req.url)) {
                 this.handleElementRequest(req, res);
                 return;
             }
@@ -312,7 +318,10 @@ class ElementQLServer implements IElementQLServer {
         }
     }
 
-    private renderPlayground(request: IncomingMessage, response: ServerResponse) {
+    private renderPlayground(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
         response.end('ElementQL Playground');
     }
 
@@ -328,8 +337,6 @@ class ElementQLServer implements IElementQLServer {
 
         const element = await new Promise ((resolve, reject) => {
             fs.readdir(elementsPath, (error, items) => {
-                console.log('items', items);
-
                 if (error) {
                     reject(error);
                 }
@@ -339,10 +346,10 @@ class ElementQLServer implements IElementQLServer {
                     // to compile the element files
 
                     const jsRoute = `/elementql/${name}.mjs`;
-                    const jsPath = `${protocol}${host}/elementql/${name}.mjs`;
+                    const jsPath = `${protocol}${host}${jsRoute}`;
                     this.registerElementRoute(jsRoute);
                     const cssRoute = `/elementql/${name}.css`;
-                    const cssPath = `${protocol}${host}/elementql/${name}.css`;
+                    const cssPath = `${protocol}${host}${cssRoute}`;
                     this.registerElementRoute(cssRoute);
                     const responseElement = {
                         js: jsPath,
