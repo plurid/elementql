@@ -37,7 +37,8 @@
             the path './element.mjs' will actually be somewhere on the network, on the elementql server
         -->
         <script type="module">
-            import AnElement from './element.mjs';
+            import AnElement from 'http://localhost:33300/elementql/ReactElement.mjs';
+            // import AnElement from './element.mjs';
             window.elementql = {};
             window.elementql.AnElement = AnElement;
         </script>
