@@ -5,6 +5,7 @@
         "outDir": "distribution"
     },
     "exclude": [
+        "node_modules",
         "distribution"
     ]
 }
