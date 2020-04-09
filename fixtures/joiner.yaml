@@ -1,0 +1,21 @@
+---
+packages:
+  - fixtures/*
+
+package:
+  manager: yarn
+  publisher: npm
+  ignore:
+    - node_modules
+
+yarnWorkspace: false
+
+commit:
+  engine: git
+  combine: true
+  root: ''
+  fullFolder: false
+  divider: ' > '
+  message: 'setup: package'
+
+runFrom: ../
