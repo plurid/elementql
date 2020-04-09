@@ -1,16 +1,19 @@
-import http, { IncomingMessage, ServerResponse } from 'http';
+import http, {
+    IncomingMessage,
+    ServerResponse,
+} from 'http';
 import path from 'path';
 import fs from 'fs';
 
 import open from 'open';
 
-import ElementQLParser from '@plurid/elementql-parser';
+// import ElementQLParser from '@plurid/elementql-parser';
 
 import {
     IElementQLServer,
     ElementQLServerOptions,
     RegisteredElementQL,
-} from '../../interfaces';
+} from '../../data/interfaces';
 
 import {
     DEFAULT_PORT,
@@ -21,11 +24,9 @@ import {
     METHOD_POST,
     APPLICATION_ELEMENTQL,
     APPLICATION_JSON,
-} from '../../constants';
 
-import {
     defaultServerStartOptions,
-} from '../../data';
+} from '../../data/constants';
 
 import {
     checkAvailablePort,
