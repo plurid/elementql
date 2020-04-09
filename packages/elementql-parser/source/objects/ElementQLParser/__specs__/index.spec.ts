@@ -6,6 +6,21 @@ describe('ElementQLParser basic', () => {
     it.only('gets a single element', () => {
         const query = `
 import {
+    ElementOne
+    ElementTwo
+}
+        `;
+        const elements = [ {name: 'element'} ];
+        const parser = new ElementQLParser(query);
+        const result = parser.parse();
+        console.log(result);
+
+        expect(result).toStrictEqual(elements);
+    });
+
+    it('gets a single element', () => {
+        const query = `
+import {
     <element>
 }
         `;
@@ -90,7 +105,7 @@ export {
         expect(result).toStrictEqual(elements);
     });
 
-    it.only('gets multiple spaces and subspaces', () => {
+    it('gets multiple spaces and subspaces', () => {
         const query = `
 export {
     element <element-1>

@@ -63,45 +63,70 @@ class ElementQLParser implements IElementQLParser {
     }
 
     public parse(): ElementQL[] {
-        // console.log('this.query', this.query);
-        let query = this.query.split('\n');
-        query = query.map(el => el.trim());
-        query = query.filter(el => el !== '');
 
-        // check if export or import
-        let exporting = /export/.test(query[0]);
-        let importing = /import/.test(query[0]);
-        query = query.slice(1, query.length - 1);
-        // console.log(exporting, importing);
-        // console.log(query);
 
-        const elements: any = {};
 
-        for (let [index, queryString] of query.entries()) {
-            if (/^el(ement)?\s/.test(queryString)) {
-                if (queryString[queryString.length - 1] !== '{') {
-                    // console.log('element', queryString);
-                    const element = getElement(queryString);
-                    if (element) {
-                         elements[toCamel(element.name)] = element;
-                    }
-                }
 
-                if (queryString[queryString.length - 1] === '{') {
-                    // look into the element for self, subelements and their subelements, recursively
-                    // console.log('element with subelements', queryString);
-                    const element = getElementWithSubelements(queryString, query.slice(index,));
-                    if (element) {
-                        elements[toCamel(element.self.name)] = element;
-                    }
-                }
-            }
 
-            if (/^sp(ace)?\s/.test(queryString)) {
-                // look into space for elements with or without subelements, other spaces
-                // console.log('space', queryString);
-            }
-        }
+
+
+
+
+        // // console.log('this.query', this.query);
+
+        // let query = this.query.split('\n');
+        // query = query.map(el => el.trim());
+        // query = query.filter(el => el !== '');
+        // // console.log('query', query);
+
+        // // check if export or import
+        // let exporting = /export/.test(query[0]);
+        // let importing = /import/.test(query[0]);
+        // query = query.slice(1, query.length - 1);
+        // // console.log(exporting, importing);
+        // // console.log(query);
+
+        // const elements: any = {};
+
+        // for (let [index, queryString] of query.entries()) {
+        //     console.log('index', index);
+        //     console.log('queryString', queryString);
+
+        //     if (/^el(ement)?\s/.test(queryString)) {
+        //         console.log('aaaa', queryString);
+
+        //         if (queryString[queryString.length - 1] !== '{') {
+        //             console.log('element', queryString);
+        //             const element = getElement(queryString);
+        //             if (element) {
+        //                  elements[toCamel(element.name)] = element;
+        //             }
+        //         }
+
+        //         if (queryString[queryString.length - 1] === '{') {
+        //             // look into the element for self, subelements and their subelements, recursively
+        //             // console.log('element with subelements', queryString);
+        //             const element = getElementWithSubelements(queryString, query.slice(index,));
+        //             if (element) {
+        //                 elements[toCamel(element.self.name)] = element;
+        //             }
+        //         }
+        //     }
+
+        //     if (/^sp(ace)?\s/.test(queryString)) {
+        //         // look into space for elements with or without subelements, other spaces
+        //         // console.log('space', queryString);
+        //     }
+        // }
+
+
+
+
+
+
+
+
+        // OLD
 
         // console.log('elements', elements);
 
