@@ -36,6 +36,8 @@ class ElementQLClientReact implements IElementQLClientReact {
                 return window.elementql.element;
             }
         }
+
+        return;
     }
 }
 
