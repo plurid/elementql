@@ -1,5 +1,6 @@
 import React, {
     useEffect,
+    useState,
 } from 'react';
 import './App.css';
 
@@ -12,19 +13,24 @@ const elementQLClient = new ElementQLClientReact({
     url: 'http://localhost:33300/elementql',
 });
 
-const ELEMENT = elementql`
-    import {
-        <element>
-    }
-`;
+// const ELEMENT = elementql`
+//     import {
+//         <element>
+//     }
+// `;
+const ELEMENT = 'AnElement';
 
 
 const App: React.FC = () => {
+    const [Element, setElement] = useState<React.FC<any>>();
+
     useEffect(() => {
         const fetchElement = async () => {
-            const Element = await elementQLClient.get(ELEMENT);
-
+            const Element: React.FC<any> | undefined = await elementQLClient.get(ELEMENT);
             console.log(Element);
+            if (Element) {
+                setElement(Element);
+            }
         }
 
         fetchElement();
@@ -33,6 +39,10 @@ const App: React.FC = () => {
     return (
         <div>
             ElementQL Client React
+
+            {Element && (
+                <Element />
+            )}
         </div>
     );
 }
