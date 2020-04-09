@@ -1227,12 +1227,19 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@plurid/elementql-client-react@*":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-client-react/-/elementql-client-react-0.0.1.tgz#2386482b8ed073fb2ab151e8997ffbe57d0802a7"
-  integrity sha512-72Kea4lymGeOaIU4Zxa5tsdiA/Ct1XevEY84tyHhr6pMc4MFCCNsZcDUULv3Hqv5e/7Wf39mjpzHJ/yG1lPoQA==
+"@plurid/elementql-client-react@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-client-react/-/elementql-client-react-0.0.2.tgz#24c53e5b3de6d46ec4a0fbd41a4ebc69567218f3"
+  integrity sha512-LOB18nZplei5xzVzP+NQukFhaXc2U8yuha9N7QJl6iMTpBxoFYoDWjGZjOrB24Yu2YMdKABbZh5SzY2iNf4vGw==
+  dependencies:
+    "@plurid/elementql-client" "^0.0.2"
 
-"@plurid/elementql-tag@^0.0.3":
+"@plurid/elementql-client@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.2.tgz#9991b223fcd0cd4f45076005e7bb76d07b18be73"
+  integrity sha512-vUKed6wNpuBw4yuZVXbcfNvTZrOm1aikufl6dHcc8yJbcGCST0K8lT32U9tPpvIrIU0VQYB2cas38SMB53SV6A==
+
+"@plurid/elementql-tag@0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.3.tgz#2df11567767285f998e4ece5234b67a2d1022ef6"
   integrity sha512-1aj5r2H7Pq3LEJJNIZG03ZelywQxic7TLyjMwCnaoX1omT1YBYhr8qGOqHsVsPJWMJ1CmXE6a7+Crv740vmmbQ==
