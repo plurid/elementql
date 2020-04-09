@@ -3,7 +3,9 @@ import http, {
     ServerResponse,
 } from 'http';
 import path from 'path';
-import fs from 'fs';
+import fs, {
+    promises as fsPromise,
+} from 'fs';
 
 import open from 'open';
 
@@ -38,6 +40,7 @@ class ElementQLServer implements IElementQLServer {
     private server: http.Server;
     private port: number = DEFAULT_PORT;
     private verbose: boolean = false;
+    private open: boolean = false;
     private elementsDir: string = DEFAULT_ELEMENTS_DIR;
     private elementQLEndpoint: string = DEFAULT_ELEMENTQL_ENDPOINT;
     private playgroundEndpoint: string = DEFAULT_PLAYGROUND_ENDPOINT;
@@ -50,6 +53,7 @@ class ElementQLServer implements IElementQLServer {
         options: ElementQLServerOptions,
     ) {
         this.handleOptions(options);
+        this.registerElements();
         this.server = this.createServer();
 
         process.addListener('SIGINT', () => {
@@ -58,14 +62,14 @@ class ElementQLServer implements IElementQLServer {
         });
     }
 
-    public async start(options = defaultServerStartOptions) {
+    public async start() {
         this.port = await checkAvailablePort(this.port);
         const serverlink = `http://localhost:${this.port}`;
         if (this.verbose) {
             console.log(`\n\tElementQL Server Started on Port ${this.port}: ${serverlink}\n`);
         }
         this.server.listen(this.port);
-        if (options.open) {
+        if (this.open) {
             open(serverlink);
         }
     }
@@ -78,35 +82,19 @@ class ElementQLServer implements IElementQLServer {
         this.server.close();
     }
 
-    private handleOptions(options?: ElementQLServerOptions) {
+
+    private handleOptions(
+        options?: ElementQLServerOptions,
+    ) {
         if (options) {
-            if (options.port) {
-                this.port = options.port;
-            }
-
-            if (options.verbose) {
-                this.verbose = options.verbose;
-            }
-
-            if (options.elementsDir) {
-                this.elementsDir = options.elementsDir;
-            }
-
-            if (options.endpoint) {
-                this.elementQLEndpoint = options.endpoint;
-            }
-
-            if (options.playground) {
-                this.playground = options.playground;
-            }
-
-            if (options.playgroundURL) {
-                this.playgroundEndpoint = options.playgroundURL;
-            }
-
-            if (options.plugins) {
-                this.plugins = options.plugins;
-            }
+            this.port = options.port || DEFAULT_PORT;
+            this.verbose = options.verbose ?? true;
+            this.elementsDir = options.elementsDir || DEFAULT_ELEMENTS_DIR;
+            this.elementQLEndpoint = options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT;
+            this.playground = options.playground ?? false;
+            this.playgroundEndpoint = options.playgroundURL || DEFAULT_PLAYGROUND_ENDPOINT;
+            this.plugins = options.plugins || [];
+            this.open = options.open ?? true;
         }
     }
 
@@ -262,12 +250,38 @@ class ElementQLServer implements IElementQLServer {
         }
     }
 
-    private registerElementRoute(route: string) {
+    private registerElementRoute(
+        route: string,
+    ) {
         this.elementsRoutes.push(route);
     }
 
-    private registerElement(element: RegisteredElementQL) {
+    private registerElement(
+        element: RegisteredElementQL,
+    ) {
         this.elements.push(element);
+    }
+
+    private async registerElements() {
+        const elementsPath = path.join(process.cwd(), 'build', this.elementsDir);
+
+        const elements = await fsPromise.readdir(elementsPath);
+
+        const elementsData: any[] = [];
+
+        for (const element of elements) {
+            const elementPath = path.join(elementsPath, element);
+            const elementFiles = await fsPromise.readdir(elementPath);
+            for (const elementFile of elementFiles) {
+                const elementData = {
+                    elementName: element,
+                    elementFile,
+                };
+                elementsData.push(elementData);
+            }
+        }
+
+        console.log(elementsData);
     }
 
     private async handleElementRequest(
@@ -282,8 +296,6 @@ class ElementQLServer implements IElementQLServer {
             }
             return;
         })[0];
-
-        console.log('element', element);
 
         if (element) {
             const file = await new Promise((resolve, reject) => {
@@ -316,13 +328,6 @@ class ElementQLServer implements IElementQLServer {
             response.setHeader('content-type', 'text/plain');
             response.end(`Could not find element for ${request.url}.`);
         }
-    }
-
-    private renderPlayground(
-        request: IncomingMessage,
-        response: ServerResponse,
-    ) {
-        response.end('ElementQL Playground');
     }
 
     private async fetchElement(
@@ -376,6 +381,13 @@ class ElementQLServer implements IElementQLServer {
         });
 
         return element;
+    }
+
+    private renderPlayground(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        response.end('ElementQL Playground');
     }
 }
 
