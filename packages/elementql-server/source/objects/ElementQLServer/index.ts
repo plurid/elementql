@@ -172,11 +172,11 @@ class ElementQLServer implements IElementQLServer {
             }
 
             const body = await bodyData();
-            console.log('body', body);
-            console.log('body', body.replace(/"/g, ''));
+            // console.log('body', body);
+            // console.log('body', body.replace(/"/g, ''));
 
             const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
-            console.log('parsedBody', parsedBody);
+            // console.log('parsedBody', parsedBody);
 
             const elementsPath = path.join(process.cwd(), this.elementsDir);
 
@@ -246,7 +246,7 @@ class ElementQLServer implements IElementQLServer {
     }
 
     private async handleElementRequest(request: IncomingMessage, response: ServerResponse) {
-        console.log(this.elements);
+        console.log('this.elements', this.elements);
 
         const element = this.elements.filter(element => {
             if (element.routes.js === request.url || element.routes.css === request.url) {
@@ -255,7 +255,7 @@ class ElementQLServer implements IElementQLServer {
             return;
         })[0];
 
-        console.log(element);
+        console.log('element', element);
 
         if (element) {
             const file = await new Promise((resolve, reject) => {
