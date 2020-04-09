@@ -1,4 +1,21 @@
-# ElementQL
+<p align="center">
+    <img src="https://raw.githubusercontent.com/plurid/elementql/master/about/identity/elementql-logo.png" height="250px">
+    <br />
+    <a target="_blank" href="https://github.com/plurid/elementql/blob/master/LICENSE">
+        <img src="https://img.shields.io/badge/license-MIT-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: MIT">
+    </a>
+</p>
+
+
+<h1 align="center">
+    ElementQL
+</h1>
+
+
+<h3 align="center">
+    Query Web Elements
+</h3>
+
 
 
 ElementQL is a query language specification and implementation to query a server for Web Elements.
