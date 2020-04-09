@@ -1,6 +1,6 @@
 // node modules are actually in the folder
 // from where the element is served over the network
-import React from './node_modules/react';
+import './node_modules/react/umd/react.production.min.js';
 
 
 
