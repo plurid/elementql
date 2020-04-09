@@ -8,7 +8,7 @@ export const DEFAULT_ELEMENTS_DIR = '/elements';
 export const DEFAULT_ELEMENTQL_ENDPOINT = '/elementql';
 export const DEFAULT_PLAYGROUND_ENDPOINT = '/playground';
 
-export const FAVICON = path.join(__dirname, '../src/assets', 'favicon.ico');
+export const FAVICON = path.join(__dirname, './assets', 'favicon.ico');
 
 
 export const METHOD_POST = 'POST';
