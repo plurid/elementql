@@ -7,6 +7,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
+import copy from 'rollup-plugin-copy';
 
 
 
@@ -69,5 +70,10 @@ export default {
 
         // Resolve source maps to the original source
         sourceMaps(),
+        copy({
+            targets: [
+                { src: 'src/elements', dest: 'build/' },
+            ],
+        }),
     ],
 }
