@@ -1,12 +1,12 @@
 ---
 packages:
-  - ./packages/*
+  - packages/*
 
 package:
   manager: yarn
   publisher: npm
   ignore:
-    - ./packages/elementql-spec
+    - packages/elementql-spec
 
 yarnWorkspace: false
 
