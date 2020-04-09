@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ElementQL Concept</title>
+
+        <style>
+            html, body {
+                background: #22222c;
+                color: white;
+                font-family: Ubuntu, -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+
+            #react-root {
+                background: #3d3d4e;
+                padding: 30px;
+            }
+        </style>
+
+        <!-- the scripts that import react, could be loaded locally -->
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <h1>
+                ElementQL Concept
+            </h1>
+        </div>
+
+        <!-- the react root where the element will be injected -->
+        <div id="react-root"></div>
+
+        <!-- t
+            he module which is injected by elementql client
+            the path './element.mjs' will actually be somewhere on the network, on the elementql server
+        -->
+        <script type="module">
+            import AnElement from './element.mjs';
+            window.elementql = {};
+            window.elementql.AnElement = AnElement;
+        </script>
+
+        <!-- the element root injection -->
+        <script>
+            // delay to give time to the browser to parse(?) the element
+            setTimeout(() => {
+                const AnElement = window.elementql.AnElement;
+
+                ReactDOM.render(
+                    AnElement(),
+                    document.getElementById('react-root')
+                );
+            }, 100);
+        </script>
+    </body>
+</html>
