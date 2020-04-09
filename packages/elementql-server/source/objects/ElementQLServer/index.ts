@@ -45,9 +45,11 @@ class ElementQLServer implements IElementQLServer {
     private elementsRoutes: string[] = [];
     private elements: RegisteredElementQL[] = [];
 
-    constructor(options: ElementQLServerOptions) {
+    constructor(
+        options: ElementQLServerOptions,
+    ) {
         this.handleOptions(options);
-        this.createServer();
+        this.server = this.createServer();
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -108,7 +110,7 @@ class ElementQLServer implements IElementQLServer {
     }
 
     private createServer() {
-        this.server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
+        const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
             // Set CORS headers
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Request-Method', '*');
@@ -144,6 +146,8 @@ class ElementQLServer implements IElementQLServer {
             res.end('ElementQL');
             return;
         });
+
+        return server;
     }
 
     private async handleElements(request: IncomingMessage, response: ServerResponse) {
