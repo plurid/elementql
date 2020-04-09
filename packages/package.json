@@ -1,0 +1,15 @@
+{
+    "private": true,
+    "workspaces": [
+        "elementql",
+        "elementql-client",
+        "elementql-client-react",
+        "elementql-express",
+        "elementql-org",
+        "elementql-parser",
+        "elementql-server",
+        "elementql-tag"
+    ],
+    "dependencies": {
+    }
+}
