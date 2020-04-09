@@ -3,7 +3,7 @@ import ElementQLParser from '../';
 
 
 describe('ElementQLParser basic', () => {
-    it('gets a single element', () => {
+    it.only('gets a single element', () => {
         const query = `
 import {
     <element>
@@ -12,6 +12,7 @@ import {
         const elements = [ {name: 'element'} ];
         const parser = new ElementQLParser(query);
         const result = parser.parse();
+        console.log(result);
 
         expect(result).toStrictEqual(elements);
     });

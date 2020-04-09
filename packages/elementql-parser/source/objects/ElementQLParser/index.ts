@@ -63,7 +63,7 @@ class ElementQLParser implements IElementQLParser {
     }
 
     public parse(): ElementQL[] {
-        console.log('this.query', this.query);
+        // console.log('this.query', this.query);
         let query = this.query.split('\n');
         query = query.map(el => el.trim());
         query = query.filter(el => el !== '');
@@ -72,15 +72,15 @@ class ElementQLParser implements IElementQLParser {
         let exporting = /export/.test(query[0]);
         let importing = /import/.test(query[0]);
         query = query.slice(1, query.length - 1);
-        console.log(exporting, importing);
-        console.log(query);
+        // console.log(exporting, importing);
+        // console.log(query);
 
         const elements: any = {};
 
         for (let [index, queryString] of query.entries()) {
             if (/^el(ement)?\s/.test(queryString)) {
                 if (queryString[queryString.length - 1] !== '{') {
-                    console.log('element', queryString);
+                    // console.log('element', queryString);
                     const element = getElement(queryString);
                     if (element) {
                          elements[toCamel(element.name)] = element;
@@ -89,7 +89,7 @@ class ElementQLParser implements IElementQLParser {
 
                 if (queryString[queryString.length - 1] === '{') {
                     // look into the element for self, subelements and their subelements, recursively
-                    console.log('element with subelements', queryString);
+                    // console.log('element with subelements', queryString);
                     const element = getElementWithSubelements(queryString, query.slice(index,));
                     if (element) {
                         elements[toCamel(element.self.name)] = element;
@@ -99,11 +99,11 @@ class ElementQLParser implements IElementQLParser {
 
             if (/^sp(ace)?\s/.test(queryString)) {
                 // look into space for elements with or without subelements, other spaces
-                console.log('space', queryString);
+                // console.log('space', queryString);
             }
         }
 
-        console.log('elements', elements);
+        // console.log('elements', elements);
 
 
         // let query = this.query;
