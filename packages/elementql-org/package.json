@@ -10,6 +10,7 @@
         "type": "git",
         "url": "https://github.com/plurid/elementql"
     },
+    "private": true,
     "license": "MIT",
     "dependencies": {
         "@types/jest": "25.2.1",
