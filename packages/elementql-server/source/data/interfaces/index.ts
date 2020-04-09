@@ -7,6 +7,7 @@ export interface IElementQLServer {
 export interface ElementQLServerOptions {
     port?: number;
     verbose?: boolean;
+    open?: boolean;
     elementsDir?: string;
     plugins?: string[];
     endpoint?: string;
