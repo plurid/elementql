@@ -150,7 +150,10 @@ class ElementQLServer implements IElementQLServer {
         return server;
     }
 
-    private async handleElements(request: IncomingMessage, response: ServerResponse) {
+    private async handleElements(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
         if (request.method === METHOD_POST
             && request.headers['content-type'] === APPLICATION_ELEMENTQL
         ) {
@@ -172,63 +175,78 @@ class ElementQLServer implements IElementQLServer {
             }
 
             const body = await bodyData();
+
+            const handledBody = body.split(',');
+            const elements = handledBody.map(element => element.trim());
+
+            const responseElements: any[] = [];
+
+            for (const element of elements) {
+                const responseElement = await this.fetchElement(element, request);
+                responseElements.push(responseElement);
+            }
+            console.log('responseElements', responseElements);
+
             // console.log('body', body);
             // console.log('body', body.replace(/"/g, ''));
 
-            const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
-            // console.log('parsedBody', parsedBody);
+            // const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
+            // // console.log('parsedBody', parsedBody);
 
-            const elementsPath = path.join(process.cwd(), this.elementsDir);
+            // const elementsPath = path.join(process.cwd(), this.elementsDir);
 
-            const host = request.headers.host;
-            const protocol = 'http://';
+            // const host = request.headers.host;
+            // const protocol = 'http://';
 
-            const responseElements: any[] = [];
-            for (let parsedElement of parsedBody) {
-                const {
-                    name,
-                } = parsedElement;
+            // const responseElements: any[] = [];
 
-                await new Promise ((resolve, reject) => {
-                    fs.readdir(elementsPath, (error, items) => {
-                        if (error) {
-                            reject(error);
-                        }
 
-                        if (items.includes(name)) {
-                            // based on plugins
-                            // to compile the element files
 
-                            const jsRoute = `/elementql/${parsedElement.name}.js`;
-                            const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
-                            this.registerElementRoute(jsRoute);
-                            const cssRoute = `/elementql/${parsedElement.name}.css`;
-                            const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
-                            this.registerElementRoute(cssRoute);
-                            const responseElement = {
-                                js: jsPath,
-                                css: cssPath,
-                            };
-                            responseElements.push(responseElement);
+            // for (let parsedElement of parsedBody) {
+            //     const {
+            //         name,
+            //     } = parsedElement;
 
-                            const registerElement: RegisteredElementQL = {
-                                name,
-                                routes: {
-                                    js: jsRoute,
-                                    css: cssRoute,
-                                },
-                                paths: {
-                                    js: `${elementsPath}/${name}/index.js`,
-                                    css: `${elementsPath}/${name}/index.css`,
-                                },
-                            };
-                            this.registerElement(registerElement);
+            //     await new Promise ((resolve, reject) => {
+            //         fs.readdir(elementsPath, (error, items) => {
+            //             if (error) {
+            //                 reject(error);
+            //             }
 
-                            resolve();
-                        }
-                    });
-                });
-            }
+            //             if (items.includes(name)) {
+            //                 // based on plugins
+            //                 // to compile the element files
+
+            //                 const jsRoute = `/elementql/${parsedElement.name}.js`;
+            //                 const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
+            //                 this.registerElementRoute(jsRoute);
+            //                 const cssRoute = `/elementql/${parsedElement.name}.css`;
+            //                 const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
+            //                 this.registerElementRoute(cssRoute);
+            //                 const responseElement = {
+            //                     js: jsPath,
+            //                     css: cssPath,
+            //                 };
+            //                 responseElements.push(responseElement);
+
+            //                 const registerElement: RegisteredElementQL = {
+            //                     name,
+            //                     routes: {
+            //                         js: jsRoute,
+            //                         css: cssRoute,
+            //                     },
+            //                     paths: {
+            //                         js: `${elementsPath}/${name}/index.js`,
+            //                         css: `${elementsPath}/${name}/index.css`,
+            //                     },
+            //                 };
+            //                 this.registerElement(registerElement);
+
+            //                 resolve();
+            //             }
+            //         });
+            //     });
+            // }
 
             response.setHeader('Content-Type', APPLICATION_JSON);
             response.end(JSON.stringify(responseElements));
@@ -245,7 +263,10 @@ class ElementQLServer implements IElementQLServer {
         this.elements.push(element);
     }
 
-    private async handleElementRequest(request: IncomingMessage, response: ServerResponse) {
+    private async handleElementRequest(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
         console.log('this.elements', this.elements);
 
         const element = this.elements.filter(element => {
@@ -292,6 +313,61 @@ class ElementQLServer implements IElementQLServer {
 
     private renderPlayground(request: IncomingMessage, response: ServerResponse) {
         response.end('ElementQL Playground');
+    }
+
+    private async fetchElement(
+        name: string,
+        request: IncomingMessage,
+    ) {
+        const elementsPath = path.join(process.cwd(), 'build', this.elementsDir);
+        console.log('elementsPath', elementsPath);
+
+        const host = request.headers.host;
+        const protocol = 'http://';
+
+        const element = await new Promise ((resolve, reject) => {
+            fs.readdir(elementsPath, (error, items) => {
+                console.log('items', items);
+
+                if (error) {
+                    reject(error);
+                }
+
+                if (items.includes(name)) {
+                    // based on plugins
+                    // to compile the element files
+
+                    const jsRoute = `/elementql/${name}.mjs`;
+                    const jsPath = `${protocol}${host}/elementql/${name}.mjs`;
+                    this.registerElementRoute(jsRoute);
+                    const cssRoute = `/elementql/${name}.css`;
+                    const cssPath = `${protocol}${host}/elementql/${name}.css`;
+                    this.registerElementRoute(cssRoute);
+                    const responseElement = {
+                        js: jsPath,
+                        css: cssPath,
+                    };
+                    // responseElements.push(responseElement);
+
+                    const registerElement: RegisteredElementQL = {
+                        name,
+                        routes: {
+                            js: jsRoute,
+                            css: cssRoute,
+                        },
+                        paths: {
+                            js: `${elementsPath}/${name}/index.mjs`,
+                            css: `${elementsPath}/${name}/index.css`,
+                        },
+                    };
+                    this.registerElement(registerElement);
+
+                    resolve(responseElement);
+                }
+            });
+        });
+
+        return element;
     }
 }
 
