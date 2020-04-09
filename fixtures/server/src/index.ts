@@ -10,6 +10,7 @@ const options = {
     schema,
     elementsDir: './src/elements',
     playground: true,
+    verbose: true,
 };
 
 const server = new ElementQLServer(options);
