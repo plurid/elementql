@@ -1435,11 +1435,6 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@plurid/elementql-client@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.1.tgz#f735b3df7805c44e81f17edb6412ad9274e42aa1"
-  integrity sha512-xa6EVi46C1jGH0MMxYbDh6INS7VKW/m1RH2ZkQAYomwPUFNdxLUd8oqGFxZ2qIpYzX1c7QBoqOlH3oWoFGszpA==
-
 "@plurid/elementql-parser@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@plurid/elementql-parser/-/elementql-parser-0.0.1.tgz#0db9d088a83bac2115da9653101de76c387eec74"
