@@ -36,7 +36,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@plurid/elementql-parser": "^0.0.1",
+        "@plurid/elementql-parser": "^0.0.2",
         "open": "^7.0.3",
         "portscanner": "^2.2.0"
     },
