@@ -17,14 +17,14 @@
     "dependencies": {
         "@plurid/elementql-client-react": "*",
         "@plurid/elementql-tag": "^0.0.1",
-        "@types/jest": "24.0.18",
-        "@types/node": "12.7.4",
-        "@types/react": "16.9.2",
-        "@types/react-dom": "16.9.0",
-        "react": "^16.9.0",
-        "react-dom": "^16.9.0",
-        "react-scripts": "3.1.1",
-        "typescript": "3.6.2"
+        "@types/jest": "25.2.1",
+        "@types/node": "13.11.1",
+        "@types/react": "16.9.33",
+        "@types/react-dom": "16.9.6",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-scripts": "3.4.1",
+        "typescript": "3.8.3"
     },
     "scripts": {
         "start": "react-scripts start",
