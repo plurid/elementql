@@ -248,6 +248,7 @@ class ElementQLServer implements IElementQLServer {
             if (element.routes.js === request.url || element.routes.css === request.url) {
                 return element;
             }
+            return;
         })[0];
 
         console.log(element);
