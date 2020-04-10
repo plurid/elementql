@@ -363,13 +363,19 @@ class ElementQLServer implements IElementQLServer {
 
         response.setHeader('Content-Type', APPLICATION_JSON);
         response.end(JSON.stringify(responseElements));
+        return;
     }
 
     private async handleElementQLJSONRequest(
         request: IncomingMessage,
         response: ServerResponse,
     ) {
+        const responseElements: any[] = [];
 
+
+        response.setHeader('Content-Type', APPLICATION_JSON);
+        response.end(JSON.stringify(responseElements));
+        return;
     }
 
     private async handleElementRequest(
