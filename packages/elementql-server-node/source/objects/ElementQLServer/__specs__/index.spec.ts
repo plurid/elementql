@@ -1,4 +1,4 @@
-import ElementQLServer from '../';
+import ElementQLServer from '..';
 
 
 
