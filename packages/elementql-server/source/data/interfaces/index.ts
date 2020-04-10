@@ -34,3 +34,23 @@ export interface RegisteredElementQL {
         css: string;
     }
 }
+
+
+export interface ElementQLJSONSystemPropertiesTranspile {
+    target: string;
+}
+
+export interface ElementQLJSONSystemProperties {
+    transpile: Partial<ElementQLJSONSystemPropertiesTranspile>;
+}
+
+export type ElementQLJSONProperties = Partial<ElementQLJSONSystemProperties> & Record<string, any>;
+
+export interface ElementQLJSON {
+    name: string;
+    properties: ElementQLJSONProperties;
+}
+
+export type ElementQLJSONRequest = {
+    elements: ElementQLJSON[];
+}
