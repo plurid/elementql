@@ -17,7 +17,6 @@ import {
 } from '@plurid/plurid-functions';
 
 import {
-    IElementQLServer,
     ElementQLServerOptions,
     InternalElementQLServerOptions,
     RegisteredElementQL,
@@ -48,7 +47,7 @@ import {
 
 
 
-class ElementQLServer implements IElementQLServer {
+class ElementQLServer {
     private options: InternalElementQLServerOptions;
     // private elementsNames: Map<string, string> = new Map();
     private elementsRoutes: Map<string, string> = new Map();
