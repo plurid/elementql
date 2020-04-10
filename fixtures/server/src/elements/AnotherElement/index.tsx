@@ -5,7 +5,7 @@ import React from 'react';
 
 
 
-const AnotherElement = () => {
+const AnotherElement: React.FC<any> = () => {
     React.useEffect(() => {
         console.log('another element');
     }, []);
