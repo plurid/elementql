@@ -146,36 +146,36 @@ class ElementQLServer implements IElementQLServer {
             const elementPath = path.join(elementsPath, element);
             const elementFiles = await fsPromise.readdir(elementPath);
 
-            let jsFile = '';
-            let cssFile = '';
+            const routes = [];
 
             for (const elementFile of elementFiles) {
-                // get js and css files
+                const fileType = path.extname(elementFile);
+                const elementFilePath = path.join(elementPath, elementFile);
+                const url = `/elementql/${uuid.generate()}.${fileType}`;
+                const route = {
+                    fileType,
+                    filePath: elementFilePath,
+                    url,
+                };
+                routes.push(route);
             }
 
             const registeredElement: RegisteredElementQL = {
                 id: uuid.generate(),
                 name: element,
-                paths: {
-                    css: '',
-                    js: '',
-                },
-                routes: {
-                    css: '',
-                    js: '',
-                },
+                routes,
             };
 
-            this.registerElement(registeredElement);
+            await this.registerElement(registeredElement);
         }
     }
 
-    private registerElement(
+    private async registerElement(
         element: RegisteredElementQL,
     ) {
-        // this.elementsNames.set(element.name, element.id);
-        this.elementsRoutes.set(element.routes.js, element.id);
-        this.elementsRoutes.set(element.routes.css, element.id);
+        for (const route of element.routes) {
+            this.elementsRoutes.set(route.url, element.id);
+        }
 
         this.elementsRegistry.set(element.id, element);
     }
@@ -395,28 +395,28 @@ class ElementQLServer implements IElementQLServer {
         }
 
         const file = await new Promise((resolve, reject) => {
-            const jsFile = /\.mjs/.test(request.url || '');
-            const cssFile = /\.css/.test(request.url || '');
-            const filePath = jsFile
-                ? element.paths.js
-                : cssFile
-                    ? element.paths.css
-                    : '';
+            // const jsFile = /\.mjs/.test(request.url || '');
+            // const cssFile = /\.css/.test(request.url || '');
+            // const filePath = jsFile
+            //     ? element.paths.js
+            //     : cssFile
+            //         ? element.paths.css
+            //         : '';
 
-            if (jsFile) {
-                response.setHeader('Content-Type', 'text/javascript');
-            }
+            // if (jsFile) {
+            //     response.setHeader('Content-Type', 'text/javascript');
+            // }
 
-            if (cssFile) {
-                response.setHeader('Content-Type', 'text/css');
-            }
+            // if (cssFile) {
+            //     response.setHeader('Content-Type', 'text/css');
+            // }
 
-            fs.readFile(filePath, (error, data) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(data);
-            });
+            // fs.readFile(filePath, (error, data) => {
+            //     if (error) {
+            //         reject(error);
+            //     }
+            //     resolve(data);
+            // });
         });
 
         response.end(file);
@@ -426,55 +426,55 @@ class ElementQLServer implements IElementQLServer {
         name: string,
         request: IncomingMessage,
     ) {
-        const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
-        // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
-        console.log('elementsPath', elementsPath);
+        // const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
+        // // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
+        // console.log('elementsPath', elementsPath);
 
-        const host = request.headers.host;
-        const protocol = 'http://';
+        // const host = request.headers.host;
+        // const protocol = 'http://';
 
-        const element = await new Promise ((resolve, reject) => {
-            fs.readdir(elementsPath, (error, items) => {
-                if (error) {
-                    reject(error);
-                }
+        // const element = await new Promise ((resolve, reject) => {
+        //     fs.readdir(elementsPath, (error, items) => {
+        //         if (error) {
+        //             reject(error);
+        //         }
 
-                if (items.includes(name)) {
-                    // based on plugins
-                    // to compile the element files
+        //         if (items.includes(name)) {
+        //             // based on plugins
+        //             // to compile the element files
 
-                    const jsRoute = `/elementql/${name}.mjs`;
-                    const jsPath = `${protocol}${host}${jsRoute}`;
-                    // this.registerElementRoute(jsRoute);
-                    const cssRoute = `/elementql/${name}.css`;
-                    const cssPath = `${protocol}${host}${cssRoute}`;
-                    // this.registerElementRoute(cssRoute);
-                    const responseElement = {
-                        js: jsPath,
-                        css: cssPath,
-                    };
-                    // responseElements.push(responseElement);
+        //             const jsRoute = `/elementql/${name}.mjs`;
+        //             const jsPath = `${protocol}${host}${jsRoute}`;
+        //             // this.registerElementRoute(jsRoute);
+        //             const cssRoute = `/elementql/${name}.css`;
+        //             const cssPath = `${protocol}${host}${cssRoute}`;
+        //             // this.registerElementRoute(cssRoute);
+        //             const responseElement = {
+        //                 js: jsPath,
+        //                 css: cssPath,
+        //             };
+        //             // responseElements.push(responseElement);
 
-                    const registerElement: RegisteredElementQL = {
-                        id: uuid.generate(),
-                        name,
-                        routes: {
-                            js: jsRoute,
-                            css: cssRoute,
-                        },
-                        paths: {
-                            js: `${elementsPath}/${name}/index.mjs`,
-                            css: `${elementsPath}/${name}/index.css`,
-                        },
-                    };
-                    this.registerElement(registerElement);
+        //             const registerElement: RegisteredElementQL = {
+        //                 id: uuid.generate(),
+        //                 name,
+        //                 routes: {
+        //                     js: jsRoute,
+        //                     css: cssRoute,
+        //                 },
+        //                 paths: {
+        //                     js: `${elementsPath}/${name}/index.mjs`,
+        //                     css: `${elementsPath}/${name}/index.css`,
+        //                 },
+        //             };
+        //             this.registerElement(registerElement);
 
-                    resolve(responseElement);
-                }
-            });
-        });
+        //             resolve(responseElement);
+        //         }
+        //     });
+        // });
 
-        return element;
+        // return element;
     }
 
 

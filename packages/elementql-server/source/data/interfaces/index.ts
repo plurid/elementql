@@ -30,14 +30,13 @@ export interface ElementQLServerStartOptions {
 export interface RegisteredElementQL {
     id: string;
     name: string;
-    routes: {
-        js: string;
-        css: string;
-    },
-    paths: {
-        js: string;
-        css: string;
-    }
+    routes: RegisteredElementQLRoute[];
+}
+
+export interface RegisteredElementQLRoute {
+    fileType: string;
+    filePath: string;
+    url: string;
 }
 
 
