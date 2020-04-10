@@ -1,3 +1,9 @@
+import {
+    CompilerOptions,
+} from 'typescript';
+
+
+
 export interface ElementQLServerOptions {
     schema: any;
     resolvers: any;
@@ -33,3 +39,17 @@ export interface ElementQLJSON {
 export type ElementQLJSONRequest = {
     elements: ElementQLJSON[];
 }
+
+
+export interface PluginBase {
+    kind: 'typescript';
+}
+
+
+export interface PluginTypescript extends PluginBase {
+    kind: 'typescript';
+    compilerOptions?: CompilerOptions;
+}
+
+
+export type Plugin = PluginTypescript;
