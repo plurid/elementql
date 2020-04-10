@@ -38,7 +38,6 @@ ElementQL is a query language specification and implementation to query a server
 
 ## Description
 
-
 ### Current State
 
 Consider the following Web Element which uses [React](https://reactjs.org/)
@@ -61,7 +60,6 @@ The manner proposed by `ElementQL` is to let the client request only the require
 
 
 ## Usage
-
 
 ### Server
 
@@ -127,8 +125,8 @@ curl http://localhost:33300/elementql \
 The `elementql-server` for `Go` is a `go 1.14` module.
 
 
-### Client
 
+### Client
 
 #### React
 
