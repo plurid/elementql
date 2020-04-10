@@ -1,14 +1,12 @@
 // @ts-nocheck
 
 // assume import React from 'react';
-import React, {
-    useEffect,
-} from 'react';
+import React from 'react';
 
 
 
 const AnotherElement = () => {
-    useEffect(() => {
+    React.useEffect(() => {
         console.log('another element');
     }, []);
 
