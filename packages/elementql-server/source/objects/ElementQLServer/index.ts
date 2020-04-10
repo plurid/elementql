@@ -20,6 +20,7 @@ import {
     ElementQLServerOptions,
     InternalElementQLServerOptions,
     RegisteredElementQL,
+    ElementQLJSONRequest,
 } from '../../data/interfaces';
 
 import {
@@ -374,15 +375,13 @@ class ElementQLServer implements IElementQLServer {
         response: ServerResponse,
     ) {
         try {
-            const body = await this.readBody(request);
-            const bodyJSON = JSON.parse(body);
-
-            const responseElements: any[] = [];
-
-            console.log('bodyJSON', bodyJSON);
-            console.log('this.elementsRegistry', this.elementsRegistry);
-            console.log('this.elementsRoutes', this.elementsRoutes);
-
+            const body = await this.parseBody(
+                request,
+                'json',
+            );
+            const responseElements = await this.fetchElementsFromJSONRequest(
+                body as ElementQLJSONRequest,
+            );
 
             response.setHeader('Content-Type', APPLICATION_JSON);
             response.end(JSON.stringify(responseElements));
@@ -507,6 +506,34 @@ class ElementQLServer implements IElementQLServer {
         // return element;
     }
 
+    private async fetchElementsFromJSONRequest(
+        jsonRequest: ElementQLJSONRequest,
+    ) {
+        const {
+            elements,
+        } = jsonRequest;
+
+        const responseElements: any[] = [];
+
+        for (const element of elements) {
+            for (const [id, registeredElement] of this.elementsRegistry) {
+                if (registeredElement.name === element.name) {
+                    const responseElement = {
+                        name: element.name,
+                        routes: registeredElement.routes,
+                    };
+                    responseElements.push(responseElement);
+                }
+            }
+        }
+
+        // console.log('jsonRequest', jsonRequest);
+        // console.log('this.elementsRegistry', this.elementsRegistry);
+        // console.log('this.elementsRoutes', this.elementsRoutes);
+
+        return responseElements;
+    }
+
 
     /** PLAYGROUND */
     private renderPlayground(
@@ -518,9 +545,10 @@ class ElementQLServer implements IElementQLServer {
 
 
     /** UTILITIES */
-    private async readBody(
+    private async parseBody(
         request: IncomingMessage,
-    ) {
+        type: 'json' | 'elementql',
+    ): Promise<ElementQLJSONRequest | string> {
         const bodyData = (): Promise<string> => {
             let body = '';
             return new Promise((resolve, reject) => {
@@ -539,7 +567,13 @@ class ElementQLServer implements IElementQLServer {
         }
 
         const body = await bodyData();
-        return body;
+
+        switch (type) {
+            case 'json':
+                return JSON.parse(body);
+            case 'elementql':
+                return body;
+        }
     }
 }
 
