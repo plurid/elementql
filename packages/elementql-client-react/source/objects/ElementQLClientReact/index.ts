@@ -19,23 +19,30 @@ class ElementQLClientReact implements IElementQLClientReact {
     }
 
     /**
-     * Gets a React Element from the server if the elementLiteral contains only one element.
-     * Returns an object of elements if the elementLiteral contains multiple elements.
+     * Gets a React Element from the server if the elementsRequest contains only one element.
+     * Returns an object of elements if the elementsRequest contains multiple elements.
      *
-     * @param elementLiteral elementql-tag literal
+     * @param elementsRequest
      */
-    public async get(elementLiteral: any) {
-        // get element name/id from elementLiteral
-        await this.client.get(elementLiteral);
+    public async get(
+        elementsRequest: any,
+        type: 'elementql' | 'json' = 'elementql',
+    ) {
+        const elements = await this.client.get(
+            elementsRequest,
+            type,
+        );
 
-        console.log(window.elementql)
+        console.log('elements', elements);
 
-        if (window.elementql) {
-            console.log('Return Element based on Id/Name');
-            if (window.elementql.element) {
-                return window.elementql.element;
-            }
-        }
+        // console.log(window.elementql)
+
+        // if (window.elementql) {
+        //     console.log('Return Element based on Id/Name');
+        //     if (window.elementql.element) {
+        //         return window.elementql.element;
+        //     }
+        // }
 
         return;
     }
