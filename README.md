@@ -21,6 +21,179 @@
 ElementQL is a query language specification and implementation to query a server for Web Elements.
 
 
+### Contents
+
++ [Description](#description)
+    + [Current State](#current-state)
+    + [ElementQL Proposal](#elementql-proposal)
++ [Usage](#usage)
+    + [Server](#server)
+        + [NodeJS](#nodejs)
+    + [Client](#client)
+        + [React](#react)
++ [Packages](#packages)
+
+
+
+## Description
+
+
+### Current State
+
+Consider the following Web Element which uses [React](https://reactjs.org/)
+
+``` typescript
+const HelloElementQL = () => {
+    return React.createElement('div', null, 'Hello from ElementQL');
+}
+```
+
+When embedded into a standard `React` rendering process, the `HelloElementQL` functional element will generate a `div` containing the text `Hello from ElementQL`.
+
+The normal manner of sending the element to the browser is by packing it up into an `Application`, in a large `JavaScript` `index.js` file, which gets attached to a `index.html` with a `script` tag and then gets sent by the server to the client.
+
+
+### ElementQL Proposal
+
+The manner proposed by `ElementQL` is to let the client request only the required elements at runtime from a server and receive only the particular element-specific module.
+
+
+
+## Usage
+
+
+### Server
+
+#### NodeJS
+
+The [`NodeJS`](https://nodejs.org) server can be installed running the command
+
+``` bash
+npm install @plurid/elementql-server
+```
+
+or
+
+``` bash
+yarn add @plurid/elementql-server
+```
+
+The simplest `ElementQL` server requires only a relative path for the elements to be served
+
+``` typescript
+// server.js
+import ElementQLServer, {
+    ElementQLServerOptions,
+} from '@plurid/elementql-server';
+
+
+const options: ElementQLServerOptions = {
+    elementsPaths: './elements',
+};
+
+const server = new ElementQLServer(options);
+
+server.start();
+```
+
+The server will then accept requests on the `/elementql` path for the elements in the `./elements` directory.
+
+The `./elements` directory has a flat structure of folders with `.js` or `.css` files. For example
+
+```
+.
+|- server.js
+|- elements
+|   |- HelloElementQL
+|   |   |- index.js
+|   |-
+|-
+```
+
+
+The requests can be made using the `POST` method with a `Content-Type` header of `application/json` or `application/elementql`. For example
+
+
+```
+curl http://localhost:33300/elementql \
+    -H "Content-Type: application/json" \
+    -v --data '{"elements":[{"name":"HelloElementQL"}]}'
+```
+
+
+
+### Client
+
+
+#### React
+
+Considering the standard `React` application, using `ElementQL` involves
+
++ defining an `ElementQL`/`JSON` request,
++ instantiating an `ElementQLClient` with the `URL` for the `ElementQL` server endpoint,
++ and making the request with the `useEffect`, `useState` standard `React` hooks.
+
+
+``` tsx
+import React, {
+    useEffect,
+    useState,
+} from 'react';
+
+import ElementQLClientReact from '@plurid/elementql-client-react';
+
+
+const elementQLClient = new ElementQLClientReact({
+    url: 'http://localhost:33300/elementql',
+});
+
+const HelloElementQLJSONRequest = {
+    elements: [
+        {
+            name: 'HelloElementQL',
+        },
+    ],
+};
+
+
+const App: React.FC = () => {
+    const [HelloElement, setHelloElement] = useState<any>();
+
+    useEffect(() => {
+        const fetchElement = async () => {
+            const {
+                HelloElementQL,
+            }: any = await elementQLClient.get(
+                HelloElementQLJSONRequest,
+                'json',
+            );
+
+            const ReactHelloElementQL = React.createElement(
+                HelloElementQL,
+                null,
+            );
+            setElement(ReactHelloElementQL);
+        }
+
+        fetchElement();
+    }, []);
+
+    return (
+        <>
+            {HelloElement && (
+                <>
+                    {HelloElement}
+                </>
+            )}
+        </>
+    );
+}
+
+
+export default App;
+```
+
+
 
 ## Packages
 
