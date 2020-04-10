@@ -11,5 +11,6 @@
         "elementql-tag"
     ],
     "dependencies": {
+        "typescript": "^3.8.3"
     }
 }
