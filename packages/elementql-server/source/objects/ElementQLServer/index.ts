@@ -155,7 +155,7 @@ class ElementQLServer implements IElementQLServer {
             for (const elementFile of elementFiles) {
                 const fileType = path.extname(elementFile);
                 const elementFilePath = path.join(elementPath, elementFile);
-                const elementHash = crypto.createHash('md5').update(elementFile).digest('hex');
+                const elementHash = crypto.createHash('md5').update(element + elementFile).digest('hex');
                 const url = `/elementql/${elementHash}${fileType}`;
                 const route = {
                     fileType,
