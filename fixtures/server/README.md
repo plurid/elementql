@@ -4,15 +4,14 @@
     // REQUEST
 
 
-    curl http://localhost:33300/elementql \
-        -H "Content-Type: application/elementql" \
-        --data "AnElement"
+    // JSON REQUEST
 
     curl http://localhost:33300/elementql \
         -H "Content-Type: application/json" \
-        --data "{ "elements": [ {  } ] }"
+        -v --data '{"elements":[{"name":"AnElement"}]}'
 
 
+    // ELEMENTQL REQUEST
 
     curl http://localhost:33300/elementql \
         -H "Content-Type: application/elementql" \
