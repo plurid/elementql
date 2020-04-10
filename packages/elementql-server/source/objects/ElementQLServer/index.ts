@@ -153,7 +153,7 @@ class ElementQLServer implements IElementQLServer {
             for (const elementFile of elementFiles) {
                 const fileType = path.extname(elementFile);
                 const elementFilePath = path.join(elementPath, elementFile);
-                const url = `/elementql/${uuid.generate()}.${fileType}`;
+                const url = `/elementql/${uuid.generate()}${fileType}`;
                 const route = {
                     fileType,
                     filePath: elementFilePath,
@@ -373,15 +373,33 @@ class ElementQLServer implements IElementQLServer {
         request: IncomingMessage,
         response: ServerResponse,
     ) {
-        const responseElements: any[] = [];
+        try {
+            const body = await this.readBody(request);
+            const bodyJSON = JSON.parse(body);
 
-        console.log('this.elementsRegistry', this.elementsRegistry);
-        console.log('this.elementsRoutes', this.elementsRoutes);
+            const responseElements: any[] = [];
+
+            console.log('bodyJSON', bodyJSON);
+            console.log('this.elementsRegistry', this.elementsRegistry);
+            console.log('this.elementsRoutes', this.elementsRoutes);
 
 
-        response.setHeader('Content-Type', APPLICATION_JSON);
-        response.end(JSON.stringify(responseElements));
-        return;
+            response.setHeader('Content-Type', APPLICATION_JSON);
+            response.end(JSON.stringify(responseElements));
+            return;
+        } catch (error) {
+            const badRequest = {
+                status: false,
+                error: {
+                    path: 'elementQL/jsonRequest',
+                    type: 'BAD_REQUEST',
+                    mesage: 'Could not parse the JSON request.',
+                },
+            };
+            response.setHeader('Content-Type', APPLICATION_JSON);
+            response.end(JSON.stringify(badRequest));
+            return;
+        }
     }
 
     private async handleElementRequest(
@@ -496,6 +514,32 @@ class ElementQLServer implements IElementQLServer {
         response: ServerResponse,
     ) {
         response.end('ElementQL Playground');
+    }
+
+
+    /** UTILITIES */
+    private async readBody(
+        request: IncomingMessage,
+    ) {
+        const bodyData = (): Promise<string> => {
+            let body = '';
+            return new Promise((resolve, reject) => {
+                request.on('data', (chunk: Buffer) => {
+                    body += chunk.toString();
+                });
+
+                request.on('error', (error) => {
+                    reject(error);
+                });
+
+                request.on('end', () => {
+                    resolve(body)
+                });
+            });
+        }
+
+        const body = await bodyData();
+        return body;
     }
 }
 

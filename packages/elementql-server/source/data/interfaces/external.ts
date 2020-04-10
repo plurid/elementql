@@ -26,7 +26,7 @@ export type ElementQLJSONProperties = Partial<ElementQLJSONSystemProperties> & R
 
 export interface ElementQLJSON {
     name: string;
-    properties: ElementQLJSONProperties;
+    properties?: ElementQLJSONProperties;
 }
 
 export type ElementQLJSONRequest = {
