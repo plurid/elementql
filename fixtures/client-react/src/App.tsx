@@ -20,17 +20,33 @@ const elementQLClient = new ElementQLClientReact({
 // `;
 const ELEMENT = 'AnElement';
 
+const AnElementJSONRequest = {
+    elements: [
+        {
+            name: 'AnElement',
+        },
+    ],
+};
+
 
 const App: React.FC = () => {
     const [Element, setElement] = useState<React.FC<any>>();
 
     useEffect(() => {
         const fetchElement = async () => {
-            const Element: React.FC<any> | undefined = await elementQLClient.get(ELEMENT);
-            console.log(Element);
-            if (Element) {
-                setElement(Element);
-            }
+            const elements = await elementQLClient.get(
+                AnElementJSONRequest,
+                'json',
+            );
+            console.log(elements);
+
+            // const Element: React.FC<any> | undefined = await elementQLClient.get(ELEMENT);
+
+
+            // console.log(Element);
+            // if (Element) {
+            //     setElement(Element);
+            // }
         }
 
         fetchElement();
