@@ -40,7 +40,7 @@
         "prompt": "^1.0.0",
         "replace-in-file": "^5.0.2",
         "rimraf": "^3.0.2",
-        "rollup": "^2.3.4",
+        "rollup": "^2.4.0",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-copy": "^3.3.0",
         "rollup-plugin-json": "^4.0.0",
@@ -55,8 +55,8 @@
         "typescript": "^3.8.3"
     },
     "dependencies": {
-        "@plurid/elementql-server": "^0.0.2",
-        "@plurid/elementql-tag": "^0.0.3",
+        "@plurid/elementql-server": "^0.0.3",
+        "@plurid/elementql-tag": "^0.0.4",
         "react": "^16.13.1"
     }
 }
