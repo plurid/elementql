@@ -29,6 +29,7 @@ ElementQL is a query language specification and implementation to query a server
 + [Usage](#usage)
     + [Server](#server)
         + [NodeJS](#nodejs)
+        + [Go](#go)
     + [Client](#client)
         + [React](#react)
 + [Packages](#packages)
@@ -120,6 +121,10 @@ curl http://localhost:33300/elementql \
     -v --data '{"elements":[{"name":"HelloElementQL"}]}'
 ```
 
+
+#### Go
+
+The `elementql-server` for `Go` is a `go 1.14` module.
 
 
 ### Client
@@ -253,7 +258,17 @@ export default App;
 
 [@plurid/elementql-server][elementql-server-node] • NodeJS server
 
-[elementql-server-node]: https://github.com/plurid/elementql/tree/master/packages/elementql-server
+[elementql-server-node]: https://github.com/plurid/elementql/tree/master/packages/elementql-server-node
+
+
+
+<a target="_blank" href="">
+    <img src="https://img.shields.io/badge/go-v0.0.0-blue?&colorB=1380C3&style=for-the-badge" alt="Version">
+</a>
+
+[@plurid/elementql-server][elementql-server-go] • Go server
+
+[elementql-server-go]: https://github.com/plurid/elementql/tree/master/packages/elementql-server-go
 
 
 
