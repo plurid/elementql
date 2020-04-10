@@ -6,6 +6,7 @@ import path from 'path';
 import fs, {
     promises as fsPromise,
 } from 'fs';
+import crypto from 'crypto';
 
 import open from 'open';
 
@@ -154,7 +155,8 @@ class ElementQLServer implements IElementQLServer {
             for (const elementFile of elementFiles) {
                 const fileType = path.extname(elementFile);
                 const elementFilePath = path.join(elementPath, elementFile);
-                const url = `/elementql/${uuid.generate()}${fileType}`;
+                const elementHash = crypto.createHash('md5').update(elementFile).digest('hex');
+                const url = `/elementql/${elementHash}${fileType}`;
                 const route = {
                     fileType,
                     filePath: elementFilePath,
@@ -225,6 +227,7 @@ class ElementQLServer implements IElementQLServer {
             return;
         }
 
+        console.log('this.elementsRoutes', this.elementsRoutes);
         if (this.elementsRoutes.has(request.url)) {
             this.handleElementRequest(request, response);
             return;
