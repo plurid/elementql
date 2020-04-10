@@ -5,7 +5,7 @@
 
 const AnElement = () => {
     return React.createElement('div', null, `Hello from AnElement`);
-};
+}
 
 
 export default AnElement;
