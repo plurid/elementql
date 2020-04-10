@@ -4,10 +4,10 @@
         "elementql",
         "elementql-client",
         "elementql-client-react",
-        "elementql-express",
         "elementql-org",
         "elementql-parser",
-        "elementql-server",
+        "elementql-server-node",
+        "elementql-server-express",
         "elementql-tag"
     ],
     "dependencies": {
