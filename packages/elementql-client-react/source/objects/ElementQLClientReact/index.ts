@@ -1,21 +1,25 @@
 import ElementQLClient from '@plurid/elementql-client';
 
 import {
-    ElementQLClientReact as IElementQLClientReact,
     ElementQLClientReactOptions,
+    InternalElementQLClientReactOptions,
 } from '../../interfaces';
 
 
 
-class ElementQLClientReact implements IElementQLClientReact {
+class ElementQLClientReact {
     private client: ElementQLClient;
+    private options: InternalElementQLClientReactOptions;
 
-    constructor(options: ElementQLClientReactOptions) {
+    constructor(
+        options: ElementQLClientReactOptions,
+    ) {
         const clientOptions = {
             url: options.url,
         };
 
         this.client = new ElementQLClient(clientOptions);
+        this.options = options;
     }
 
     /**
@@ -43,7 +47,7 @@ class ElementQLClientReact implements IElementQLClientReact {
             elementModule.type = 'module';
             elementModule.text =
 `
-import ${name} from 'http://localhost:33300${urls[0]}';
+import ${name} from '${this.options.url}${urls[0]}';
 
 window.elementql = window.elementql || {};
 window.elementql.${name} = ${name};
@@ -52,7 +56,16 @@ window.elementql.${name} = ${name};
             document.body.appendChild(elementModule);
         }
 
-        return;
+        const Elements = await new Promise((resolve, _) => {
+            setTimeout(() => {
+                const Elements = window.elementql;
+                resolve(Elements);
+            }, 700);
+        });
+
+        console.log(Elements);
+
+        return Elements;
     }
 }
 
