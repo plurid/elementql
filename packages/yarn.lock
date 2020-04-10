@@ -1435,11 +1435,6 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@plurid/elementql-tag@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.1.tgz#df1e49db6aed81d6dea6c0d467b95f02c9c99bed"
-  integrity sha512-QnA5KJETBZhk2E51U20s0G5NajvotEhf+zNwQn63PXYKbnzIVusPiWPK8Soq6FR1RBtp/l/032KmlY5LKK+T+g==
-
 "@plurid/plurid-functions@^0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.12.tgz#044bbd45034501404d34dbb3b185a92229d4f43a"
@@ -1735,10 +1730,18 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16.9.33":
+"@types/react@*":
   version "16.9.33"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.33.tgz#a5274520f0d28cbbb73c8652ddd48646fd4bcae5"
   integrity sha512-ovgoy7p9999HDzwv8Sewhl8GJjn/r0GRsFrM9UMwp1uodh0kQ0pwIHLQ6LNfqGSyjNzJ8II/HIg0BL7Yn/B9yA==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
+"@types/react@16.9.34":
+  version "16.9.34"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.34.tgz#f7d5e331c468f53affed17a8a4d488cd44ea9349"
+  integrity sha512-8AJlYMOfPe1KGLKyHpflCg5z46n0b5DbRfqDksxBLBTUpB75ypDBAO9eCUcjNwE6LCUslwTz00yyG/X9gaVtow==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -10026,10 +10029,10 @@ rollup-plugin-typescript2@^0.27.0:
     resolve "1.15.1"
     tslib "1.11.1"
 
-rollup@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.3.4.tgz#979e461f8cab1a71aec2d37ce2a434052ae70223"
-  integrity sha512-8U9x54RCVhrUEV1zon4Pp8kokg1HM0fwzf5vkwe2/rOfyTClarx5e27kFlaoZ7ofJiazWkNQ+dgdG4HuZxkQ9A==
+rollup@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.4.0.tgz#b136a4d701d24dd79ec9551ee0330e7f632ee9d2"
+  integrity sha512-dYE2ZKl9+kxuFKDaaSuauZjIPa8hcKDqI7WrOq1pTXYG4GJw+6ypLifGIvCKw5yJpSmuFohuimYpg0wfRXTCLw==
   optionalDependencies:
     fsevents "~2.1.2"
 
