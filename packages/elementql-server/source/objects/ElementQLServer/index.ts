@@ -50,8 +50,9 @@ import {
 
 class ElementQLServer implements IElementQLServer {
     private options: InternalElementQLServerOptions;
-    private routes: Map<string, string> = new Map();
-    private elements: Map<string, RegisteredElementQL> = new Map();
+    // private elementsNames: Map<string, string> = new Map();
+    private elementsRoutes: Map<string, string> = new Map();
+    private elementsRegistry: Map<string, RegisteredElementQL> = new Map();
     private server: http.Server;
 
 
@@ -143,10 +144,11 @@ class ElementQLServer implements IElementQLServer {
     private registerElement(
         element: RegisteredElementQL,
     ) {
-        this.routes.set(element.routes.js, element.name);
-        this.routes.set(element.routes.css, element.name);
+        // this.elementsNames.set(element.name, element.id);
+        this.elementsRoutes.set(element.routes.js, element.id);
+        this.elementsRoutes.set(element.routes.css, element.id);
 
-        this.elements.set(element.routes.js, element);
+        this.elementsRegistry.set(element.id, element);
     }
 
 
@@ -190,7 +192,7 @@ class ElementQLServer implements IElementQLServer {
             return;
         }
 
-        if (this.elements.has(request.url)) {
+        if (this.elementsRoutes.has(request.url)) {
             this.handleElementRequest(request, response);
             return;
         }
@@ -348,41 +350,47 @@ class ElementQLServer implements IElementQLServer {
         if (!request.url) {
             return;
         }
-        // console.log('this.elements', this.elements);
 
-        const element = this.elements.get(request.url);
-
-        if (element) {
-            const file = await new Promise((resolve, reject) => {
-                const jsFile = /\.mjs/.test(request.url || '');
-                const cssFile = /\.css/.test(request.url || '');
-                const filePath = jsFile
-                    ? element.paths.js
-                    : cssFile
-                        ? element.paths.css
-                        : '';
-
-                if (jsFile) {
-                    response.setHeader('Content-Type', 'text/javascript');
-                }
-
-                if (cssFile) {
-                    response.setHeader('Content-Type', 'text/css');
-                }
-
-                fs.readFile(filePath, (error, data) => {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(data);
-                });
-            });
-
-            response.end(file);
-        } else {
+        const elementID = this.elementsRoutes.get(request.url);
+        if (!elementID) {
             response.setHeader('content-type', 'text/plain');
             response.end(`Could not find element for ${request.url}.`);
+            return;
         }
+
+        const element = this.elementsRegistry.get(elementID);
+        if (!element) {
+            response.setHeader('content-type', 'text/plain');
+            response.end(`Could not find element for ${request.url}.`);
+            return;
+        }
+
+        const file = await new Promise((resolve, reject) => {
+            const jsFile = /\.mjs/.test(request.url || '');
+            const cssFile = /\.css/.test(request.url || '');
+            const filePath = jsFile
+                ? element.paths.js
+                : cssFile
+                    ? element.paths.css
+                    : '';
+
+            if (jsFile) {
+                response.setHeader('Content-Type', 'text/javascript');
+            }
+
+            if (cssFile) {
+                response.setHeader('Content-Type', 'text/css');
+            }
+
+            fs.readFile(filePath, (error, data) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(data);
+            });
+        });
+
+        response.end(file);
     }
 
     private async fetchElement(
