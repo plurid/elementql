@@ -3,9 +3,9 @@
 
 
 
-const AnElementWithName = (
+function AnElementWithName (
     properties,
-) => {
+) {
     const {
         name,
     } = properties;
