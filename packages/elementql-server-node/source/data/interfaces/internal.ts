@@ -4,11 +4,6 @@ import {
 
 
 
-export interface IElementQLServer {
-    start: () => void;
-    stop: () => void;
-}
-
 export type InternalElementQLServerOptions = Required<ElementQLServerOptions>;
 
 
