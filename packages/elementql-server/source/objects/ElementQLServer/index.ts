@@ -61,7 +61,9 @@ class ElementQLServer implements IElementQLServer {
     ) {
         this.options = this.handleOptions(options);
         this.registerElements();
-        this.server = http.createServer(this.createServer);
+        this.server = http.createServer(
+            (request, response) => this.createServer(request, response, this.options),
+        );
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -185,6 +187,7 @@ class ElementQLServer implements IElementQLServer {
     private createServer(
         request: IncomingMessage,
         response: ServerResponse,
+        options: InternalElementQLServerOptions,
     ) {
         // Set CORS headers
         response.setHeader('Access-Control-Allow-Origin', '*');
@@ -211,12 +214,12 @@ class ElementQLServer implements IElementQLServer {
             return;
         }
 
-        if (this.options.playground && request.url === this.options.playgroundEndpoint) {
+        if (options.playground && request.url === options.playgroundEndpoint) {
             this.renderPlayground(request, response);
             return;
         }
 
-        if (request.url === this.options.endpoint)  {
+        if (request.url === options.endpoint) {
             this.handleElements(request, response);
             return;
         }
@@ -371,6 +374,9 @@ class ElementQLServer implements IElementQLServer {
         response: ServerResponse,
     ) {
         const responseElements: any[] = [];
+
+        console.log('this.elementsRegistry', this.elementsRegistry);
+        console.log('this.elementsRoutes', this.elementsRoutes);
 
 
         response.setHeader('Content-Type', APPLICATION_JSON);

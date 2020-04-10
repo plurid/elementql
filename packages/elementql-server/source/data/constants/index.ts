@@ -24,7 +24,7 @@ export const FAVICON = path.join(__dirname, './assets', 'favicon.ico');
 export const METHOD_GET = 'GET';
 export const METHOD_POST = 'POST';
 
-export const HEADER_CONTENT_TYPE = 'Content-Type';
+export const HEADER_CONTENT_TYPE = 'content-type';
 
 export const APPLICATION_ELEMENTQL = 'application/elementql';
 export const APPLICATION_JSON = 'application/json';
