@@ -3,6 +3,40 @@
 
 ## Usage
 
+v2
+
+    EON
+    Element Object Notation
+
+    ElementName {
+        property: value;
+    }
+
+    the properties can be user defined or system specific (`transpile`)
+
+    property examples
+        language: 'fr'; // get the internationalized version of the element
+        transpile: {
+            // special property which gives specifics about compilation/transpilation step
+        }
+
+
+    JSON Request
+
+    {
+        "elements": [
+            {
+                "name": "ElementName",
+                "properties": {
+                    "language": "fr"
+                }
+            }
+        ]
+    }
+
+
+
+
 Client-Side Usage
 
     // imports the input element defined in the root space
