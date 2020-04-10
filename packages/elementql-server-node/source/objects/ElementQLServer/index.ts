@@ -105,6 +105,7 @@ class ElementQLServer {
             schema: options.schema,
             resolvers: options.resolvers,
             port: options.port || DEFAULT_PORT,
+            buildDirectory: options.buildDirectory || 'build',
             elementsPaths: options.elementsPaths || DEFAULT_ELEMENTS_DIR,
             endpoint: options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT,
             allowOrigin: options.allowOrigin || '*',
@@ -139,7 +140,11 @@ class ElementQLServer {
     private async registerElementsFromPath(
         elementPath: string,
     ) {
-        const elementsPath = path.join(process.cwd(), 'build', elementPath);
+        const elementsPath = path.join(
+            process.cwd(),
+            this.options.buildDirectory,
+            elementPath,
+        );
 
         const elements = await fsPromise.readdir(elementsPath);
 
@@ -152,7 +157,10 @@ class ElementQLServer {
             for (const elementFile of elementFiles) {
                 const fileType = path.extname(elementFile);
                 const elementFilePath = path.join(elementPath, elementFile);
-                const elementHash = crypto.createHash('md5').update(element + elementFile).digest('hex');
+                const elementHash = crypto
+                    .createHash('md5')
+                    .update(element + elementFile)
+                    .digest('hex');
                 const url = `/${elementHash}${fileType}`;
                 const route = {
                     fileType,
