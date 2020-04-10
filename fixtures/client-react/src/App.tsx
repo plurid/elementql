@@ -25,39 +25,46 @@ const AnElementJSONRequest = {
         {
             name: 'AnElement',
         },
+        {
+            name: 'AnElementWithName',
+        }
     ],
 };
 
 
 const App: React.FC = () => {
-    const [Element, setElement] = useState<React.FC<any>>();
+    const [Element, setElement] = useState<any>();
 
     useEffect(() => {
         const fetchElement = async () => {
-            const elements = await elementQLClient.get(
+            const {
+                // AnElement,
+                AnElementWithName,
+            }: any = await elementQLClient.get(
                 AnElementJSONRequest,
                 'json',
             );
-            console.log(elements);
 
-            // const Element: React.FC<any> | undefined = await elementQLClient.get(ELEMENT);
-
-
-            // console.log(Element);
-            // if (Element) {
-            //     setElement(Element);
-            // }
+            const ReactAnElementWithName = React.createElement(
+                AnElementWithName,
+                {
+                    name: 'AnElementWithName from properties',
+                },
+            );
+            setElement(ReactAnElementWithName);
         }
 
         fetchElement();
-    });
+    }, []);
 
     return (
         <div>
             ElementQL Client React
 
             {Element && (
-                <Element />
+                <>
+                    {Element}
+                </>
             )}
         </div>
     );
