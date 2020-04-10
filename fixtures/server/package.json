@@ -55,6 +55,7 @@
         "typescript": "^3.8.3"
     },
     "dependencies": {
-        "@plurid/elementql-server": "^0.0.2"
+        "@plurid/elementql-server": "^0.0.2",
+        "@plurid/elementql-tag": "^0.0.3"
     }
 }
