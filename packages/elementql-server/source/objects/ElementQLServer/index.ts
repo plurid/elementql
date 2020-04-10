@@ -411,77 +411,49 @@ class ElementQLServer implements IElementQLServer {
             return;
         }
 
-        console.log('requestURL', request.url);
-
+        const notFound = `Could not find element for ${request.url}.`;
         const elementID = this.elementsRoutes.get(request.url);
         if (!elementID) {
             response.setHeader('content-type', 'text/plain');
-            response.end(`Could not find element for ${request.url}.`);
+            response.end(notFound);
             return;
         }
-        console.log('elementID', elementID);
 
         const element = this.elementsRegistry.get(elementID);
         if (!element) {
             response.setHeader('content-type', 'text/plain');
-            response.end(`Could not find element for ${request.url}.`);
+            response.end(notFound);
             return;
         }
 
-        console.log('element', element);
+        const routeFile = this.resolveRouteFile(request.url, element);
 
-        const file = await new Promise((resolve, reject) => {
-            const {
-                routes,
-            } = element;
+        if (!routeFile) {
+            response.statusCode = HTTP_NOT_FOUND;
+            response.end('Not Found.');
+            return;
+        }
 
-            const routeFile = routes[0];
-            const {
-                fileType,
-                filePath,
-            } = routeFile;
+        const {
+            fileType,
+            filePath,
+        } = routeFile;
 
-            switch (fileType) {
-                case '.mjs':
-                case '.js':
-                    response.setHeader('Content-Type', 'text/javascript');
-                    break;
-                case '.css':
-                    response.setHeader('Content-Type', 'text/css');
-                    break;
-            }
+        switch (fileType) {
+            case '.mjs':
+            case '.js':
+                response.setHeader('Content-Type', 'text/javascript');
+                break;
+            case '.css':
+                response.setHeader('Content-Type', 'text/css');
+                break;
+        }
 
-            fs.readFile(filePath, (error, data) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(data);
-            });
-
-
-
-            // depending on the request (transpilation and so forth)
-            // fetch the appropiate
-
-
-            // const jsFile = /\.mjs/.test(request.url || '');
-            // const cssFile = /\.css/.test(request.url || '');
-            // const filePath = jsFile
-            //     ? element.paths.js
-            //     : cssFile
-            //         ? element.paths.css
-            //         : '';
-
-            // if (jsFile) {
-            //     response.setHeader('Content-Type', 'text/javascript');
-            // }
-
-            // if (cssFile) {
-            //     response.setHeader('Content-Type', 'text/css');
-            // }
-        });
-
-        response.end(file);
+        const fileStat = fs.statSync(filePath);
+        response.statusCode = HTTP_OK;
+        response.setHeader('Content-Length', fileStat.size);
+        const readStream = fs.createReadStream(filePath)
+        readStream.pipe(response);
     }
 
     private async fetchElement(
@@ -604,6 +576,23 @@ class ElementQLServer implements IElementQLServer {
             case 'elementql':
                 return body;
         }
+    }
+
+    private resolveRouteFile(
+        requestURL: string,
+        element: RegisteredElementQL,
+    ) {
+        const {
+            routes,
+        } = element;
+
+        for (const route of routes) {
+            if (route.url === requestURL) {
+                return route;
+            }
+        }
+
+        return;
     }
 }
 
