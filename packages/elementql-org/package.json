@@ -1,6 +1,6 @@
 {
     "name": "@plurid/elementql-org",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "ElementQL Documentation Application",
     "keywords": [
         "elementql"
@@ -15,7 +15,7 @@
     "dependencies": {
         "@types/jest": "25.2.1",
         "@types/node": "13.11.1",
-        "@types/react": "16.9.33",
+        "@types/react": "16.9.34",
         "@types/react-dom": "16.9.6",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
