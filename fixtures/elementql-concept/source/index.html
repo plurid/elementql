@@ -40,15 +40,18 @@
             the path './element.mjs' will actually be somewhere on the network, on the elementql server
         -->
         <script type="module">
+            // import AnElement from 'http://localhost:33300/elementql/a3a274eb4eb03597ec0fe47aea0cac58.mjs';
+            import AnElementWithName from 'http://localhost:33300/elementql/216a69e3813d6e6aed586ef7f6e05428.mjs';
             // import AnElement from 'http://localhost:33300/elementql/AnElement.mjs';
             // // import AnElement from 'http://localhost:33300/elementql/AnotherElement.mjs';
             // // import AnElement from './element.mjs';
 
-            // window.elementql = window.elementql || {};
+            window.elementql = window.elementql || {};
             // window.elementql.AnElement = AnElement;
+            window.elementql.AnElementWithName = AnElementWithName;
         </script>
 
-        <script type="module">
+        <!-- <script type="module">
             function AnotherElement(properties) {
                 React.useEffect(function () {
                     console.log('another element');
@@ -59,7 +62,7 @@
 
             window.elementql = window.elementql || {};
             window.elementql.AnotherElement = AnotherElement;
-        </script>
+        </script> -->
 
         <script>
             // const elementScript = document.createElement('script');
@@ -75,10 +78,13 @@
             // delay to give time to the browser to parse(?) the element
             setTimeout(() => {
                 // const AnElement = window.elementql.AnElement;
-                const AnotherElement = window.elementql.AnotherElement;
+                const AnElementWithName = window.elementql.AnElementWithName;
+                // const AnotherElement = window.elementql.AnotherElement;
 
                 ReactDOM.render(
-                    React.createElement(AnotherElement, { name: 'AnotherElement' }),
+                    // React.createElement(AnElement, null),
+                    React.createElement(AnElementWithName, { name: 'AnElementWithName' }),
+                    // React.createElement(AnotherElement, { name: 'AnotherElement' }),
                     document.getElementById('react-root')
                 );
             }, 100);
