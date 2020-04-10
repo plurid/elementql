@@ -28,6 +28,7 @@ export interface ElementQLServerStartOptions {
 
 
 export interface RegisteredElementQL {
+    id: string;
     name: string;
     routes: {
         js: string;

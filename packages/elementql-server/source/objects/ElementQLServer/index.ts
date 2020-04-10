@@ -12,6 +12,10 @@ import open from 'open';
 // import ElementQLParser from '@plurid/elementql-parser';
 
 import {
+    uuid,
+} from '@plurid/plurid-functions';
+
+import {
     IElementQLServer,
     ElementQLServerOptions,
     InternalElementQLServerOptions,
@@ -415,6 +419,7 @@ class ElementQLServer implements IElementQLServer {
                     // responseElements.push(responseElement);
 
                     const registerElement: RegisteredElementQL = {
+                        id: uuid.generate(),
                         name,
                         routes: {
                             js: jsRoute,
