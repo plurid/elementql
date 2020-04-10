@@ -29,37 +29,6 @@
         "start": "rollup -c rollup.config.ts -w",
         "spec": "jest ./src"
     },
-    "jest": {
-        "transform": {
-            ".(ts|tsx)": "ts-jest"
-        },
-        "testEnvironment": "node",
-        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-        "moduleFileExtensions": [
-            "ts",
-            "tsx",
-            "js"
-        ],
-        "coveragePathIgnorePatterns": [
-            "/node_modules/",
-            "/test/"
-        ],
-        "coverageThreshold": {
-            "global": {
-                "branches": 90,
-                "functions": 95,
-                "lines": 95,
-                "statements": 95
-            }
-        },
-        "collectCoverageFrom": [
-            "src/*.{js,ts}"
-        ]
-    },
-    "dependencies": {
-        "@plurid/elementql-server": ">=0",
-        "@plurid/elementql-tag": ">=0"
-    },
     "devDependencies": {
         "@types/jest": "^25.2.1",
         "@types/node": "^13.11.1",
