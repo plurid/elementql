@@ -1,14 +1,5 @@
 import path from 'path';
 
-import {
-    ElementQLServerStartOptions,
-} from '../interfaces';
-
-
-
-export const defaultServerStartOptions: ElementQLServerStartOptions = {
-    open: true,
-};
 
 
 export const DEFAULT_PORT = 33300;

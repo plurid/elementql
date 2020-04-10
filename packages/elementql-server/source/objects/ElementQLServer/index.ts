@@ -40,8 +40,6 @@ import {
     HTTP_NOT_FOUND,
     HTTP_METHOD_NOT_ALLOWED,
     HTTP_UNSUPPORTED_MEDIA_TYPE,
-
-    defaultServerStartOptions,
 } from '../../data/constants';
 
 import {
@@ -179,7 +177,8 @@ class ElementQLServer implements IElementQLServer {
         element: RegisteredElementQL,
     ) {
         for (const route of element.routes) {
-            this.elementsRoutes.set(route.url, element.id);
+            const url = this.options.endpoint + route.url;
+            this.elementsRoutes.set(url, element.id);
         }
 
         this.elementsRegistry.set(element.id, element);
@@ -587,7 +586,8 @@ class ElementQLServer implements IElementQLServer {
         } = element;
 
         for (const route of routes) {
-            if (route.url === requestURL) {
+            const url = this.options.endpoint + route.url;
+            if (url === requestURL) {
                 return route;
             }
         }
