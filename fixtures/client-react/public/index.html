@@ -16,10 +16,35 @@
 
         <meta name="description" content="ElementQL Client React" />
 
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
         <title>ElementQL Client React</title>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
+
         <div id="root"></div>
+
+
+        <!-- <div id="root-two"></div>
+
+        <script type="module">
+            import AnElementWithName from 'http://localhost:33300/elementql/216a69e3813d6e6aed586ef7f6e05428.mjs';
+
+            window.elementql = window.elementql || {};
+            window.elementql.AnElementWithName = AnElementWithName;
+        </script>
+
+        <script>
+            setTimeout(() => {
+                const AnElementWithName = window.elementql.AnElementWithName;
+
+                ReactDOM.render(
+                    React.createElement(AnElementWithName, { name: 'AnElementWithName' }),
+                    document.getElementById('root-two')
+                );
+            }, 500);
+        </script> -->
     </body>
 </html>
