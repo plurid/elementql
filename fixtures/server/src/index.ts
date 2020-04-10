@@ -1,22 +1,23 @@
-import ElementQLServer from '@plurid/elementql-server';
+import ElementQLServer, {
+    ElementQLServerOptions,
+} from '@plurid/elementql-server';
 
 import resolvers from './elementql/resolvers';
 import schema from './elementql/schema';
 
 
 
-const options = {
+// starting the server starts serving components from the ./components folder
+// to pass an options object with
+// componentsDir
+// plugins - typescript, babel, etc.
+const options: ElementQLServerOptions = {
     resolvers,
     schema,
-    elementsDir: './elements',
-    playground: true,
+    elementsPaths: './elements',
     verbose: true,
 };
 
 const server = new ElementQLServer(options);
 
-// starting the server starts serving components from the ./components folder
-// to pass an options object with
-// componentsDir
-// plugins - typescript, babel, etc.
 server.start();
