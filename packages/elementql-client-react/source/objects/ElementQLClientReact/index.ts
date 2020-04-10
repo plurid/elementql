@@ -28,6 +28,9 @@ class ElementQLClientReact implements IElementQLClientReact {
         elementsRequest: any,
         type: 'elementql' | 'json' = 'elementql',
     ) {
+        console.log('elementsRequest', elementsRequest);
+        console.log('type', type);
+
         const elements = await this.client.get(
             elementsRequest,
             type,
