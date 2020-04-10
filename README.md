@@ -251,7 +251,7 @@ export default App;
     <img src="https://img.shields.io/npm/v/@plurid/elementql-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/elementql-server][elementql-server-node]
+[@plurid/elementql-server][elementql-server-node] • NodeJS server
 
 [elementql-server-node]: https://github.com/plurid/elementql/tree/master/packages/elementql-server
 
