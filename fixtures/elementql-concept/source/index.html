@@ -37,11 +37,22 @@
             the path './element.mjs' will actually be somewhere on the network, on the elementql server
         -->
         <script type="module">
-            import AnElement from 'http://localhost:33300/elementql/AnElement.mjs';
-            // import AnElement from 'http://localhost:33300/elementql/AnotherElement.mjs';
-            // import AnElement from './element.mjs';
-            window.elementql = {};
-            window.elementql.AnElement = AnElement;
+            // @ts-nocheck
+            var AnotherElement = function () {
+                React.useEffect(function () {
+                    console.log('another element');
+                }, []);
+                return (React.createElement("div", null, "Hello from AnotherElement"));
+            };
+            export default AnotherElement;
+        </script>
+
+        <script type="module">
+            // import AnElement from 'http://localhost:33300/elementql/AnElement.mjs';
+            // // import AnElement from 'http://localhost:33300/elementql/AnotherElement.mjs';
+            // // import AnElement from './element.mjs';
+            // window.elementql = {};
+            // window.elementql.AnElement = AnElement;
         </script>
 
         <script>
@@ -55,7 +66,7 @@
         </script>
 
         <!-- the element root injection -->
-        <script>
+        <!-- <script>
             // delay to give time to the browser to parse(?) the element
             setTimeout(() => {
                 const AnElement = window.elementql.AnElement;
@@ -65,6 +76,6 @@
                     document.getElementById('react-root')
                 );
             }, 100);
-        </script>
+        </script> -->
     </body>
 </html>
