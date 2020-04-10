@@ -20,6 +20,7 @@ import {
     ElementQLServerOptions,
     InternalElementQLServerOptions,
     RegisteredElementQL,
+    RegisteredElementQLRoute,
     ElementQLJSONRequest,
 } from '../../data/interfaces';
 
@@ -189,6 +190,8 @@ class ElementQLServer {
         }
 
         this.elementsRegistry.set(element.id, element);
+
+        this.transpileElement(element);
     }
 
 
@@ -597,6 +600,51 @@ class ElementQLServer {
             if (url === requestURL) {
                 return route;
             }
+        }
+
+        return;
+    }
+
+    private transpileElement(
+        element: RegisteredElementQL,
+    ) {
+        const {
+            routes,
+        } = element;
+
+        const updatedElement = {
+            ...element,
+        };
+        const updatedRoutes = [
+            ...updatedElement.routes,
+        ];
+
+        for (const route of routes){
+            const transpiledRoute = this.transpileRoute(route);
+            if (transpiledRoute) {
+                updatedRoutes.push(transpiledRoute);
+            }
+        }
+
+        updatedElement.routes = [
+            ...updatedRoutes,
+        ];
+
+        this.elementsRegistry.set(updatedElement.id, updatedElement);
+    }
+
+    private transpileRoute(
+        route: RegisteredElementQLRoute,
+    ) {
+        const {
+            plugins,
+        } = this.options;
+
+        // based on this.options.plugins
+        // and on the routes[i].filePath
+        // transpile to the target
+        if (plugins) {
+            return route;
         }
 
         return;
