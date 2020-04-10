@@ -35,6 +35,9 @@
         "build": "yarn lint && yarn test && yarn build.production",
         "prepublishOnly": "yarn build"
     },
+    "peerDependencies": {
+        "typescript": "^3.8.3"
+    },
     "dependencies": {
         "@plurid/elementql-parser": "^0.0.2",
         "@plurid/plurid-functions": "^0.1.12",
