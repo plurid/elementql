@@ -1,5 +1,4 @@
 import {
-    ElementQLClient as IElementQLClient,
     ElementQLClientOptions,
 } from '../../interfaces';
 
@@ -10,20 +9,36 @@ import {
 
 
 
-class ElementQLClient implements IElementQLClient {
+class ElementQLClient {
     private url: string;
 
-    constructor(options: ElementQLClientOptions) {
+    constructor(
+        options: ElementQLClientOptions,
+    ) {
         this.url = options.url;
     }
 
-    public async get(elementLiteral: any) {
-        console.log('elementLiteral', elementLiteral);
+    public async get(
+        elementsRequest: any,
+        type: 'elementql' | 'json' = 'elementql',
+    ) {
+        switch (type) {
+            case 'elementql':
+                return await this.getWithElementQL(elementsRequest);
+            case 'json':
+                return await this.getWithJSON(elementsRequest)
+        }
+    }
+
+    private async getWithElementQL(
+        request: any,
+    ) {
+        console.log('request', request);
 
         const elementFiles = await fetch(this.url,
             {
                 method: 'POST',
-                body: JSON.stringify(elementLiteral[0]),
+                body: JSON.stringify(request[0]),
                 headers:{
                     'Content-Type': 'application/elementql'
                 }
@@ -54,6 +69,34 @@ class ElementQLClient implements IElementQLClient {
                 return window.elementql.element;
             }
         }
+
+        return {
+        };
+    }
+
+    private async getWithJSON(
+        request: any,
+    ) {
+        const elementsRequest = await fetch(
+            this.url,
+            {
+                method: 'POST',
+                body: JSON.stringify(request),
+                headers:{
+                    'Content-Type': 'application/elementql',
+                },
+            },
+        ).then(res => {
+            console.log(res);
+            return res.json();
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+
+        console.log(elementsRequest);
+
+        return {
+        };
     }
 }
 
