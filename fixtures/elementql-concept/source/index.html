@@ -19,8 +19,11 @@
         </style>
 
         <!-- the scripts that import react, could be loaded locally -->
-        <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+        <!-- <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script> -->
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     </head>
     <body>
         <div>
@@ -37,22 +40,25 @@
             the path './element.mjs' will actually be somewhere on the network, on the elementql server
         -->
         <script type="module">
-            // @ts-nocheck
-            var AnotherElement = function () {
-                React.useEffect(function () {
-                    console.log('another element');
-                }, []);
-                return (React.createElement("div", null, "Hello from AnotherElement"));
-            };
-            export default AnotherElement;
-        </script>
-
-        <script type="module">
             // import AnElement from 'http://localhost:33300/elementql/AnElement.mjs';
             // // import AnElement from 'http://localhost:33300/elementql/AnotherElement.mjs';
             // // import AnElement from './element.mjs';
-            // window.elementql = {};
+
+            // window.elementql = window.elementql || {};
             // window.elementql.AnElement = AnElement;
+        </script>
+
+        <script type="module">
+            function AnotherElement(properties) {
+                React.useEffect(function () {
+                    console.log('another element');
+                }, []);
+
+                return (React.createElement("div", null, "Hello from " + properties.name));
+            };
+
+            window.elementql = window.elementql || {};
+            window.elementql.AnotherElement = AnotherElement;
         </script>
 
         <script>
@@ -60,22 +66,22 @@
             // elementScript.src = 'http://localhost:33300/elementql/ReactElement.mjs';
             // elementScript.type = 'module';
             // elementScript.onload = function() {
-            //     console.log('aaa');
             // }
             // document.getElementsByTagName('head')[0].appendChild(elementScript);
         </script>
 
         <!-- the element root injection -->
-        <!-- <script>
+        <script>
             // delay to give time to the browser to parse(?) the element
             setTimeout(() => {
-                const AnElement = window.elementql.AnElement;
+                // const AnElement = window.elementql.AnElement;
+                const AnotherElement = window.elementql.AnotherElement;
 
                 ReactDOM.render(
-                    AnElement(),
+                    React.createElement(AnotherElement, { name: 'AnotherElement' }),
                     document.getElementById('react-root')
                 );
             }, 100);
-        </script> -->
+        </script>
     </body>
 </html>
