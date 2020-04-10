@@ -5,17 +5,21 @@ export interface IElementQLServer {
 
 
 export interface ElementQLServerOptions {
-    port?: number;
-    verbose?: boolean;
-    open?: boolean;
-    elementsDir?: string;
-    plugins?: string[];
-    endpoint?: string;
-    playground?: boolean;
-    playgroundURL?: string;
     schema: any;
     resolvers: any;
+    port?: number;
+    elementsPaths?: string;
+    endpoint?: string;
+    allowOrigin?: string | string[]
+    allowHeaders?: string;
+    plugins?: string[];
+    verbose?: boolean;
+    open?: boolean;
+    playground?: boolean;
+    playgroundEndpoint?: string;
 }
+
+export type InternalElementQLServerOptions = Required<ElementQLServerOptions>
 
 
 export interface ElementQLServerStartOptions {

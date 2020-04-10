@@ -14,6 +14,7 @@ import open from 'open';
 import {
     IElementQLServer,
     ElementQLServerOptions,
+    InternalElementQLServerOptions,
     RegisteredElementQL,
 } from '../../data/interfaces';
 
@@ -28,6 +29,9 @@ import {
     HEADER_CONTENT_TYPE,
     APPLICATION_ELEMENTQL,
     APPLICATION_JSON,
+    HTTP_OK,
+    HTTP_BAD_REQUEST,
+    HTTP_NOT_FOUND,
     HTTP_METHOD_NOT_ALLOWED,
     HTTP_UNSUPPORTED_MEDIA_TYPE,
 
@@ -41,24 +45,18 @@ import {
 
 
 class ElementQLServer implements IElementQLServer {
+    private options: InternalElementQLServerOptions;
+    private routes: Map<string, string> = new Map();
+    private elements: Map<string, RegisteredElementQL> = new Map();
     private server: http.Server;
-    private port: number = DEFAULT_PORT;
-    private verbose: boolean = false;
-    private open: boolean = false;
-    private elementsDir: string = DEFAULT_ELEMENTS_DIR;
-    private elementQLEndpoint: string = DEFAULT_ELEMENTQL_ENDPOINT;
-    private playgroundEndpoint: string = DEFAULT_PLAYGROUND_ENDPOINT;
-    private playground: boolean = false;
-    private plugins: string[] = [];
-    private elementsRoutes: string[] = [];
-    private elements: RegisteredElementQL[] = [];
+
 
     constructor(
         options: ElementQLServerOptions,
     ) {
-        this.handleOptions(options);
+        this.options = this.handleOptions(options);
         this.registerElements();
-        this.server = this.createServer();
+        this.server = http.createServer(this.createServer);
 
         process.addListener('SIGINT', () => {
             this.stop();
@@ -66,87 +64,136 @@ class ElementQLServer implements IElementQLServer {
         });
     }
 
+
     public async start() {
-        this.port = await checkAvailablePort(this.port);
-        const serverlink = `http://localhost:${this.port}`;
-        if (this.verbose) {
-            console.log(`\n\tElementQL Server Started on Port ${this.port}: ${serverlink}\n`);
+        const port = await checkAvailablePort(this.options.port);
+        this.options.port = port;
+
+        const serverlink = `http://localhost:${port}`;
+        if (this.options.verbose) {
+            console.log(`\n\tElementQL Server Started on Port ${port}: ${serverlink}\n`);
         }
-        this.server.listen(this.port);
-        if (this.open) {
+        this.server.listen(port);
+        if (this.options.open) {
             open(serverlink);
         }
     }
 
     public stop() {
-        if (this.verbose) {
-            console.log(`\n\tElementQL Server Closed on Port ${this.port}\n`);
+        if (this.options.verbose) {
+            console.log(`\n\tElementQL Server Closed on Port ${this.options.port}\n`);
         }
 
         this.server.close();
     }
 
 
+
+    /** OPTIONS */
     private handleOptions(
-        options?: ElementQLServerOptions,
+        options: ElementQLServerOptions,
     ) {
-        if (options) {
-            this.port = options.port || DEFAULT_PORT;
-            this.verbose = options.verbose ?? true;
-            this.elementsDir = options.elementsDir || DEFAULT_ELEMENTS_DIR;
-            this.elementQLEndpoint = options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT;
-            this.playground = options.playground ?? false;
-            this.playgroundEndpoint = options.playgroundURL || DEFAULT_PLAYGROUND_ENDPOINT;
-            this.plugins = options.plugins || [];
-            this.open = options.open ?? true;
-        }
+        const internalOptions: InternalElementQLServerOptions = {
+            schema: options.schema,
+            resolvers: options.resolvers,
+            port: options.port || DEFAULT_PORT,
+            elementsPaths: options.elementsPaths || DEFAULT_ELEMENTS_DIR,
+            endpoint: options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT,
+            allowOrigin: options.allowOrigin || '*',
+            allowHeaders: options.allowHeaders || '*',
+            plugins: options.plugins || [],
+            verbose: options.verbose ?? true,
+            open: options.open ?? true,
+            playground: options.playground ?? false,
+            playgroundEndpoint: options.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
+        };
+
+        return internalOptions;
     }
 
-    private createServer() {
-        const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-            // Set CORS headers
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Request-Method', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-            res.setHeader('Access-Control-Allow-Headers', '*');
-            if (req.method === 'OPTIONS') {
-                res.writeHead(200);
-                res.end();
-                return;
-            }
 
-            if (!req.url) {
-                res.statusCode = 400;
-                res.end();
-                return;
-            }
+    /** ELEMENTS */
+    private async registerElements() {
+        const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
+        // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
 
-            if (req.url === '/favicon.ico') {
-                res.writeHead(200, {'Content-Type': 'image/x-icon'} );
-                fs.createReadStream(FAVICON).pipe(res);
-                return;
-            }
+        const elements = await fsPromise.readdir(elementsPath);
 
-            if (this.playground && req.url === this.playgroundEndpoint) {
-                this.renderPlayground(req, res);
-                return;
-            }
+        const elementsData: any[] = [];
 
-            if (req.url === this.elementQLEndpoint)  {
-                this.handleElements(req, res);
-                return;
+        for (const element of elements) {
+            const elementPath = path.join(elementsPath, element);
+            const elementFiles = await fsPromise.readdir(elementPath);
+            for (const elementFile of elementFiles) {
+                const elementData = {
+                    elementName: element,
+                    elementFile,
+                };
+                elementsData.push(elementData);
             }
+        }
 
-            if (this.elementsRoutes.includes(req.url)) {
-                this.handleElementRequest(req, res);
-                return;
-            }
+        console.log(elementsData);
+    }
 
-            res.end('ElementQL');
+    private registerElement(
+        element: RegisteredElementQL,
+    ) {
+        this.routes.set(element.routes.js, element.name);
+        this.routes.set(element.routes.css, element.name);
+
+        this.elements.set(element.routes.js, element);
+    }
+
+
+    /** SERVER */
+    private createServer(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        // Set CORS headers
+        response.setHeader('Access-Control-Allow-Origin', '*');
+        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+        response.setHeader('Access-Control-Allow-Headers', '*');
+        if (request.method === 'OPTIONS') {
+            response.writeHead(200);
+            response.end();
             return;
-        });
+        }
 
-        return server;
+        if (!request.url) {
+            response.statusCode = HTTP_BAD_REQUEST;
+            response.end();
+            return;
+        }
+
+        if (request.url === '/favicon.ico') {
+            response.writeHead(
+                HTTP_OK,
+                { HEADER_CONTENT_TYPE: 'image/x-icon' },
+            );
+            fs.createReadStream(FAVICON).pipe(response);
+            return;
+        }
+
+        if (this.options.playground && request.url === this.options.playgroundEndpoint) {
+            this.renderPlayground(request, response);
+            return;
+        }
+
+        if (request.url === this.options.endpoint)  {
+            this.handleElements(request, response);
+            return;
+        }
+
+        if (this.elements.has(request.url)) {
+            this.handleElementRequest(request, response);
+            return;
+        }
+
+        response.statusCode = HTTP_NOT_FOUND;
+        response.end('ElementQL');
+        return;
     }
 
     private async handleElements(
@@ -290,52 +337,16 @@ class ElementQLServer implements IElementQLServer {
 
     }
 
-    private registerElementRoute(
-        route: string,
-    ) {
-        this.elementsRoutes.push(route);
-    }
-
-    private registerElement(
-        element: RegisteredElementQL,
-    ) {
-        this.elements.push(element);
-    }
-
-    private async registerElements() {
-        const elementsPath = path.join(process.cwd(), 'build', this.elementsDir);
-
-        const elements = await fsPromise.readdir(elementsPath);
-
-        const elementsData: any[] = [];
-
-        for (const element of elements) {
-            const elementPath = path.join(elementsPath, element);
-            const elementFiles = await fsPromise.readdir(elementPath);
-            for (const elementFile of elementFiles) {
-                const elementData = {
-                    elementName: element,
-                    elementFile,
-                };
-                elementsData.push(elementData);
-            }
-        }
-
-        console.log(elementsData);
-    }
-
     private async handleElementRequest(
         request: IncomingMessage,
         response: ServerResponse,
     ) {
+        if (!request.url) {
+            return;
+        }
         // console.log('this.elements', this.elements);
 
-        const element = this.elements.filter(element => {
-            if (element.routes.js === request.url || element.routes.css === request.url) {
-                return element;
-            }
-            return;
-        })[0];
+        const element = this.elements.get(request.url);
 
         if (element) {
             const file = await new Promise((resolve, reject) => {
@@ -374,7 +385,8 @@ class ElementQLServer implements IElementQLServer {
         name: string,
         request: IncomingMessage,
     ) {
-        const elementsPath = path.join(process.cwd(), 'build', this.elementsDir);
+        const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
+        // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
         console.log('elementsPath', elementsPath);
 
         const host = request.headers.host;
@@ -392,10 +404,10 @@ class ElementQLServer implements IElementQLServer {
 
                     const jsRoute = `/elementql/${name}.mjs`;
                     const jsPath = `${protocol}${host}${jsRoute}`;
-                    this.registerElementRoute(jsRoute);
+                    // this.registerElementRoute(jsRoute);
                     const cssRoute = `/elementql/${name}.css`;
                     const cssPath = `${protocol}${host}${cssRoute}`;
-                    this.registerElementRoute(cssRoute);
+                    // this.registerElementRoute(cssRoute);
                     const responseElement = {
                         js: jsPath,
                         css: cssPath,
@@ -423,6 +435,8 @@ class ElementQLServer implements IElementQLServer {
         return element;
     }
 
+
+    /** PLAYGROUND */
     private renderPlayground(
         request: IncomingMessage,
         response: ServerResponse,
