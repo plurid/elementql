@@ -16,6 +16,7 @@ const options: ElementQLServerOptions = {
     schema,
     elementsPaths: './elements',
     verbose: true,
+    open: false,
 };
 
 const server = new ElementQLServer(options);
