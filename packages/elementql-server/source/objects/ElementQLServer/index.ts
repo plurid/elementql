@@ -518,18 +518,15 @@ class ElementQLServer implements IElementQLServer {
         for (const element of elements) {
             for (const [id, registeredElement] of this.elementsRegistry) {
                 if (registeredElement.name === element.name) {
+                    const urls = registeredElement.routes.map(route => route.url);
                     const responseElement = {
                         name: element.name,
-                        routes: registeredElement.routes,
+                        urls,
                     };
                     responseElements.push(responseElement);
                 }
             }
         }
-
-        // console.log('jsonRequest', jsonRequest);
-        // console.log('this.elementsRegistry', this.elementsRegistry);
-        // console.log('this.elementsRoutes', this.elementsRoutes);
 
         return responseElements;
     }
