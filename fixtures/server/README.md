@@ -6,7 +6,11 @@
 
     curl http://localhost:33300/elementql \
         -H "Content-Type: application/elementql" \
-        --data "ReactElement, element"
+        --data "AnElement"
+
+    curl http://localhost:33300/elementql \
+        -H "Content-Type: application/json" \
+        --data "{ "elements": [ {  } ] }"
 
 
 
