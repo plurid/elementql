@@ -5,7 +5,7 @@ import React, {
 import './App.css';
 
 import ElementQLClientReact from '@plurid/elementql-client-react';
-import elementql from '@plurid/elementql-tag';
+// import elementql from '@plurid/elementql-tag';
 
 
 
