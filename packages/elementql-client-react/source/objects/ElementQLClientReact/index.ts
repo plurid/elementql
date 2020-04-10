@@ -28,24 +28,29 @@ class ElementQLClientReact implements IElementQLClientReact {
         elementsRequest: any,
         type: 'elementql' | 'json' = 'elementql',
     ) {
-        console.log('elementsRequest', elementsRequest);
-        console.log('type', type);
-
         const elements = await this.client.get(
             elementsRequest,
             type,
         );
 
-        console.log('elements', elements);
+        for (const element of elements) {
+            const {
+                name,
+                urls,
+            } = element;
 
-        // console.log(window.elementql)
+            const elementModule = document.createElement('script');
+            elementModule.type = 'module';
+            elementModule.text =
+`
+import ${name} from 'http://localhost:33300${urls[0]}';
 
-        // if (window.elementql) {
-        //     console.log('Return Element based on Id/Name');
-        //     if (window.elementql.element) {
-        //         return window.elementql.element;
-        //     }
-        // }
+window.elementql = window.elementql || {};
+window.elementql.${name} = ${name};
+`;
+
+            document.body.appendChild(elementModule);
+        }
 
         return;
     }
