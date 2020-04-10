@@ -82,21 +82,15 @@ class ElementQLClient {
             {
                 method: 'POST',
                 body: JSON.stringify(request),
+                credentials: 'omit',
                 headers:{
-                    'Content-Type': 'application/elementql',
+                    'Content-Type': 'application/json',
                 },
             },
-        ).then(res => {
-            console.log(res);
-            return res.json();
-        }).catch(error => {
-            console.error('Error:', error);
-        });
+        );
+        const elementsData = await elementsRequest.json();
 
-        console.log(elementsRequest);
-
-        return {
-        };
+        return elementsData;
     }
 }
 
