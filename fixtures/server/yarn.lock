@@ -457,24 +457,30 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@plurid/elementql-parser@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-parser/-/elementql-parser-0.0.1.tgz#0db9d088a83bac2115da9653101de76c387eec74"
-  integrity sha512-3w0K3ZSRo1LPLVHkNXgs1Ivo0GsWT6kIxeqBYcOj5h1x/6k7cQ1XIdLUNToDk03dbXVISj+qLb8qPg51jrLsbg==
+"@plurid/elementql-parser@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-parser/-/elementql-parser-0.0.3.tgz#9c13303a2e33f55c1dbfbcfd4050694d73f02757"
+  integrity sha512-9kZd68064HmWRqSaXa1UWhP63TYIMKYPmrmjZ87k72frghUrvR/mgRj+cL4slLsW7JoWR4nmdlQ+Z8Kx1LICfA==
 
-"@plurid/elementql-server@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-server/-/elementql-server-0.0.2.tgz#021e8f66781120cd589c3b70c1c6d23b115fa402"
-  integrity sha512-orGs+kK9EOs6h5HkSpX2E7b5qXgk9hCpSbLDPzHLREC/lDJuLpYbxZtFF9aIuZezUdmp/W1DO9N2wrmRTG1LDg==
+"@plurid/elementql-server@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-server/-/elementql-server-0.0.3.tgz#c9c2425c4995055b2b6f7c91618f65fe5cfa70b8"
+  integrity sha512-hCRu7HDZqlyBtRaNOtCTDE3GKz9L6g77ewj5UYLjoAc6HMKSeDnwieBbG79FuyNd+PDsaXTIaEGf4b0KWHq27w==
   dependencies:
-    "@plurid/elementql-parser" "^0.0.1"
+    "@plurid/elementql-parser" "^0.0.3"
+    "@plurid/plurid-functions" "^0.1.12"
     open "^7.0.3"
     portscanner "^2.2.0"
 
-"@plurid/elementql-tag@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.3.tgz#2df11567767285f998e4ece5234b67a2d1022ef6"
-  integrity sha512-1aj5r2H7Pq3LEJJNIZG03ZelywQxic7TLyjMwCnaoX1omT1YBYhr8qGOqHsVsPJWMJ1CmXE6a7+Crv740vmmbQ==
+"@plurid/elementql-tag@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.4.tgz#11759a31751549e883cea8d9279bb11c3b7cfd9a"
+  integrity sha512-NoVp3Xe93qISqa6RRFIlYS3jcdZ0IrZB3PFU8F76tZGXb1e2hG65IMy9fZK03nECx+O/1nX/rJaScYfg3SB7Aw==
+
+"@plurid/plurid-functions@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@plurid/plurid-functions/-/plurid-functions-0.1.12.tgz#044bbd45034501404d34dbb3b185a92229d4f43a"
+  integrity sha512-7S12VrAWZtOYuadcuoyTKJM8xOxJhFIpo7AfbAlZneU4fI5xfs9e2fibWnhzvb1MjH5wCQ9aJgRCecEVmy6YdQ==
 
 "@rollup/pluginutils@^3.0.1", "@rollup/pluginutils@^3.0.8":
   version "3.0.8"
@@ -3896,7 +3902,7 @@ rollup-pluginutils@^2.3.1, rollup-pluginutils@^2.5.0, rollup-pluginutils@^2.8.1:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.3.4:
+rollup@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.4.0.tgz#b136a4d701d24dd79ec9551ee0330e7f632ee9d2"
   integrity sha512-dYE2ZKl9+kxuFKDaaSuauZjIPa8hcKDqI7WrOq1pTXYG4GJw+6ypLifGIvCKw5yJpSmuFohuimYpg0wfRXTCLw==
