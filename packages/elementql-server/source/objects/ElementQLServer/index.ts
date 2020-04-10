@@ -227,7 +227,6 @@ class ElementQLServer implements IElementQLServer {
             return;
         }
 
-        console.log('this.elementsRoutes', this.elementsRoutes);
         if (this.elementsRoutes.has(request.url)) {
             this.handleElementRequest(request, response);
             return;
@@ -412,12 +411,15 @@ class ElementQLServer implements IElementQLServer {
             return;
         }
 
+        console.log('requestURL', request.url);
+
         const elementID = this.elementsRoutes.get(request.url);
         if (!elementID) {
             response.setHeader('content-type', 'text/plain');
             response.end(`Could not find element for ${request.url}.`);
             return;
         }
+        console.log('elementID', elementID);
 
         const element = this.elementsRegistry.get(elementID);
         if (!element) {
@@ -426,7 +428,42 @@ class ElementQLServer implements IElementQLServer {
             return;
         }
 
+        console.log('element', element);
+
         const file = await new Promise((resolve, reject) => {
+            const {
+                routes,
+            } = element;
+
+            const routeFile = routes[0];
+            const {
+                fileType,
+                filePath,
+            } = routeFile;
+
+            switch (fileType) {
+                case '.mjs':
+                case '.js':
+                    response.setHeader('Content-Type', 'text/javascript');
+                    break;
+                case '.css':
+                    response.setHeader('Content-Type', 'text/css');
+                    break;
+            }
+
+            fs.readFile(filePath, (error, data) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(data);
+            });
+
+
+
+            // depending on the request (transpilation and so forth)
+            // fetch the appropiate
+
+
             // const jsFile = /\.mjs/.test(request.url || '');
             // const cssFile = /\.css/.test(request.url || '');
             // const filePath = jsFile
@@ -442,13 +479,6 @@ class ElementQLServer implements IElementQLServer {
             // if (cssFile) {
             //     response.setHeader('Content-Type', 'text/css');
             // }
-
-            // fs.readFile(filePath, (error, data) => {
-            //     if (error) {
-            //         reject(error);
-            //     }
-            //     resolve(data);
-            // });
         });
 
         response.end(file);
