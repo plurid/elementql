@@ -78,7 +78,9 @@ class ElementQLServer implements IElementQLServer {
         if (this.options.verbose) {
             console.log(`\n\tElementQL Server Started on Port ${port}: ${serverlink}\n`);
         }
+
         this.server.listen(port);
+
         if (this.options.open) {
             open(serverlink);
         }
@@ -119,26 +121,53 @@ class ElementQLServer implements IElementQLServer {
 
     /** ELEMENTS */
     private async registerElements() {
-        const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
-        // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
+        const {
+            elementsPaths,
+        } = this.options;
+
+        if (typeof elementsPaths === 'string') {
+            await this.registerElementsFromPath(elementsPaths);
+            return;
+        }
+
+        for (const elementPath of elementsPaths) {
+            await this.registerElementsFromPath(elementPath);
+        }
+    }
+
+    private async registerElementsFromPath(
+        elementPath: string,
+    ) {
+        const elementsPath = path.join(process.cwd(), 'build', elementPath);
 
         const elements = await fsPromise.readdir(elementsPath);
-
-        const elementsData: any[] = [];
 
         for (const element of elements) {
             const elementPath = path.join(elementsPath, element);
             const elementFiles = await fsPromise.readdir(elementPath);
-            for (const elementFile of elementFiles) {
-                const elementData = {
-                    elementName: element,
-                    elementFile,
-                };
-                elementsData.push(elementData);
-            }
-        }
 
-        console.log(elementsData);
+            let jsFile = '';
+            let cssFile = '';
+
+            for (const elementFile of elementFiles) {
+                // get js and css files
+            }
+
+            const registeredElement: RegisteredElementQL = {
+                id: uuid.generate(),
+                name: element,
+                paths: {
+                    css: '',
+                    js: '',
+                },
+                routes: {
+                    css: '',
+                    js: '',
+                },
+            };
+
+            this.registerElement(registeredElement);
+        }
     }
 
     private registerElement(

@@ -8,7 +8,7 @@ export interface ElementQLServerOptions {
     schema: any;
     resolvers: any;
     port?: number;
-    elementsPaths?: string;
+    elementsPaths?: string | string[];
     endpoint?: string;
     allowOrigin?: string | string[]
     allowHeaders?: string;
