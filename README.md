@@ -233,7 +233,7 @@ export default App;
 
 [@plurid/elementql-express][elementql-express] • `express` middleware
 
-[elementql-express]: https://github.com/plurid/elementql/tree/master/packages/elementql-express
+[elementql-express]: https://github.com/plurid/elementql/tree/master/packages/elementql-server-express
 
 
 
@@ -251,9 +251,9 @@ export default App;
     <img src="https://img.shields.io/npm/v/@plurid/elementql-server.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
 </a>
 
-[@plurid/elementql-server][elementql-server]
+[@plurid/elementql-server][elementql-server-node]
 
-[elementql-server]: https://github.com/plurid/elementql/tree/master/packages/elementql-server
+[elementql-server-node]: https://github.com/plurid/elementql/tree/master/packages/elementql-server
 
 
 
@@ -267,9 +267,9 @@ export default App;
 
 
 
-[@plurid/elementql-spec][elementql-spec] • specification
+[@plurid/elementql-specification][elementql-specification] • specification
 
-[elementql-spec]: https://github.com/plurid/elementql/tree/master/packages/elementql-spec
+[elementql-specification]: https://github.com/plurid/elementql/tree/master/packages/elementql-specification
 
 
 
