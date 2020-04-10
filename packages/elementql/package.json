@@ -35,7 +35,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@plurid/elementql-tag": "^0.0.3"
+        "@plurid/elementql-tag": "^0.0.4"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.2",
