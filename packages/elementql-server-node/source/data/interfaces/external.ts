@@ -2,6 +2,7 @@ export interface ElementQLServerOptions {
     schema: any;
     resolvers: any;
     port?: number;
+    buildDirectory?: string;
     elementsPaths?: string | string[];
     endpoint?: string;
     allowOrigin?: string | string[]
