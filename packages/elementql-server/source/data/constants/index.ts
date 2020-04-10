@@ -21,6 +21,13 @@ export const DEFAULT_PLAYGROUND_ENDPOINT = '/playground';
 export const FAVICON = path.join(__dirname, './assets', 'favicon.ico');
 
 
+export const METHOD_GET = 'GET';
 export const METHOD_POST = 'POST';
+
+export const HEADER_CONTENT_TYPE = 'Content-Type';
+
 export const APPLICATION_ELEMENTQL = 'application/elementql';
 export const APPLICATION_JSON = 'application/json';
+
+export const HTTP_METHOD_NOT_ALLOWED = 405;
+export const HTTP_UNSUPPORTED_MEDIA_TYPE = 415;

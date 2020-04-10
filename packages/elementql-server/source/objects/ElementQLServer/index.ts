@@ -23,9 +23,13 @@ import {
     DEFAULT_ELEMENTQL_ENDPOINT,
     DEFAULT_PLAYGROUND_ENDPOINT,
     FAVICON,
+    METHOD_GET,
     METHOD_POST,
+    HEADER_CONTENT_TYPE,
     APPLICATION_ELEMENTQL,
     APPLICATION_JSON,
+    HTTP_METHOD_NOT_ALLOWED,
+    HTTP_UNSUPPORTED_MEDIA_TYPE,
 
     defaultServerStartOptions,
 } from '../../data/constants';
@@ -149,105 +153,141 @@ class ElementQLServer implements IElementQLServer {
         request: IncomingMessage,
         response: ServerResponse,
     ) {
-        if (request.method === METHOD_POST
-            && request.headers['content-type'] === APPLICATION_ELEMENTQL
-        ) {
-            const bodyData = (): Promise<string> => {
-                let body = '';
-                return new Promise((resolve, reject) => {
-                    request.on('data', (chunk: Buffer) => {
-                        body += chunk.toString();
-                    });
+        const invalidElementQLQuery = 'Not A Valid ElementQL Query.';
 
-                    request.on('error', (error) => {
-                        reject(error);
-                    });
-
-                    request.on('end', () => {
-                        resolve(body)
-                    });
-                });
-            }
-
-            const body = await bodyData();
-
-            const handledBody = body.split(',');
-            const elements = handledBody.map(element => element.trim());
-
-            const responseElements: any[] = [];
-
-            for (const element of elements) {
-                const responseElement = await this.fetchElement(element, request);
-                responseElements.push(responseElement);
-            }
-            console.log('responseElements', responseElements);
-
-            // console.log('body', body);
-            // console.log('body', body.replace(/"/g, ''));
-
-            // const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
-            // // console.log('parsedBody', parsedBody);
-
-            // const elementsPath = path.join(process.cwd(), this.elementsDir);
-
-            // const host = request.headers.host;
-            // const protocol = 'http://';
-
-            // const responseElements: any[] = [];
-
-
-
-            // for (let parsedElement of parsedBody) {
-            //     const {
-            //         name,
-            //     } = parsedElement;
-
-            //     await new Promise ((resolve, reject) => {
-            //         fs.readdir(elementsPath, (error, items) => {
-            //             if (error) {
-            //                 reject(error);
-            //             }
-
-            //             if (items.includes(name)) {
-            //                 // based on plugins
-            //                 // to compile the element files
-
-            //                 const jsRoute = `/elementql/${parsedElement.name}.js`;
-            //                 const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
-            //                 this.registerElementRoute(jsRoute);
-            //                 const cssRoute = `/elementql/${parsedElement.name}.css`;
-            //                 const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
-            //                 this.registerElementRoute(cssRoute);
-            //                 const responseElement = {
-            //                     js: jsPath,
-            //                     css: cssPath,
-            //                 };
-            //                 responseElements.push(responseElement);
-
-            //                 const registerElement: RegisteredElementQL = {
-            //                     name,
-            //                     routes: {
-            //                         js: jsRoute,
-            //                         css: cssRoute,
-            //                     },
-            //                     paths: {
-            //                         js: `${elementsPath}/${name}/index.js`,
-            //                         css: `${elementsPath}/${name}/index.css`,
-            //                     },
-            //                 };
-            //                 this.registerElement(registerElement);
-
-            //                 resolve();
-            //             }
-            //         });
-            //     });
-            // }
-
-            response.setHeader('Content-Type', APPLICATION_JSON);
-            response.end(JSON.stringify(responseElements));
-        } else {
-            response.end('Not A Valid ElementQL Query.');
+        if (request.method === METHOD_GET) {
+            // MAYBE
+            // return a special page with documentation/information
+            response.statusCode = HTTP_METHOD_NOT_ALLOWED;
+            response.end(invalidElementQLQuery);
+            return;
         }
+
+        if (request.method !== METHOD_POST) {
+            response.statusCode = HTTP_METHOD_NOT_ALLOWED;
+            response.end(invalidElementQLQuery);
+            return;
+        }
+
+        const contentType = request.headers[HEADER_CONTENT_TYPE];
+        switch (contentType) {
+            case APPLICATION_ELEMENTQL:
+                this.handleElementQLSpecificRequest(request, response);
+                return;
+            case APPLICATION_JSON:
+                this.handleElementQLJSONRequest(request, response);
+                return;
+            default:
+                response.statusCode = HTTP_UNSUPPORTED_MEDIA_TYPE;
+                response.end(invalidElementQLQuery);
+                return;
+        }
+    }
+
+    private async handleElementQLSpecificRequest(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        const bodyData = (): Promise<string> => {
+            let body = '';
+            return new Promise((resolve, reject) => {
+                request.on('data', (chunk: Buffer) => {
+                    body += chunk.toString();
+                });
+
+                request.on('error', (error) => {
+                    reject(error);
+                });
+
+                request.on('end', () => {
+                    resolve(body)
+                });
+            });
+        }
+
+        const body = await bodyData();
+
+        const handledBody = body.split(',');
+        const elements = handledBody.map(element => element.trim());
+
+        const responseElements: any[] = [];
+
+        for (const element of elements) {
+            const responseElement = await this.fetchElement(element, request);
+            responseElements.push(responseElement);
+        }
+        console.log('responseElements', responseElements);
+
+        // console.log('body', body);
+        // console.log('body', body.replace(/"/g, ''));
+
+        // const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
+        // // console.log('parsedBody', parsedBody);
+
+        // const elementsPath = path.join(process.cwd(), this.elementsDir);
+
+        // const host = request.headers.host;
+        // const protocol = 'http://';
+
+        // const responseElements: any[] = [];
+
+
+
+        // for (let parsedElement of parsedBody) {
+        //     const {
+        //         name,
+        //     } = parsedElement;
+
+        //     await new Promise ((resolve, reject) => {
+        //         fs.readdir(elementsPath, (error, items) => {
+        //             if (error) {
+        //                 reject(error);
+        //             }
+
+        //             if (items.includes(name)) {
+        //                 // based on plugins
+        //                 // to compile the element files
+
+        //                 const jsRoute = `/elementql/${parsedElement.name}.js`;
+        //                 const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
+        //                 this.registerElementRoute(jsRoute);
+        //                 const cssRoute = `/elementql/${parsedElement.name}.css`;
+        //                 const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
+        //                 this.registerElementRoute(cssRoute);
+        //                 const responseElement = {
+        //                     js: jsPath,
+        //                     css: cssPath,
+        //                 };
+        //                 responseElements.push(responseElement);
+
+        //                 const registerElement: RegisteredElementQL = {
+        //                     name,
+        //                     routes: {
+        //                         js: jsRoute,
+        //                         css: cssRoute,
+        //                     },
+        //                     paths: {
+        //                         js: `${elementsPath}/${name}/index.js`,
+        //                         css: `${elementsPath}/${name}/index.css`,
+        //                     },
+        //                 };
+        //                 this.registerElement(registerElement);
+
+        //                 resolve();
+        //             }
+        //         });
+        //     });
+        // }
+
+        response.setHeader('Content-Type', APPLICATION_JSON);
+        response.end(JSON.stringify(responseElements));
+    }
+
+    private async handleElementQLJSONRequest(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+
     }
 
     private registerElementRoute(
