@@ -34,8 +34,9 @@ ElementQL is a query language specification and implementation to query a server
     + [Client](#client)
         + [React](#react)
 + [Plugins](#plugins)
-    + [Minimize](#minimize)
+    + [Minify](#minify)
     + [TypeScript](#typescript)
+    + [Babel](#babel)
 + [Packages](#packages)
 
 
