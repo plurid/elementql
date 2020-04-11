@@ -149,6 +149,12 @@ class ElementQLServer {
 
         const elements = await fsPromise.readdir(elementsPath);
 
+        // TODO
+        // loop over elements recursively, checking if some are folders
+        // resolve transpilation (from typesript-react to pure javascript or w/e the plugins say)
+        // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
+        // but maybe it also imports something else from the top
+
         for (const element of elements) {
             const elementPath = path.join(elementsPath, element);
             const elementFiles = await fsPromise.readdir(elementPath);
