@@ -743,6 +743,8 @@ class ElementQLServer {
 
                 if (code) {
                     updatedFileContents = code;
+                } else {
+                    updatedFileContents = fileContents;
                 }
             }
         }
