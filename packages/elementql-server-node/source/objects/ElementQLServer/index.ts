@@ -726,11 +726,13 @@ class ElementQLServer {
             return transpile;
         }
 
-        // based on this.options.plugins
-        // and on the routes[i].filePath
-        // transpile to the target
-        let updatedFileContents = '';
+
+        let updatedFileContents = fileContents;
         let updatedFileType = fileType;
+        let typescriptOptions;
+        let minifyOptions;
+
+        const indexedPlugins: any = {}
 
         for (const plugin of plugins) {
             if (
@@ -738,50 +740,63 @@ class ElementQLServer {
                 (typeof plugin === 'object' && plugin.kind === 'minify')
             ) {
                 const defaultMinifyOptions = {};
-                const minifyOptions = typeof plugin == 'object'
+                minifyOptions = typeof plugin == 'object'
                     ? plugin.options || defaultMinifyOptions
                     : defaultMinifyOptions;
 
-                const terser = Terser.minify(
-                    fileContents,
-                    minifyOptions,
-                );
-                const {
-                    code,
-                } = terser;
-
-                if (code) {
-                    updatedFileContents = code;
-                } else {
-                    updatedFileContents = fileContents;
-                }
+                indexedPlugins.minify = {
+                    options: {
+                        ...minifyOptions
+                    },
+                };
             }
 
             if (
                 plugin === 'typescript' ||
                 (typeof plugin === 'object' && plugin.kind === 'typescript')
             ) {
-                if (
-                    fileType === '.ts'
-                    || fileType === '.tsx'
-                ) {
-                    const defaultTypescriptOptions: typescript.CompilerOptions = {
-                        jsx: 2,
-                        module: 99,
-                    };
-                    const typescriptOptions = typeof plugin == 'object'
-                        ? plugin.options || defaultTypescriptOptions
-                        : defaultTypescriptOptions;
+                const defaultTypescriptOptions: typescript.CompilerOptions = {
+                    jsx: 2,
+                    module: 99,
+                };
+                typescriptOptions = typeof plugin == 'object'
+                    ? plugin.options || defaultTypescriptOptions
+                    : defaultTypescriptOptions;
 
-                    const compiled = typescript.transpile(
-                        fileContents,
-                        typescriptOptions,
-                    );
+                indexedPlugins.typescript = {
+                    options: {
+                        ...typescriptOptions
+                    },
+                };
+            }
+        }
 
-                    console.log(compiled);
-                    updatedFileContents = compiled;
-                    updatedFileType = '.js';
-                }
+        if (indexedPlugins.typescript) {
+            if (
+                fileType === '.ts'
+                || fileType === '.tsx'
+            ) {
+                const compiled = typescript.transpile(
+                    updatedFileContents,
+                    typescriptOptions,
+                );
+
+                updatedFileContents = compiled;
+                updatedFileType = '.js';
+            }
+        }
+
+        if (indexedPlugins.minify) {
+            const terser = Terser.minify(
+                updatedFileContents,
+                minifyOptions,
+            );
+            const {
+                code,
+            } = terser;
+
+            if (code) {
+                updatedFileContents = code;
             }
         }
 
