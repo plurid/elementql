@@ -112,6 +112,8 @@ class ElementQLServer {
             resolvers: options.resolvers,
             port: options.port || DEFAULT_PORT,
             buildDirectory: options.buildDirectory || 'build',
+            elementqlDirectory: options.elementqlDirectory || '.elementql',
+            transpilesDirectory: options.transpilesDirectory || 'transpiles',
             elementsPaths: options.elementsPaths || DEFAULT_ELEMENTS_DIR,
             endpoint: options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT,
             allowOrigin: options.allowOrigin || '*',
@@ -796,7 +798,7 @@ class ElementQLServer {
         const elementQLDirectory = path.join(
             process.cwd(),
             options.buildDirectory,
-            '.elementql',
+            options.elementqlDirectory,
         );
         if (!fs.existsSync(elementQLDirectory)) {
             fs.mkdirSync(elementQLDirectory);
@@ -804,7 +806,7 @@ class ElementQLServer {
 
         const transpilesDirectory = path.join(
             elementQLDirectory,
-            'transpiles',
+            options.transpilesDirectory,
         );
         if (!fs.existsSync(transpilesDirectory)) {
             fs.mkdirSync(transpilesDirectory);
