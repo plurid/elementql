@@ -4,6 +4,9 @@ import path from 'path';
 
 export const DEFAULT_PORT = 33300;
 
+export const DEFAULT_ELEMENTQL_ROOT_DIRECTORY = '.elementql';
+export const DEFAULT_ELEMENTQL_TRANSPILED_DIRECTORY = 'transpiled';
+
 export const DEFAULT_ELEMENTS_DIR = '/elements';
 
 export const DEFAULT_ELEMENTQL_ENDPOINT = '/elementql';
