@@ -763,7 +763,15 @@ class ElementQLServer {
     private assembleElementURL(
         routeURL: string,
     ) {
-        const url = this.options.endpoint + routeURL;
+        const {
+            endpoint,
+        } = this.options;
+
+        const slash = endpoint[endpoint.length - 1] === '/'
+            ? ''
+            : '/';
+        const url = this.options.endpoint + slash + routeURL;
+
         return url;
     }
 
