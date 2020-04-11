@@ -815,7 +815,7 @@ class ElementQLServer {
 
         const transpile: ProcessedElementQLTranspile = {
             id: uuid.generate(),
-            filePath: transpilePath,
+            filePath: updatedTranspilePath,
             fileType: updatedFileType,
             url: updatedURL,
         };
