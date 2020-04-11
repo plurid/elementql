@@ -13,7 +13,7 @@ export interface ElementQLServerOptions {
     endpoint?: string;
     allowOrigin?: string | string[]
     allowHeaders?: string;
-    plugins?: string[];
+    plugins?: ElementQLServerPluginKind[] | ElementQLServerPlugin[];
     verbose?: boolean;
     open?: boolean;
     playground?: boolean;
@@ -41,15 +41,30 @@ export type ElementQLJSONRequest = {
 }
 
 
-export interface PluginBase {
-    kind: 'typescript';
+export type ElementQLServerPluginKind = 'typescript' | 'minimize';
+
+export interface ElementQLServerPluginBase {
+    kind: ElementQLServerPluginKind;
 }
 
 
-export interface PluginTypescript extends PluginBase {
+export interface ElementQLServerTypescript extends ElementQLServerPluginBase {
     kind: 'typescript';
-    compilerOptions?: CompilerOptions;
+    options?: CompilerOptions;
 }
 
 
-export type Plugin = PluginTypescript;
+export interface PluginMinimizeOptions {
+    /**
+     * Default: true
+     */
+    mangle: boolean;
+}
+
+export interface ElementQLServerMinimize extends ElementQLServerPluginBase {
+    kind: 'minimize';
+    options?: PluginMinimizeOptions;
+}
+
+
+export type ElementQLServerPlugin = ElementQLServerTypescript | ElementQLServerMinimize;
