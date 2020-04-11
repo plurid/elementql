@@ -149,7 +149,10 @@ class ElementQLServer {
 
         const elements = await fsPromise.readdir(elementsPath);
 
-        const registeredElements = [];
+        const registeredElements: any[] = [];
+
+        console.log('elementPath', elementPath);
+        console.log('read elements', elements);
 
         // TODO
         // loop over elements recursively, checking if some are folders
@@ -157,61 +160,62 @@ class ElementQLServer {
         // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
         // but maybe it also imports something else from the top
 
-        for (const element of elements) {
-            const elementPath = path.join(elementsPath, element);
-            const elementFiles = await fsPromise.readdir(elementPath);
+        // for (const element of elements) {
+        //     const elementPath = path.join(elementsPath, element);
+        //     const elementFiles = await fsPromise.readdir(elementPath);
 
-            const directories = [];
-            const routes = [];
+        //     const directories = [];
+        //     const routes = [];
 
-            for (const elementFile of elementFiles) {
-                const elementFilePath = path.join(elementPath, elementFile);
+        //     for (const elementFile of elementFiles) {
+        //         const elementFilePath = path.join(elementPath, elementFile);
 
-                const isDirectory = fs.statSync(elementFilePath).isDirectory();
-                if (isDirectory) {
-                    directories.push(elementFile);
-                    continue;
-                }
+        //         const isDirectory = fs.statSync(elementFilePath).isDirectory();
+        //         if (isDirectory) {
+        //             directories.push(elementFile);
+        //             continue;
+        //         }
 
-                // process file
-                const route = this.processElementFile(
-                    element,
-                    elementFile,
-                    elementFilePath,
-                );
-                // const fileType = path.extname(elementFile);
-                // const elementHash = crypto
-                //     .createHash('md5')
-                //     .update(element + elementFile)
-                //     .digest('hex');
-                // const url = `/${elementHash}${fileType}`;
-                // const route = {
-                //     fileType,
-                //     filePath: elementFilePath,
-                //     url,
-                // };
-                routes.push(route);
-            }
+        //         // process file
+        //         const route = this.processElementFile(
+        //             element,
+        //             elementFile,
+        //             elementFilePath,
+        //         );
+        //         // const fileType = path.extname(elementFile);
+        //         // const elementHash = crypto
+        //         //     .createHash('md5')
+        //         //     .update(element + elementFile)
+        //         //     .digest('hex');
+        //         // const url = `/${elementHash}${fileType}`;
+        //         // const route = {
+        //         //     fileType,
+        //         //     filePath: elementFilePath,
+        //         //     url,
+        //         // };
+        //         routes.push(route);
+        //     }
 
-            for (const directory of directories) {
-                const directoryFilePath = path.join(elementPath, directory);
+        //     for (const directory of directories) {
+        //         const directoryFilePath = path.join(elementPath, directory);
+        //         console.log(directoryFilePath);
 
-                const directoryElements = await this.registerElementsFromPath(
-                    directoryFilePath,
-                );
-                console.log(directoryElements);
-            }
+        //         // const directoryElements = await this.registerElementsFromPath(
+        //         //     directoryFilePath,
+        //         // );
+        //         // console.log(directoryElements);
+        //     }
 
 
-            const registeredElement: RegisteredElementQL = {
-                id: uuid.generate(),
-                name: element,
-                routes,
-            };
-            registeredElements.push(registeredElement);
+        //     const registeredElement: RegisteredElementQL = {
+        //         id: uuid.generate(),
+        //         name: element,
+        //         routes,
+        //     };
+        //     registeredElements.push(registeredElement);
 
-            await this.registerElement(registeredElement);
-        }
+        //     await this.registerElement(registeredElement);
+        // }
 
         return registeredElements;
     }
