@@ -694,29 +694,25 @@ class ElementQLServer {
             'transpiles',
         );
 
+        const fileContents = await fsPromise.readFile(filePath, 'utf-8');
+        const elementHash = crypto
+            .createHash('md5')
+            .update(fileContents)
+            .digest('hex');
+
+        const transpileFilename = elementHash + fileType;
+        const transpilePath = path.join(
+            transpilesDirectory,
+            transpileFilename,
+        );
+
+        const url = this.assembleElementURL(transpileFilename);
+
         if (plugins.length === 0) {
-            const fileContents = await fsPromise.readFile(filePath);
-
-            const elementHash = crypto
-                .createHash('md5')
-                .update(fileContents)
-                .digest('hex');
-
-            const transpileFilename = elementHash + fileType;
-            const transpilePath = path.join(
-                transpilesDirectory,
-                transpileFilename,
-            );
-
             await fsPromise.copyFile(
                 filePath,
                 transpilePath,
             );
-
-            // copy the file to the .elementql/transpiles folder
-            // create the url
-
-            const url = this.assembleElementURL(transpileFilename);
 
             const transpile: ProcessedElementQLTranspile = {
                 id: uuid.generate(),
@@ -731,34 +727,36 @@ class ElementQLServer {
         // based on this.options.plugins
         // and on the routes[i].filePath
         // transpile to the target
-        // if (plugins) {
-        //     for (const plugin of plugins) {
-        //         if (plugin === 'minimize') {
-        //             const {
-        //                 filePath,
-        //             } = file;
+        let updatedFileContents = '';
 
-        //             const fileContents = await fsPromise.readFile(filePath, 'utf-8');
+        for (const plugin of plugins) {
+            if (
+                plugin === 'minimize' ||
+                (typeof plugin === 'object' && plugin.kind === 'minimize')
+            ) {
+                const terser = Terser.minify(
+                    fileContents,
+                );
+                const {
+                    code,
+                } = terser;
 
-        //             const terser = Terser.minify(
-        //                 fileContents
-        //             );
-        //             const {
-        //                 code,
-        //             } = terser;
+                if (code) {
+                    updatedFileContents = code;
+                }
+            }
+        }
 
-        //             if (code) {
-        //                 // save to file
-        //             }
-        //         }
-        //     }
-        // }
+        await fsPromise.writeFile(
+            transpilePath,
+            updatedFileContents,
+        );
 
         const transpile: ProcessedElementQLTranspile = {
-            id: '',
-            filePath: '',
-            fileType: '',
-            url: '',
+            id: uuid.generate(),
+            filePath: transpilePath,
+            fileType,
+            url,
         };
 
         return transpile;
