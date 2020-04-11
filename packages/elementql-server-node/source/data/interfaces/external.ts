@@ -12,7 +12,7 @@ export interface ElementQLServerOptions {
     elementqlDirectory?: string;
     transpilesDirectory?: string;
     elementsPaths?: string | string[];
-    libraries?: Record<string, string>;
+    libraries?: Record<string, string | ElementQLLibray>;
     endpoint?: string;
     allowOrigin?: string | string[]
     allowHeaders?: string;
@@ -84,3 +84,10 @@ export type ElementQLServerPlugin =
     | ElementQLServerTypescript
     | ElementQLServerBabel
     | ElementQLServerMinify;
+
+
+export interface ElementQLLibray {
+    version?: string;
+    file?: string;
+    link?: string;
+}
