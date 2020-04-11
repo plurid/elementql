@@ -21,6 +21,16 @@ export interface ElementQLServerOptions {
     open?: boolean;
     playground?: boolean;
     playgroundEndpoint?: string;
+
+    /**
+     * To be used to store/access the elements files in a network location
+     */
+    store?: ElementQLStore;
+}
+
+export interface ElementQLStore {
+    download: (filename: string) => Promise<string>;
+    upload: (filename: string, buffer: Buffer) => Promise<boolean>;
 }
 
 
