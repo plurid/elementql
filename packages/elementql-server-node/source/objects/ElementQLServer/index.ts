@@ -129,30 +129,77 @@ class ElementQLServer {
         } = this.options;
 
         if (typeof elementsPaths === 'string') {
-            await this.registerElementsFromPath(elementsPaths);
+            const elementsPath = path.join(
+                process.cwd(),
+                this.options.buildDirectory,
+                elementsPaths,
+            );
+            const elements = await this.registerElementsFromPath(elementsPath);
+            console.log("elements", elements);
             return;
         }
 
         for (const elementPath of elementsPaths) {
-            await this.registerElementsFromPath(elementPath);
+            const elementsPath = path.join(
+                process.cwd(),
+                this.options.buildDirectory,
+                elementPath,
+            );
+            await this.registerElementsFromPath(elementsPath);
         }
     }
 
     private async registerElementsFromPath(
-        elementPath: string,
+        elementsPath: string,
     ) {
-        const elementsPath = path.join(
-            process.cwd(),
-            this.options.buildDirectory,
-            elementPath,
-        );
-
         const elements = await fsPromise.readdir(elementsPath);
 
         const registeredElements: any[] = [];
+        const routes: any = [];
 
-        console.log('elementPath', elementPath);
-        console.log('read elements', elements);
+        for (const element of elements) {
+            const elementFilePath = path.join(elementsPath, element);
+
+            const isDirectory = fs.statSync(elementFilePath).isDirectory();
+            if (isDirectory) {
+                /** Handle directory */
+                const directoryElements = await this.registerElementsFromPath(
+                    elementFilePath,
+                );
+                registeredElements.push(...directoryElements);
+                continue;
+            }
+
+            /** Handle file */
+            const route = this.processElementFile(
+                element,
+                elementFilePath,
+            );
+            routes.push(route);
+        }
+
+        const basePath = path.join(
+            process.cwd(),
+            this.options.buildDirectory,
+        );
+
+        const relativePath = path.relative(
+            basePath,
+            elementsPath,
+        );
+
+        if (routes.length > 0) {
+            const registeredElement: RegisteredElementQL = {
+                id: uuid.generate(),
+                name: relativePath,
+                routes,
+            };
+
+            registeredElements.push(registeredElement);
+        }
+
+        return registeredElements;
+
 
         // TODO
         // loop over elements recursively, checking if some are folders
@@ -216,8 +263,6 @@ class ElementQLServer {
 
         //     await this.registerElement(registeredElement);
         // }
-
-        return registeredElements;
     }
 
     private async registerElement(
@@ -697,15 +742,17 @@ class ElementQLServer {
     }
 
     private processElementFile(
-        element: string,
-        elementFile: string,
+        elementFileName: string,
         elementFilePath: string,
     ) {
-        const fileType = path.extname(elementFile);
+        // elementFilePath is the original
+        // for transpilation move the file into the `./.elementql/transpiled` mirror directory
+
+        const fileType = path.extname(elementFilePath);
 
         const elementHash = crypto
             .createHash('md5')
-            .update(element + elementFile)
+            .update(elementFilePath)
             .digest('hex');
         const url = `/${elementHash}${fileType}`;
 
