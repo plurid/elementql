@@ -2,6 +2,8 @@ import {
     CompilerOptions,
 } from 'typescript';
 
+import Terser from 'terser';
+
 
 
 export interface ElementQLServerOptions {
@@ -50,20 +52,21 @@ export interface ElementQLServerPluginBase {
 
 export interface ElementQLServerTypescript extends ElementQLServerPluginBase {
     kind: 'typescript';
+    /**
+     * Typescript compiler options
+     * https://www.typescriptlang.org/docs/handbook/compiler-options.html
+     */
     options?: CompilerOptions;
 }
 
 
-export interface PluginMinimizeOptions {
-    /**
-     * Default: true
-     */
-    mangle: boolean;
-}
-
 export interface ElementQLServerMinimize extends ElementQLServerPluginBase {
     kind: 'minimize';
-    options?: PluginMinimizeOptions;
+    /**
+     * Terser options
+     * https://github.com/terser/terser#minify-options
+     */
+    options?: Terser.MinifyOptions;
 }
 
 
