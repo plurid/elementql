@@ -359,7 +359,7 @@ class ElementQLServer {
             const responseElement = await this.fetchElement(element, request);
             responseElements.push(responseElement);
         }
-        console.log('responseElements', responseElements);
+        // console.log('responseElements', responseElements);
 
         // console.log('body', body);
         // console.log('body', body.replace(/"/g, ''));
@@ -439,8 +439,8 @@ class ElementQLServer {
             const responseElements = await this.fetchElementsFromJSONRequest(
                 body as ElementQLJSONRequest,
             );
-            console.log(this.elementsRegistry);
-            console.log(this.elementsURLs);
+            // console.log(this.elementsRegistry);
+            // console.log(this.elementsURLs);
 
             response.setHeader('Content-Type', APPLICATION_JSON);
             response.end(JSON.stringify(responseElements));
@@ -810,6 +810,11 @@ class ElementQLServer {
             options.transpilesDirectory,
         );
         if (!fs.existsSync(transpilesDirectory)) {
+            fs.mkdirSync(transpilesDirectory);
+        } else {
+            fs.rmdirSync(transpilesDirectory, {
+                recursive: true,
+            });
             fs.mkdirSync(transpilesDirectory);
         }
     }
