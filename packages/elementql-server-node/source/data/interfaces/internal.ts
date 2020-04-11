@@ -40,6 +40,7 @@ export interface ProcessedElementQLFile {
     id: string;
     fileType: string;
     filePath: string;
+    imports: ElementQLFileImport[];
 }
 
 
@@ -48,4 +49,11 @@ export interface ProcessedElementQLTranspile {
     fileType: string;
     filePath: string;
     url: string;
+}
+
+
+export interface ElementQLFileImport {
+    relative: boolean;
+    library: boolean;
+    value: string;
 }
