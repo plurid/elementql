@@ -134,8 +134,13 @@ class ElementQLServer {
                 this.options.buildDirectory,
                 elementsPaths,
             );
-            const elements = await this.registerElementsFromPath(elementsPath);
-            console.log("elements", elements);
+            const elements = await this.extractElementsFromPath(
+                elementsPath,
+                elementsPaths,
+            );
+            for (const element of elements) {
+                this.registerElement(element);
+            }
             return;
         }
 
@@ -145,12 +150,19 @@ class ElementQLServer {
                 this.options.buildDirectory,
                 elementPath,
             );
-            await this.registerElementsFromPath(elementsPath);
+            const elements = await this.extractElementsFromPath(
+                elementsPath,
+                elementPath,
+            );
+            for (const element of elements) {
+                this.registerElement(element);
+            }
         }
     }
 
-    private async registerElementsFromPath(
+    private async extractElementsFromPath(
         elementsPath: string,
+        sourceDirectory: string,
     ) {
         // TODO
         // done - loop over elements recursively, checking if some are folders
@@ -169,8 +181,9 @@ class ElementQLServer {
             const isDirectory = fs.statSync(elementFilePath).isDirectory();
             if (isDirectory) {
                 /** Handle directory */
-                const directoryElements = await this.registerElementsFromPath(
+                const directoryElements = await this.extractElementsFromPath(
                     elementFilePath,
+                    sourceDirectory,
                 );
                 registeredElements.push(...directoryElements);
                 continue;
@@ -187,6 +200,7 @@ class ElementQLServer {
         const basePath = path.join(
             process.cwd(),
             this.options.buildDirectory,
+            sourceDirectory,
         );
 
         const relativePath = path.relative(
@@ -419,6 +433,8 @@ class ElementQLServer {
             const responseElements = await this.fetchElementsFromJSONRequest(
                 body as ElementQLJSONRequest,
             );
+            console.log(this.elementsRegistry);
+            console.log(this.elementsRoutes);
 
             response.setHeader('Content-Type', APPLICATION_JSON);
             response.end(JSON.stringify(responseElements));
@@ -645,12 +661,12 @@ class ElementQLServer {
             ...updatedElement.routes,
         ];
 
-        for (const route of routes){
-            const transpiledRoute = this.transpileRoute(route);
-            if (transpiledRoute) {
-                updatedRoutes.push(transpiledRoute);
-            }
-        }
+        // for (const route of routes) {
+        //     const transpiledRoute = this.transpileRoute(route);
+        //     if (transpiledRoute) {
+        //         updatedRoutes.push(transpiledRoute);
+        //     }
+        // }
 
         updatedElement.routes = [
             ...updatedRoutes,
