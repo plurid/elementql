@@ -28,6 +28,7 @@ import {
     ProcessedElementQL,
     ProcessedElementQLFile,
     ProcessedElementQLTranspile,
+    ElementQLFileImport,
     ElementQL,
 } from '../../data/interfaces';
 
@@ -198,7 +199,7 @@ class ElementQLServer {
             }
 
             /** Handle file */
-            const file: ProcessedElementQLFile = this.processElementFile(
+            const file: ProcessedElementQLFile = await this.processElementFile(
                 // element,
                 elementFilePath,
             );
@@ -837,15 +838,18 @@ class ElementQLServer {
         return url;
     }
 
-    private processElementFile(
+    private async processElementFile(
         elementFilePath: string,
     ) {
         const fileType = path.extname(elementFilePath);
+
+        const imports = await this.extractFileImports(elementFilePath);
 
         const file: ProcessedElementQLFile = {
             id: uuid.generate(),
             fileType,
             filePath: elementFilePath,
+            imports,
         };
 
         return file;
@@ -875,6 +879,56 @@ class ElementQLServer {
             });
             fs.mkdirSync(transpilesDirectory);
         }
+    }
+
+    private async extractFileImports(
+        elementFilePath: string,
+    ) {
+        const fileContents = await fsPromise.readFile(elementFilePath, 'utf-8');
+        const fileLines = fileContents.split('\n');
+
+        const imports = [];
+
+        for (const fileLine of fileLines) {
+            // TODO
+            // check if import on one line
+            // or import start
+            // or import end
+
+            const importOneLineRE = /^\s*import.*from.*('|")(.+)('|");?/;
+            const importOneLineMatch = fileLine.match(importOneLineRE);
+
+            if (importOneLineMatch) {
+                const value = importOneLineMatch[2];
+                const isRelative = this.checkRelativeImport(value);
+                // check if value is library or relative
+
+                const fileImport: ElementQLFileImport = {
+                    relative: isRelative,
+                    library: !isRelative,
+                    value,
+                };
+                imports.push(fileImport);
+            }
+        }
+        console.log(fileContents);
+        console.log('imports', imports);
+
+        return imports;
+    }
+
+    private checkRelativeImport(
+        value: string,
+    ) {
+        const relativeRE = /\.\//;
+        const relativeMatch = value.match(relativeRE);
+        return !!relativeMatch;
+    }
+
+    private isImportLine(
+        line: string,
+    ) {
+        return true;
     }
 
     private resolveImports(
