@@ -180,7 +180,7 @@ class ElementQLServer {
 
         const elements = await fsPromise.readdir(elementsPath);
 
-        const registeredElements: ProcessedElementQL[] = [];
+        const processedElements: ProcessedElementQL[] = [];
         const files: ProcessedElementQLFile[] = [];
 
         for (const element of elements) {
@@ -193,13 +193,13 @@ class ElementQLServer {
                     elementFilePath,
                     sourceDirectory,
                 );
-                registeredElements.push(...directoryElements);
+                processedElements.push(...directoryElements);
                 continue;
             }
 
             /** Handle file */
             const file: ProcessedElementQLFile = this.processElementFile(
-                element,
+                // element,
                 elementFilePath,
             );
             files.push(file);
@@ -217,29 +217,29 @@ class ElementQLServer {
         );
 
         if (files.length > 0) {
-            const registeredElement: ProcessedElementQL = {
+            const processedElement: ProcessedElementQL = {
                 id: uuid.generate(),
                 name: relativePath,
                 files: indexing.create(files),
             };
 
-            registeredElements.push(registeredElement);
+            processedElements.push(processedElement);
         }
 
-        return registeredElements;
+        return processedElements;
     }
 
     private async registerElement(
         element: ProcessedElementQL,
     ) {
-        const transpiledElement = await this.transpileElement(element);
+        const elementql = await this.transpileElement(element);
 
-        for (const transpile of Object.values(transpiledElement.transpiles)) {
+        for (const transpile of Object.values(elementql.transpiles)) {
             const url = this.assembleElementURL(transpile.url);
-            this.elementsURLs.set(url, transpiledElement.id);
+            this.elementsURLs.set(url, elementql.id);
         }
 
-        this.elementsRegistry.set(transpiledElement.id, transpiledElement);
+        this.elementsRegistry.set(elementql.id, elementql);
     }
 
 
@@ -660,34 +660,26 @@ class ElementQLServer {
     private async transpileElement(
         element: ProcessedElementQL,
     ): Promise<ElementQL> {
-        // const {
-        //     routes,
-        // } = element;
+        const {
+            files,
+        } = element;
 
-        // const updatedRoutes = [
-        //     ...updatedElement.routes,
-        // ];
+        const transpiles: ProcessedElementQLTranspile[] = [];
 
-        // for (const route of routes) {
-        //     const transpiledRoute = await this.transpileRoute(route);
-        //     // if (transpiledRoute) {
-        //     //     updatedRoutes.push(transpiledRoute);
-        //     // }
-        // }
-
-        // updatedElement.routes = [
-        //     ...updatedRoutes,
-        // ];
+        for (const file of Object.values(files)) {
+            const transpiledFile = await this.transpileFile(file);
+            transpiles.push(transpiledFile);
+        }
 
         const transpiledElement: ElementQL = {
             ...element,
-            transpiles: {}
+            transpiles: indexing.create(transpiles),
         };
         return transpiledElement;
     }
 
-    private async transpileRoute(
-        route: RegisteredElementQLRoute,
+    private async transpileFile(
+        file: ProcessedElementQLFile,
     ) {
         const {
             plugins,
@@ -696,30 +688,36 @@ class ElementQLServer {
         // based on this.options.plugins
         // and on the routes[i].filePath
         // transpile to the target
-        if (plugins) {
-            for (const plugin of plugins) {
-                if (plugin === 'minimize') {
-                    const {
-                        filePath,
-                    } = route;
+        // if (plugins) {
+        //     for (const plugin of plugins) {
+        //         if (plugin === 'minimize') {
+        //             const {
+        //                 filePath,
+        //             } = file;
 
-                    const fileContents = await fsPromise.readFile(filePath, 'utf-8');
+        //             const fileContents = await fsPromise.readFile(filePath, 'utf-8');
 
-                    const terser = Terser.minify(
-                        fileContents
-                    );
-                    const {
-                        code,
-                    } = terser;
+        //             const terser = Terser.minify(
+        //                 fileContents
+        //             );
+        //             const {
+        //                 code,
+        //             } = terser;
 
-                    if (code) {
-                        // save to file
-                    }
-                }
-            }
-        }
+        //             if (code) {
+        //                 // save to file
+        //             }
+        //         }
+        //     }
+        // }
 
-        return;
+        const transpile: ProcessedElementQLTranspile = {
+            filePath: '',
+            fileType: '',
+            url: '',
+        };
+
+        return transpile;
     }
 
     private assembleElementURL(
@@ -730,7 +728,7 @@ class ElementQLServer {
     }
 
     private processElementFile(
-        elementFileName: string,
+        // elementFileName: string,
         elementFilePath: string,
     ) {
         // elementFilePath is the original
@@ -738,11 +736,11 @@ class ElementQLServer {
 
         const fileType = path.extname(elementFilePath);
 
-        const elementHash = crypto
-            .createHash('md5')
-            .update(elementFilePath)
-            .digest('hex');
-        const url = `/${elementHash}${fileType}`;
+        // const elementHash = crypto
+        //     .createHash('md5')
+        //     .update(elementFilePath)
+        //     .digest('hex');
+        // const url = `/${elementHash}${fileType}`;
 
         const file: ProcessedElementQLFile = {
             id: uuid.generate(),
