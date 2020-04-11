@@ -110,13 +110,12 @@ class ElementQLServer {
         options: ElementQLServerOptions,
     ) {
         const internalOptions: InternalElementQLServerOptions = {
-            schema: options.schema,
-            resolvers: options.resolvers,
             port: options.port || DEFAULT_PORT,
             buildDirectory: options.buildDirectory || 'build',
             elementqlDirectory: options.elementqlDirectory || '.elementql',
             transpilesDirectory: options.transpilesDirectory || 'transpiles',
             elementsPaths: options.elementsPaths || DEFAULT_ELEMENTS_DIR,
+            libraries: options.libraries || {},
             endpoint: options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT,
             allowOrigin: options.allowOrigin || '*',
             allowHeaders: options.allowHeaders || '*',
@@ -876,6 +875,16 @@ class ElementQLServer {
             });
             fs.mkdirSync(transpilesDirectory);
         }
+    }
+
+    private resolveImports(
+
+    ) {
+        // parse the file and check
+        // 1. for imports for libraries
+        // "library": "version" --> "http://example.com/elementql/node_modules/library@version"
+        // 2. for relative imports
+        // "./relative-import"  --> "http://example.com/elementql/<relative-element-id>.js"
     }
 }
 
