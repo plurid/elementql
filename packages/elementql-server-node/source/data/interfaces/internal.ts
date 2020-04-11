@@ -7,17 +7,17 @@ import {
 export type InternalElementQLServerOptions = Required<ElementQLServerOptions>;
 
 
-export interface RegisteredElementQL {
-    id: string;
-    name: string;
-    routes: RegisteredElementQLRoute[];
-}
+// export interface RegisteredElementQL {
+//     id: string;
+//     name: string;
+//     routes: RegisteredElementQLRoute[];
+// }
 
-export interface RegisteredElementQLRoute {
-    fileType: string;
-    filePath: string;
-    url: string;
-}
+// export interface RegisteredElementQLRoute {
+//     fileType: string;
+//     filePath: string;
+//     url: string;
+// }
 
 
 

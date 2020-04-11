@@ -21,14 +21,11 @@ import {
 import {
     ElementQLServerOptions,
     InternalElementQLServerOptions,
-    RegisteredElementQL,
-    RegisteredElementQLRoute,
     ElementQLJSONRequest,
 
     ProcessedElementQL,
     ProcessedElementQLFile,
     ProcessedElementQLTranspile,
-    TranspiledElementQL,
     ElementQL,
 } from '../../data/interfaces';
 
@@ -58,7 +55,6 @@ import {
 
 class ElementQLServer {
     private options: InternalElementQLServerOptions;
-    // private elementsNames: Map<string, string> = new Map();
     private elementsURLs: Map<string, string> = new Map();
     private elementsRegistry: Map<string, ElementQL> = new Map();
     private server: http.Server;
@@ -68,6 +64,7 @@ class ElementQLServer {
         options: ElementQLServerOptions,
     ) {
         this.options = this.handleOptions(options);
+        this.generateElementQLDirectories(this.options);
         this.registerElements();
         this.server = http.createServer(
             (request, response) => this.createServer(request, response, this.options),
@@ -233,7 +230,6 @@ class ElementQLServer {
         element: ProcessedElementQL,
     ) {
         const elementql = await this.transpileElement(element);
-        console.log('elementql', elementql);
 
         for (const transpile of Object.values(elementql.transpiles)) {
             const url = this.assembleElementURL(transpile.url);
@@ -792,6 +788,27 @@ class ElementQLServer {
         };
 
         return file;
+    }
+
+    private generateElementQLDirectories(
+        options: InternalElementQLServerOptions,
+    ) {
+        const elementQLDirectory = path.join(
+            process.cwd(),
+            options.buildDirectory,
+            '.elementql',
+        );
+        if (!fs.existsSync(elementQLDirectory)) {
+            fs.mkdirSync(elementQLDirectory);
+        }
+
+        const transpilesDirectory = path.join(
+            elementQLDirectory,
+            'transpiles',
+        );
+        if (!fs.existsSync(transpilesDirectory)) {
+            fs.mkdirSync(transpilesDirectory);
+        }
     }
 }
 
