@@ -42,7 +42,8 @@
         "@plurid/elementql-parser": "^0.0.3",
         "@plurid/plurid-functions": "^0.1.12",
         "open": "^7.0.3",
-        "portscanner": "^2.2.0"
+        "portscanner": "^2.2.0",
+        "terser": "^4.6.11"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^11.0.2",
@@ -51,6 +52,7 @@
         "@types/jest": "^25.2.1",
         "@types/node": "^13.11.1",
         "@types/portscanner": "^2.1.0",
+        "@types/terser": "^3.12.0",
         "@typescript-eslint/eslint-plugin": "^2.27.0",
         "@typescript-eslint/parser": "^2.27.0",
         "eslint": "^6.8.0",
