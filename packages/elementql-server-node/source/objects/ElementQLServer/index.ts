@@ -234,8 +234,7 @@ class ElementQLServer {
         const elementql = await this.transpileElement(element);
 
         for (const transpile of Object.values(elementql.transpiles)) {
-            const url = this.assembleElementURL(transpile.url);
-            this.elementsURLs.set(url, elementql.id);
+            this.elementsURLs.set(transpile.url, elementql.id);
         }
 
         this.elementsRegistry.set(elementql.id, elementql);
@@ -484,9 +483,9 @@ class ElementQLServer {
             return;
         }
 
-        const routeFile = this.resolveRouteFile(request.url, element);
+        const elementFile = this.resolveElementFile(request.url, element);
 
-        if (!routeFile) {
+        if (!elementFile) {
             response.statusCode = HTTP_NOT_FOUND;
             response.end('Not Found.');
             return;
@@ -495,7 +494,7 @@ class ElementQLServer {
         const {
             fileType,
             filePath,
-        } = routeFile;
+        } = elementFile;
 
         switch (fileType) {
             case '.mjs':
@@ -638,7 +637,7 @@ class ElementQLServer {
         }
     }
 
-    private resolveRouteFile(
+    private resolveElementFile(
         requestURL: string,
         element: ElementQL,
     ) {
@@ -647,8 +646,7 @@ class ElementQLServer {
         } = element;
 
         for (const transpile of Object.values(transpiles)) {
-            const url = this.assembleElementURL(transpile.url);
-            if (url === requestURL) {
+            if (transpile.url === requestURL) {
                 return transpile;
             }
         }
@@ -697,7 +695,14 @@ class ElementQLServer {
         );
 
         if (plugins.length === 0) {
-            const transpileFilename = uuid.generate() + fileType;
+            const fileContents = await fsPromise.readFile(filePath);
+
+            const elementHash = crypto
+                .createHash('md5')
+                .update(fileContents)
+                .digest('hex');
+
+            const transpileFilename = elementHash + fileType;
             const transpilePath = path.join(
                 transpilesDirectory,
                 transpileFilename,
@@ -719,7 +724,6 @@ class ElementQLServer {
                 fileType,
                 url,
             };
-            console.log('transpile', transpile);
 
             return transpile;
         }
@@ -776,25 +780,14 @@ class ElementQLServer {
     }
 
     private processElementFile(
-        // elementFileName: string,
         elementFilePath: string,
     ) {
-        // elementFilePath is the original
-        // for transpilation move the file into the `./.elementql/transpiled` mirror directory
-
         const fileType = path.extname(elementFilePath);
-
-        // const elementHash = crypto
-        //     .createHash('md5')
-        //     .update(elementFilePath)
-        //     .digest('hex');
-        // const url = `/${elementHash}${fileType}`;
 
         const file: ProcessedElementQLFile = {
             id: uuid.generate(),
             fileType,
             filePath: elementFilePath,
-            // url,
         };
 
         return file;
