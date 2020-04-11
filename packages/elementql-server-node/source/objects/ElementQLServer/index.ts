@@ -901,6 +901,7 @@ class ElementQLServer {
         for (const transpile of Object.values(transpiles)) {
             const {
                 filePath,
+                fileType,
                 sourceFileID,
             } = transpile;
             const sourceFile = files[sourceFileID];
@@ -956,17 +957,29 @@ class ElementQLServer {
                         }
                     }
 
-                    // HACK
-                    // need to link the source file with the transpile
-                    const transpile = importElement?.transpiles && Object.values(importElement?.transpiles)[0];
+                    if (!importElement) {
+                        continue;
+                    }
+
+                    let linkedTranspileURL;
+                    for (const transpile of Object.values(importElement.transpiles)) {
+                        if (transpile.fileType === fileType) {
+                            linkedTranspileURL = transpile.url;
+                        }
+                    }
+
+                    if (!linkedTranspileURL) {
+                        continue;
+                    }
 
                     console.log('sourceFileDirectory', sourceFileDirectory);
                     console.log('basePathElement', basePathElement);
                     console.log('value', value);
                     console.log('elementName', elementName);
 
-                    const importURL = transpile?.url || '';
-                    const replaceValue = '"' + 'http://localhost:33300' + importURL + '"';
+                    const replaceValue = '"' + 'http://localhost:33300' + linkedTranspileURL + '"';
+                    console.log('replaceValue', replaceValue);
+
                     transpileContents = transpileContents.replace(importValueRE, replaceValue);
                     continue;
                 }
