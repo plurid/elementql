@@ -7,13 +7,12 @@ import Terser from 'terser';
 
 
 export interface ElementQLServerOptions {
-    schema: any;
-    resolvers: any;
     port?: number;
     buildDirectory?: string;
     elementqlDirectory?: string;
     transpilesDirectory?: string;
     elementsPaths?: string | string[];
+    libraries?: Record<string, string>;
     endpoint?: string;
     allowOrigin?: string | string[]
     allowHeaders?: string;
