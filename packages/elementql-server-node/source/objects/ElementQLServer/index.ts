@@ -851,6 +851,7 @@ class ElementQLServer {
             filePath: elementFilePath,
             imports,
         };
+        console.log(file);
 
         return file;
     }
