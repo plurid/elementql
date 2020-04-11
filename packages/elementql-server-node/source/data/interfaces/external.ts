@@ -45,7 +45,7 @@ export type ElementQLJSONRequest = {
 }
 
 
-export type ElementQLServerPluginKind = 'typescript' | 'minimize';
+export type ElementQLServerPluginKind = 'typescript' | 'babel' | 'minify';
 
 export interface ElementQLServerPluginBase {
     kind: ElementQLServerPluginKind;
@@ -62,8 +62,17 @@ export interface ElementQLServerTypescript extends ElementQLServerPluginBase {
 }
 
 
-export interface ElementQLServerMinimize extends ElementQLServerPluginBase {
-    kind: 'minimize';
+export interface ElementQLServerBabel extends ElementQLServerPluginBase {
+    kind: 'minify';
+    /**
+     * Babel options
+     */
+    options?: any;
+}
+
+
+export interface ElementQLServerMinify extends ElementQLServerPluginBase {
+    kind: 'minify';
     /**
      * Terser options
      * https://github.com/terser/terser#minify-options
@@ -72,4 +81,7 @@ export interface ElementQLServerMinimize extends ElementQLServerPluginBase {
 }
 
 
-export type ElementQLServerPlugin = ElementQLServerTypescript | ElementQLServerMinimize;
+export type ElementQLServerPlugin =
+    | ElementQLServerTypescript
+    | ElementQLServerBabel
+    | ElementQLServerMinify;
