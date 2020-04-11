@@ -21,11 +21,13 @@ export interface RegisteredElementQLRoute {
 
 
 
+
 export interface ProcessedElementQL {
     id: string;
     name: string;
     files: Record<string, ProcessedElementQLFile>;
 }
+
 
 export interface TranspiledElementQL {
     transpiles: Record<string, ProcessedElementQLTranspile>
@@ -44,4 +46,5 @@ export interface ProcessedElementQLFile {
 export interface ProcessedElementQLTranspile {
     fileType: string;
     filePath: string;
+    url: string;
 }
