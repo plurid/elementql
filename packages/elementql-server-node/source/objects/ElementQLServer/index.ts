@@ -730,6 +730,7 @@ class ElementQLServer {
         // and on the routes[i].filePath
         // transpile to the target
         let updatedFileContents = '';
+        let updatedFileType = fileType;
 
         for (const plugin of plugins) {
             if (
@@ -779,19 +780,26 @@ class ElementQLServer {
 
                     console.log(compiled);
                     updatedFileContents = compiled;
+                    updatedFileType = '.js';
                 }
             }
         }
 
+        const updatedTranspileFilename = elementHash + updatedFileType;
+        const updatedTranspilePath = path.join(
+            transpilesDirectory,
+            updatedTranspileFilename,
+        );
+
         await fsPromise.writeFile(
-            transpilePath,
+            updatedTranspilePath,
             updatedFileContents,
         );
 
         const transpile: ProcessedElementQLTranspile = {
             id: uuid.generate(),
             filePath: transpilePath,
-            fileType,
+            fileType: updatedFileType,
             url,
         };
 
