@@ -159,6 +159,8 @@ class ElementQLServer {
                 await this.resolveImports(registeredElement);
             }
 
+            await this.writeMetadataFile();
+
             return;
         }
 
@@ -176,6 +178,12 @@ class ElementQLServer {
                 await this.registerElement(element);
             }
         }
+
+        for (const [_, registeredElement] of this.elementsRegistry) {
+            await this.resolveImports(registeredElement);
+        }
+
+        await this.writeMetadataFile();
     }
 
     private async extractElementsFromPath(
@@ -899,7 +907,7 @@ class ElementQLServer {
             files,
             transpiles,
         } = element;
-        console.log(element);
+        // console.log(element);
 
         for (const transpile of Object.values(transpiles)) {
             const {
@@ -975,13 +983,13 @@ class ElementQLServer {
                         continue;
                     }
 
-                    console.log('sourceFileDirectory', sourceFileDirectory);
-                    console.log('basePathElement', basePathElement);
-                    console.log('value', value);
-                    console.log('elementName', elementName);
+                    // console.log('sourceFileDirectory', sourceFileDirectory);
+                    // console.log('basePathElement', basePathElement);
+                    // console.log('value', value);
+                    // console.log('elementName', elementName);
 
                     const replaceValue = '"' + 'http://localhost:33300' + linkedTranspileURL + '"';
-                    console.log('replaceValue', replaceValue);
+                    // console.log('replaceValue', replaceValue);
 
                     transpileContents = transpileContents.replace(importValueRE, replaceValue);
                     continue;
@@ -1007,6 +1015,40 @@ class ElementQLServer {
 
     private installLibraries() {
 
+    }
+
+    private async writeMetadataFile() {
+        const {
+            buildDirectory,
+            elementqlDirectory,
+            metadataFilename,
+        } = this.options;
+
+        const metadataFilePath = path.join(
+            process.cwd(),
+            buildDirectory,
+            elementqlDirectory,
+            metadataFilename,
+        );
+
+        const elements: any = [];
+        for (const [_, element] of this.elementsRegistry) {
+            elements.push({
+                ...element,
+            });
+        }
+
+        const data = {
+            elements,
+            generatedAt: Date.now() / 1000,
+        };
+
+        const metadataFileContents = JSON.stringify(data);
+
+        await fsPromise.writeFile(
+            metadataFilePath,
+            metadataFileContents,
+        );
     }
 }
 
