@@ -185,7 +185,7 @@ class ElementQLServer {
         element: RegisteredElementQL,
     ) {
         for (const route of element.routes) {
-            const url = this.options.endpoint + route.url;
+            const url = this.assembleElementURL(route.url);
             this.elementsRoutes.set(url, element.id);
         }
 
@@ -596,7 +596,7 @@ class ElementQLServer {
         } = element;
 
         for (const route of routes) {
-            const url = this.options.endpoint + route.url;
+            const url = this.assembleElementURL(route.url);
             if (url === requestURL) {
                 return route;
             }
@@ -648,6 +648,13 @@ class ElementQLServer {
         }
 
         return;
+    }
+
+    private assembleElementURL(
+        routeURL: string,
+    ) {
+        const url = this.options.endpoint + routeURL;
+        return url;
     }
 }
 
