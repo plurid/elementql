@@ -9,6 +9,8 @@ import fs, {
 import crypto from 'crypto';
 
 import open from 'open';
+
+import typescript from 'typescript';
 import Terser from 'terser';
 
 // import ElementQLParser from '@plurid/elementql-parser';
@@ -734,8 +736,14 @@ class ElementQLServer {
                 plugin === 'minify' ||
                 (typeof plugin === 'object' && plugin.kind === 'minify')
             ) {
+                const defaultMinifyOptions = {};
+                const minifyOptions = typeof plugin == 'object'
+                    ? plugin.options || defaultMinifyOptions
+                    : defaultMinifyOptions;
+
                 const terser = Terser.minify(
                     fileContents,
+                    minifyOptions,
                 );
                 const {
                     code,
@@ -745,6 +753,32 @@ class ElementQLServer {
                     updatedFileContents = code;
                 } else {
                     updatedFileContents = fileContents;
+                }
+            }
+
+            if (
+                plugin === 'typescript' ||
+                (typeof plugin === 'object' && plugin.kind === 'typescript')
+            ) {
+                if (
+                    fileType === '.ts'
+                    || fileType === '.tsx'
+                ) {
+                    const defaultTypescriptOptions: typescript.CompilerOptions = {
+                        jsx: 2,
+                        module: 99,
+                    };
+                    const typescriptOptions = typeof plugin == 'object'
+                        ? plugin.options || defaultTypescriptOptions
+                        : defaultTypescriptOptions;
+
+                    const compiled = typescript.transpile(
+                        fileContents,
+                        typescriptOptions,
+                    );
+
+                    console.log(compiled);
+                    updatedFileContents = compiled;
                 }
             }
         }
