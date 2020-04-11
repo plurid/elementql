@@ -886,6 +886,14 @@ class ElementQLServer {
         // 2. for relative imports
         // "./relative-import"  --> "http://example.com/elementql/<relative-element-id>.js"
     }
+
+    private detectLibraries() {
+
+    }
+
+    private installLibraries() {
+
+    }
 }
 
 
