@@ -225,14 +225,14 @@ class ElementQLServer {
     private async registerElement(
         element: RegisteredElementQL,
     ) {
-        for (const route of element.routes) {
+        const transpiledElement = await this.transpileElement(element);
+
+        for (const route of transpiledElement.routes) {
             const url = this.assembleElementURL(route.url);
-            this.elementsRoutes.set(url, element.id);
+            this.elementsRoutes.set(url, transpiledElement.id);
         }
 
-        this.elementsRegistry.set(element.id, element);
-
-        await this.transpileElement(element);
+        this.elementsRegistry.set(transpiledElement.id, transpiledElement);
     }
 
 
@@ -655,7 +655,7 @@ class ElementQLServer {
             routes,
         } = element;
 
-        const updatedElement = {
+        const updatedElement: RegisteredElementQL = {
             ...element,
         };
         const updatedRoutes = [
@@ -673,7 +673,8 @@ class ElementQLServer {
             ...updatedRoutes,
         ];
 
-        this.elementsRegistry.set(updatedElement.id, updatedElement);
+        // this.elementsRegistry.set(updatedElement.id, updatedElement);
+        return updatedElement;
     }
 
     private async transpileRoute(
