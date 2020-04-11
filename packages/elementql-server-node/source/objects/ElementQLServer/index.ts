@@ -14,6 +14,7 @@ import Terser from 'terser';
 // import ElementQLParser from '@plurid/elementql-parser';
 
 import {
+    indexing,
     uuid,
 } from '@plurid/plurid-functions';
 
@@ -23,6 +24,12 @@ import {
     RegisteredElementQL,
     RegisteredElementQLRoute,
     ElementQLJSONRequest,
+
+    ProcessedElementQL,
+    ProcessedElementQLFile,
+    ProcessedElementQLTranspile,
+    TranspiledElementQL,
+    ElementQL,
 } from '../../data/interfaces';
 
 import {
@@ -52,8 +59,8 @@ import {
 class ElementQLServer {
     private options: InternalElementQLServerOptions;
     // private elementsNames: Map<string, string> = new Map();
-    private elementsRoutes: Map<string, string> = new Map();
-    private elementsRegistry: Map<string, RegisteredElementQL> = new Map();
+    private elementsURLs: Map<string, string> = new Map();
+    private elementsRegistry: Map<string, ElementQL> = new Map();
     private server: http.Server;
 
 
@@ -173,8 +180,8 @@ class ElementQLServer {
 
         const elements = await fsPromise.readdir(elementsPath);
 
-        const registeredElements: RegisteredElementQL[] = [];
-        const routes: RegisteredElementQLRoute[] = [];
+        const registeredElements: ProcessedElementQL[] = [];
+        const files: ProcessedElementQLFile[] = [];
 
         for (const element of elements) {
             const elementFilePath = path.join(elementsPath, element);
@@ -191,11 +198,11 @@ class ElementQLServer {
             }
 
             /** Handle file */
-            const route: RegisteredElementQLRoute = this.processElementFile(
+            const file: ProcessedElementQLFile = this.processElementFile(
                 element,
                 elementFilePath,
             );
-            routes.push(route);
+            files.push(file);
         }
 
         const basePath = path.join(
@@ -209,11 +216,11 @@ class ElementQLServer {
             elementsPath,
         );
 
-        if (routes.length > 0) {
-            const registeredElement: RegisteredElementQL = {
+        if (files.length > 0) {
+            const registeredElement: ProcessedElementQL = {
                 id: uuid.generate(),
                 name: relativePath,
-                routes,
+                files: indexing.create(files),
             };
 
             registeredElements.push(registeredElement);
@@ -223,13 +230,13 @@ class ElementQLServer {
     }
 
     private async registerElement(
-        element: RegisteredElementQL,
+        element: ProcessedElementQL,
     ) {
         const transpiledElement = await this.transpileElement(element);
 
-        for (const route of transpiledElement.routes) {
-            const url = this.assembleElementURL(route.url);
-            this.elementsRoutes.set(url, transpiledElement.id);
+        for (const transpile of Object.values(transpiledElement.transpiles)) {
+            const url = this.assembleElementURL(transpile.url);
+            this.elementsURLs.set(url, transpiledElement.id);
         }
 
         this.elementsRegistry.set(transpiledElement.id, transpiledElement);
@@ -277,7 +284,7 @@ class ElementQLServer {
             return;
         }
 
-        if (this.elementsRoutes.has(request.url)) {
+        if (this.elementsURLs.has(request.url)) {
             this.handleElementRequest(request, response);
             return;
         }
@@ -435,7 +442,7 @@ class ElementQLServer {
                 body as ElementQLJSONRequest,
             );
             console.log(this.elementsRegistry);
-            console.log(this.elementsRoutes);
+            console.log(this.elementsURLs);
 
             response.setHeader('Content-Type', APPLICATION_JSON);
             response.end(JSON.stringify(responseElements));
@@ -464,7 +471,7 @@ class ElementQLServer {
         }
 
         const notFound = `Could not find element for ${request.url}.`;
-        const elementID = this.elementsRoutes.get(request.url);
+        const elementID = this.elementsURLs.get(request.url);
         if (!elementID) {
             response.setHeader('content-type', 'text/plain');
             response.end(notFound);
@@ -575,7 +582,9 @@ class ElementQLServer {
         for (const element of elements) {
             for (const [id, registeredElement] of this.elementsRegistry) {
                 if (registeredElement.name === element.name) {
-                    const urls = registeredElement.routes.map(route => route.url);
+                    const urls = Object
+                        .values(registeredElement.transpiles)
+                        .map(transpile => transpile.url);
                     const responseElement = {
                         name: element.name,
                         urls,
@@ -632,16 +641,16 @@ class ElementQLServer {
 
     private resolveRouteFile(
         requestURL: string,
-        element: RegisteredElementQL,
+        element: ElementQL,
     ) {
         const {
-            routes,
+            transpiles,
         } = element;
 
-        for (const route of routes) {
-            const url = this.assembleElementURL(route.url);
+        for (const transpile of Object.values(transpiles)) {
+            const url = this.assembleElementURL(transpile.url);
             if (url === requestURL) {
-                return route;
+                return transpile;
             }
         }
 
@@ -649,32 +658,32 @@ class ElementQLServer {
     }
 
     private async transpileElement(
-        element: RegisteredElementQL,
-    ) {
-        const {
-            routes,
-        } = element;
+        element: ProcessedElementQL,
+    ): Promise<ElementQL> {
+        // const {
+        //     routes,
+        // } = element;
 
-        const updatedElement: RegisteredElementQL = {
+        // const updatedRoutes = [
+        //     ...updatedElement.routes,
+        // ];
+
+        // for (const route of routes) {
+        //     const transpiledRoute = await this.transpileRoute(route);
+        //     // if (transpiledRoute) {
+        //     //     updatedRoutes.push(transpiledRoute);
+        //     // }
+        // }
+
+        // updatedElement.routes = [
+        //     ...updatedRoutes,
+        // ];
+
+        const transpiledElement: ElementQL = {
             ...element,
+            transpiles: {}
         };
-        const updatedRoutes = [
-            ...updatedElement.routes,
-        ];
-
-        for (const route of routes) {
-            const transpiledRoute = await this.transpileRoute(route);
-            // if (transpiledRoute) {
-            //     updatedRoutes.push(transpiledRoute);
-            // }
-        }
-
-        updatedElement.routes = [
-            ...updatedRoutes,
-        ];
-
-        // this.elementsRegistry.set(updatedElement.id, updatedElement);
-        return updatedElement;
+        return transpiledElement;
     }
 
     private async transpileRoute(
@@ -735,13 +744,14 @@ class ElementQLServer {
             .digest('hex');
         const url = `/${elementHash}${fileType}`;
 
-        const route = {
+        const file: ProcessedElementQLFile = {
+            id: uuid.generate(),
             fileType,
             filePath: elementFilePath,
-            url,
+            // url,
         };
 
-        return route;
+        return file;
     }
 }
 
