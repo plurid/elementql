@@ -17,6 +17,7 @@ const options: ElementQLServerOptions = {
     elementsPaths: './elements',
     verbose: true,
     open: false,
+    // plugins: [ 'minimize' ],
 };
 
 const server = new ElementQLServer(options);
