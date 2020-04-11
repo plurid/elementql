@@ -889,13 +889,15 @@ class ElementQLServer {
 
         const imports = [];
 
+        let importStarted = false;
+
         for (const fileLine of fileLines) {
             // TODO
             // check if import on one line
             // or import start
             // or import end
 
-            const importOneLineRE = /^\s*import.*from.*('|")(.+)('|");?/;
+            const importOneLineRE = /^\s*import.*from.*('|")(.+)('|");?$/;
             const importOneLineMatch = fileLine.match(importOneLineRE);
 
             if (importOneLineMatch) {
@@ -909,6 +911,32 @@ class ElementQLServer {
                     value,
                 };
                 imports.push(fileImport);
+            }
+
+            if (!importStarted) {
+                const importStartedRE = /^\s*import\s{$/;
+                const importStartedMatch = fileLine.match(importStartedRE);
+
+                if (importStartedMatch) {
+                    importStarted = true;
+                }
+            } else {
+                const importEndedRE = /^\s*}\s*from\s*('|")(.+)('|");?$/;
+                const importEndedMatch = fileLine.match(importEndedRE);
+
+                if (importEndedMatch) {
+                    const value = importEndedMatch[2];
+                    const isRelative = this.checkRelativeImport(value);
+
+                    const fileImport: ElementQLFileImport = {
+                        relative: isRelative,
+                        library: !isRelative,
+                        value,
+                    };
+                    imports.push(fileImport);
+
+                    importStarted = false;
+                }
             }
         }
         console.log(fileContents);
