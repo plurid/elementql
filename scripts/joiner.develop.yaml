@@ -7,7 +7,9 @@ package:
   manager: yarn
   publisher: npm
   ignore:
-    - packages/elementql-spec
+    - packages/elementql-server-go
+    - packages/elementql-server-python
+    - packages/elementql-specification
     - node_modules
 
 runFrom: ../
