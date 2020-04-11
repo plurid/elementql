@@ -11,6 +11,8 @@ export interface ElementQLServerOptions {
     resolvers: any;
     port?: number;
     buildDirectory?: string;
+    elementqlDirectory?: string;
+    transpilesDirectory?: string;
     elementsPaths?: string | string[];
     endpoint?: string;
     allowOrigin?: string | string[]
