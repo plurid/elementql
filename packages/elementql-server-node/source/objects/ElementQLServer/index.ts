@@ -149,6 +149,8 @@ class ElementQLServer {
 
         const elements = await fsPromise.readdir(elementsPath);
 
+        const registeredElements = [];
+
         // TODO
         // loop over elements recursively, checking if some are folders
         // resolve transpilation (from typesript-react to pure javascript or w/e the plugins say)
@@ -159,32 +161,59 @@ class ElementQLServer {
             const elementPath = path.join(elementsPath, element);
             const elementFiles = await fsPromise.readdir(elementPath);
 
+            const directories = [];
             const routes = [];
 
             for (const elementFile of elementFiles) {
-                const fileType = path.extname(elementFile);
                 const elementFilePath = path.join(elementPath, elementFile);
-                const elementHash = crypto
-                    .createHash('md5')
-                    .update(element + elementFile)
-                    .digest('hex');
-                const url = `/${elementHash}${fileType}`;
-                const route = {
-                    fileType,
-                    filePath: elementFilePath,
-                    url,
-                };
+
+                const isDirectory = fs.statSync(elementFilePath).isDirectory();
+                if (isDirectory) {
+                    directories.push(elementFile);
+                    continue;
+                }
+
+                // process file
+                const route = this.processElementFile(
+                    element,
+                    elementFile,
+                    elementFilePath,
+                );
+                // const fileType = path.extname(elementFile);
+                // const elementHash = crypto
+                //     .createHash('md5')
+                //     .update(element + elementFile)
+                //     .digest('hex');
+                // const url = `/${elementHash}${fileType}`;
+                // const route = {
+                //     fileType,
+                //     filePath: elementFilePath,
+                //     url,
+                // };
                 routes.push(route);
             }
+
+            for (const directory of directories) {
+                const directoryFilePath = path.join(elementPath, directory);
+
+                const directoryElements = await this.registerElementsFromPath(
+                    directoryFilePath,
+                );
+                console.log(directoryElements);
+            }
+
 
             const registeredElement: RegisteredElementQL = {
                 id: uuid.generate(),
                 name: element,
                 routes,
             };
+            registeredElements.push(registeredElement);
 
             await this.registerElement(registeredElement);
         }
+
+        return registeredElements;
     }
 
     private async registerElement(
@@ -661,6 +690,28 @@ class ElementQLServer {
     ) {
         const url = this.options.endpoint + routeURL;
         return url;
+    }
+
+    private processElementFile(
+        element: string,
+        elementFile: string,
+        elementFilePath: string,
+    ) {
+        const fileType = path.extname(elementFile);
+
+        const elementHash = crypto
+            .createHash('md5')
+            .update(element + elementFile)
+            .digest('hex');
+        const url = `/${elementHash}${fileType}`;
+
+        const route = {
+            fileType,
+            filePath: elementFilePath,
+            url,
+        };
+
+        return route;
     }
 }
 
