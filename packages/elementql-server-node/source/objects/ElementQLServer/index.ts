@@ -9,6 +9,7 @@ import fs, {
 import crypto from 'crypto';
 
 import open from 'open';
+import Terser from 'terser';
 
 // import ElementQLParser from '@plurid/elementql-parser';
 
@@ -139,7 +140,7 @@ class ElementQLServer {
                 elementsPaths,
             );
             for (const element of elements) {
-                this.registerElement(element);
+                await this.registerElement(element);
             }
             return;
         }
@@ -155,7 +156,7 @@ class ElementQLServer {
                 elementPath,
             );
             for (const element of elements) {
-                this.registerElement(element);
+                await this.registerElement(element);
             }
         }
     }
@@ -231,7 +232,7 @@ class ElementQLServer {
 
         this.elementsRegistry.set(element.id, element);
 
-        this.transpileElement(element);
+        await this.transpileElement(element);
     }
 
 
@@ -647,7 +648,7 @@ class ElementQLServer {
         return;
     }
 
-    private transpileElement(
+    private async transpileElement(
         element: RegisteredElementQL,
     ) {
         const {
@@ -661,12 +662,12 @@ class ElementQLServer {
             ...updatedElement.routes,
         ];
 
-        // for (const route of routes) {
-        //     const transpiledRoute = this.transpileRoute(route);
-        //     if (transpiledRoute) {
-        //         updatedRoutes.push(transpiledRoute);
-        //     }
-        // }
+        for (const route of routes) {
+            const transpiledRoute = await this.transpileRoute(route);
+            // if (transpiledRoute) {
+            //     updatedRoutes.push(transpiledRoute);
+            // }
+        }
 
         updatedElement.routes = [
             ...updatedRoutes,
@@ -675,7 +676,7 @@ class ElementQLServer {
         this.elementsRegistry.set(updatedElement.id, updatedElement);
     }
 
-    private transpileRoute(
+    private async transpileRoute(
         route: RegisteredElementQLRoute,
     ) {
         const {
@@ -686,7 +687,26 @@ class ElementQLServer {
         // and on the routes[i].filePath
         // transpile to the target
         if (plugins) {
-            return route;
+            for (const plugin of plugins) {
+                if (plugin === 'minimize') {
+                    const {
+                        filePath,
+                    } = route;
+
+                    const fileContents = await fsPromise.readFile(filePath, 'utf-8');
+
+                    const terser = Terser.minify(
+                        fileContents
+                    );
+                    const {
+                        code,
+                    } = terser;
+
+                    if (code) {
+                        // save to file
+                    }
+                }
+            }
         }
 
         return;
