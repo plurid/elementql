@@ -731,8 +731,8 @@ class ElementQLServer {
 
         for (const plugin of plugins) {
             if (
-                plugin === 'minimize' ||
-                (typeof plugin === 'object' && plugin.kind === 'minimize')
+                plugin === 'minify' ||
+                (typeof plugin === 'object' && plugin.kind === 'minify')
             ) {
                 const terser = Terser.minify(
                     fileContents,
