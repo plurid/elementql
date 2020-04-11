@@ -218,6 +218,11 @@ Uses [Terser](https://github.com/terser/terser) to minify the element files.
 Uses [TypeScript](https://github.com/microsoft/TypeScript) to transpile `.ts` and `.tsx` element files.
 
 
+### Babel
+
+Uses [Babel](https://github.com/babel/babel) to transpile `.js` and `.jsx` element files.
+
+
 
 ## Packages
 
