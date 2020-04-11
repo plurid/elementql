@@ -921,7 +921,7 @@ class ElementQLServer {
                     importStarted = true;
                 }
             } else {
-                const importEndedRE = /^\s*}\s*from\s*('|")(.+)('|");?$/;
+                const importEndedRE = /^[^import].*}?\s*from\s*('|")(.+)('|");?/;
                 const importEndedMatch = fileLine.match(importEndedRE);
 
                 if (importEndedMatch) {
@@ -939,8 +939,6 @@ class ElementQLServer {
                 }
             }
         }
-        console.log(fileContents);
-        console.log('imports', imports);
 
         return imports;
     }
