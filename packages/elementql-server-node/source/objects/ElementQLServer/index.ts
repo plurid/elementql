@@ -233,6 +233,7 @@ class ElementQLServer {
         element: ProcessedElementQL,
     ) {
         const elementql = await this.transpileElement(element);
+        console.log('elementql', elementql);
 
         for (const transpile of Object.values(elementql.transpiles)) {
             const url = this.assembleElementURL(transpile.url);
@@ -671,11 +672,11 @@ class ElementQLServer {
             transpiles.push(transpiledFile);
         }
 
-        const transpiledElement: ElementQL = {
+        const elementql: ElementQL = {
             ...element,
             transpiles: indexing.create(transpiles),
         };
-        return transpiledElement;
+        return elementql;
     }
 
     private async transpileFile(
@@ -697,7 +698,7 @@ class ElementQLServer {
             'transpiles',
         );
 
-        if (!plugins) {
+        if (plugins.length === 0) {
             const transpileFilename = uuid.generate() + fileType;
             const transpilePath = path.join(
                 transpilesDirectory,
@@ -715,10 +716,12 @@ class ElementQLServer {
             const url = this.assembleElementURL(transpileFilename);
 
             const transpile: ProcessedElementQLTranspile = {
+                id: uuid.generate(),
                 filePath: transpilePath,
                 fileType,
                 url,
             };
+            console.log('transpile', transpile);
 
             return transpile;
         }
@@ -750,6 +753,7 @@ class ElementQLServer {
         // }
 
         const transpile: ProcessedElementQLTranspile = {
+            id: '',
             filePath: '',
             fileType: '',
             url: '',
