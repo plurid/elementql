@@ -28,7 +28,6 @@ import {
     ProcessedElementQL,
     ProcessedElementQLFile,
     ProcessedElementQLTranspile,
-    ElementQLFileImport,
     ElementQL,
 } from '../../data/interfaces';
 
@@ -152,6 +151,11 @@ class ElementQLServer {
             for (const element of elements) {
                 await this.registerElement(element);
             }
+
+            for (const [_, registeredElement] of this.elementsRegistry) {
+                await this.resolveImports(registeredElement);
+            }
+
             return;
         }
 
@@ -202,7 +206,6 @@ class ElementQLServer {
 
             /** Handle file */
             const file: ProcessedElementQLFile = await this.processElementFile(
-                // element,
                 elementFilePath,
             );
             files.push(file);
@@ -687,6 +690,7 @@ class ElementQLServer {
         } = this.options;
 
         const {
+            id,
             filePath,
             fileType,
         } = file;
@@ -720,6 +724,7 @@ class ElementQLServer {
 
             const transpile: ProcessedElementQLTranspile = {
                 id: uuid.generate(),
+                sourceFileID: id,
                 filePath: transpilePath,
                 fileType,
                 url,
@@ -817,6 +822,7 @@ class ElementQLServer {
 
         const transpile: ProcessedElementQLTranspile = {
             id: uuid.generate(),
+            sourceFileID: id,
             filePath: updatedTranspilePath,
             fileType: updatedFileType,
             url: updatedURL,
@@ -853,7 +859,6 @@ class ElementQLServer {
             filePath: elementFilePath,
             imports,
         };
-        console.log(file);
 
         return file;
     }
@@ -884,9 +889,95 @@ class ElementQLServer {
         }
     }
 
-    private resolveImports(
-
+    private async resolveImports(
+        element: ElementQL,
     ) {
+        const {
+            files,
+            transpiles,
+        } = element;
+        console.log(element);
+
+        for (const transpile of Object.values(transpiles)) {
+            const {
+                filePath,
+                sourceFileID,
+            } = transpile;
+            const sourceFile = files[sourceFileID];
+            const {
+                filePath: sourceFilePath,
+                imports,
+            } = sourceFile;
+
+            let transpileContents = await fsPromise.readFile(filePath, 'utf-8');
+
+            const hostURL = 'http://localhost:33300' + this.options.endpoint + '/';
+
+            for (const importData of imports) {
+                const {
+                    library,
+                    relative,
+                    value,
+                } = importData;
+
+                const importValueRE = new RegExp(`('|")${value}('|")`);
+
+                if (library) {
+                    const replaceValue = '"' + hostURL + 'node_modules/' + value + '"';
+                    transpileContents = transpileContents.replace(importValueRE, replaceValue);
+                    continue;
+                }
+
+                if (relative) {
+                    // based on the value get the id of the targeted transpile
+                    // and get the import
+                    const sourceFileDirectory = path.dirname(sourceFilePath);
+                    const elementDirectory = path.resolve(
+                        sourceFileDirectory,
+                        value,
+                    );
+                    const basePath = path.join(
+                        process.cwd(),
+                        this.options.buildDirectory,
+                    );
+                    const basePathElement = path.relative(
+                        basePath,
+                        elementDirectory,
+                    );
+                    const indexElementsPath = basePathElement.indexOf('/');
+                    const elementName = basePathElement.slice(indexElementsPath + 1);
+
+                    let importElement;
+                    for (const [_, registeredElement] of this.elementsRegistry) {
+                        if (registeredElement.name === elementName) {
+                            importElement = {
+                                ...registeredElement,
+                            };
+                        }
+                    }
+
+                    // HACK
+                    // need to link the source file with the transpile
+                    const transpile = importElement?.transpiles && Object.values(importElement?.transpiles)[0];
+
+                    console.log('sourceFileDirectory', sourceFileDirectory);
+                    console.log('basePathElement', basePathElement);
+                    console.log('value', value);
+                    console.log('elementName', elementName);
+
+                    const importURL = transpile?.url || '';
+                    const replaceValue = '"' + 'http://localhost:33300' + importURL + '"';
+                    transpileContents = transpileContents.replace(importValueRE, replaceValue);
+                    continue;
+                }
+            }
+
+            fs.writeFileSync(
+                filePath,
+                transpileContents,
+            );
+        }
+
         // parse the file and check
         // 1. for imports for libraries
         // "library": "version" --> "http://example.com/elementql/node_modules/library@version"

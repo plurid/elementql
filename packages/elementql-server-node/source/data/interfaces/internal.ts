@@ -46,6 +46,7 @@ export interface ProcessedElementQLFile {
 
 export interface ProcessedElementQLTranspile {
     id: string;
+    sourceFileID: string;
     fileType: string;
     filePath: string;
     url: string;
