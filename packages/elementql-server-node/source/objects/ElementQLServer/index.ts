@@ -152,10 +152,16 @@ class ElementQLServer {
     private async registerElementsFromPath(
         elementsPath: string,
     ) {
+        // TODO
+        // done - loop over elements recursively, checking if some are folders
+        // resolve transpilation (from typesript-react to pure javascript or w/e the plugins say)
+        // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
+        // but maybe it also imports something else from the top
+
         const elements = await fsPromise.readdir(elementsPath);
 
-        const registeredElements: any[] = [];
-        const routes: any = [];
+        const registeredElements: RegisteredElementQL[] = [];
+        const routes: RegisteredElementQLRoute[] = [];
 
         for (const element of elements) {
             const elementFilePath = path.join(elementsPath, element);
@@ -171,7 +177,7 @@ class ElementQLServer {
             }
 
             /** Handle file */
-            const route = this.processElementFile(
+            const route: RegisteredElementQLRoute = this.processElementFile(
                 element,
                 elementFilePath,
             );
@@ -199,70 +205,6 @@ class ElementQLServer {
         }
 
         return registeredElements;
-
-
-        // TODO
-        // loop over elements recursively, checking if some are folders
-        // resolve transpilation (from typesript-react to pure javascript or w/e the plugins say)
-        // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
-        // but maybe it also imports something else from the top
-
-        // for (const element of elements) {
-        //     const elementPath = path.join(elementsPath, element);
-        //     const elementFiles = await fsPromise.readdir(elementPath);
-
-        //     const directories = [];
-        //     const routes = [];
-
-        //     for (const elementFile of elementFiles) {
-        //         const elementFilePath = path.join(elementPath, elementFile);
-
-        //         const isDirectory = fs.statSync(elementFilePath).isDirectory();
-        //         if (isDirectory) {
-        //             directories.push(elementFile);
-        //             continue;
-        //         }
-
-        //         // process file
-        //         const route = this.processElementFile(
-        //             element,
-        //             elementFile,
-        //             elementFilePath,
-        //         );
-        //         // const fileType = path.extname(elementFile);
-        //         // const elementHash = crypto
-        //         //     .createHash('md5')
-        //         //     .update(element + elementFile)
-        //         //     .digest('hex');
-        //         // const url = `/${elementHash}${fileType}`;
-        //         // const route = {
-        //         //     fileType,
-        //         //     filePath: elementFilePath,
-        //         //     url,
-        //         // };
-        //         routes.push(route);
-        //     }
-
-        //     for (const directory of directories) {
-        //         const directoryFilePath = path.join(elementPath, directory);
-        //         console.log(directoryFilePath);
-
-        //         // const directoryElements = await this.registerElementsFromPath(
-        //         //     directoryFilePath,
-        //         // );
-        //         // console.log(directoryElements);
-        //     }
-
-
-        //     const registeredElement: RegisteredElementQL = {
-        //         id: uuid.generate(),
-        //         name: element,
-        //         routes,
-        //     };
-        //     registeredElements.push(registeredElement);
-
-        //     await this.registerElement(registeredElement);
-        // }
     }
 
     private async registerElement(
