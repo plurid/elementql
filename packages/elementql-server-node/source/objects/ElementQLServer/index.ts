@@ -685,6 +685,44 @@ class ElementQLServer {
             plugins,
         } = this.options;
 
+        const {
+            filePath,
+            fileType,
+        } = file;
+
+        const transpilesDirectory = path.join(
+            process.cwd(),
+            this.options.buildDirectory,
+            '.elementql',
+            'transpiles',
+        );
+
+        if (!plugins) {
+            const transpileFilename = uuid.generate() + fileType;
+            const transpilePath = path.join(
+                transpilesDirectory,
+                transpileFilename,
+            );
+
+            await fsPromise.copyFile(
+                filePath,
+                transpilePath,
+            );
+
+            // copy the file to the .elementql/transpiles folder
+            // create the url
+
+            const url = this.assembleElementURL(transpileFilename);
+
+            const transpile: ProcessedElementQLTranspile = {
+                filePath: transpilePath,
+                fileType,
+                url,
+            };
+
+            return transpile;
+        }
+
         // based on this.options.plugins
         // and on the routes[i].filePath
         // transpile to the target
