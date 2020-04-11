@@ -25,12 +25,21 @@ export interface ElementQLServerOptions {
     /**
      * To be used to store/access the elements files in a network location
      */
-    store?: ElementQLStore;
+    store?: ElementQLStore | null;
+    metadataFilename?: string;
 }
 
 export interface ElementQLStore {
-    download: (filename: string) => Promise<string>;
+    /** Upload a file to the store */
     upload: (filename: string, buffer: Buffer) => Promise<boolean>;
+
+    /**
+     * Request a file from the store.
+     *
+     * Download is also called at instantiation and it expects from the store the metadata file,
+     * default named `metadata.json`, of the already registered elements, if any.
+     */
+    download: (filename: string) => Promise<Buffer>;
 }
 
 

@@ -126,6 +126,9 @@ class ElementQLServer {
             open: options.open ?? true,
             playground: options.playground ?? false,
             playgroundEndpoint: options.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
+
+            store: options.store || null,
+            metadataFilename: 'metadata.json',
         };
 
         return internalOptions;
