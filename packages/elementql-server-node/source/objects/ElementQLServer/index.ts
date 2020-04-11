@@ -806,6 +806,8 @@ class ElementQLServer {
             updatedTranspileFilename,
         );
 
+        const updatedURL = this.assembleElementURL(updatedTranspileFilename);
+
         await fsPromise.writeFile(
             updatedTranspilePath,
             updatedFileContents,
@@ -815,7 +817,7 @@ class ElementQLServer {
             id: uuid.generate(),
             filePath: transpilePath,
             fileType: updatedFileType,
-            url,
+            url: updatedURL,
         };
 
         return transpile;
