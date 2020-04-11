@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ElementQL Concept</title>
+        <title>Nested Imports | ElementQL Concept</title>
 
         <style>
             html, body {
@@ -21,6 +21,9 @@
         <!-- the scripts that import react, could be loaded locally -->
         <!-- <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
         <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script> -->
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     </head>
     <body>
         <div>
@@ -32,26 +35,26 @@
         <!-- the react root where the element will be injected -->
         <div id="react-root"></div>
 
-        <!-- t
-            he module which is injected by elementql client
+        <!--
+            the module which is injected by elementql client
             the path './element.mjs' will actually be somewhere on the network, on the elementql server
         -->
         <script type="module">
-            import AnElement from './element.mjs';
-            window.elementql = {};
-            window.elementql.AnElement = AnElement;
+            import APage from './APage/index.js';
+            // import APage from 'http://localhost:33300/elementql/216a69e3813d6e6aed586ef7f6e05428.mjs';
+
+            window.elementql = window.elementql || {};
+            window.elementql.APage = APage;
         </script>
 
         <!-- the element root injection -->
-        <script type="module">
-            import './node_modules/react-dom/umd/react-dom.production.min.js';
-
+        <script>
             // delay to give time to the browser to parse(?) the element
             setTimeout(() => {
-                const AnElement = window.elementql.AnElement;
+                const APage = window.elementql.APage;
 
                 ReactDOM.render(
-                    AnElement(),
+                    React.createElement(APage, null),
                     document.getElementById('react-root')
                 );
             }, 100);
