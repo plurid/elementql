@@ -72,7 +72,7 @@ export default {
         sourceMaps(),
         copy({
             targets: [
-                { src: 'src/elements', dest: 'build/' },
+                { src: 'src/elementsB', dest: 'build/' },
             ],
         }),
     ],
