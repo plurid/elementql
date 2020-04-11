@@ -14,7 +14,7 @@ import schema from './elementql/schema';
 const options: ElementQLServerOptions = {
     resolvers,
     schema,
-    elementsPaths: './elements',
+    elementsPaths: './elementsB',
     verbose: true,
     open: false,
     plugins: [ 'minify', 'typescript' ],
