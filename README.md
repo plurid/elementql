@@ -34,9 +34,9 @@ ElementQL is a query language specification and implementation to query a server
     + [Client](#client)
         + [React](#react)
 + [Plugins](#plugins)
-    + [Minify](#minify)
-    + [TypeScript](#typescript)
     + [Babel](#babel)
+    + [TypeScript](#typescript)
+    + [Minify](#minify)
 + [Packages](#packages)
 
 
@@ -209,9 +209,10 @@ export default App;
 
 ## Plugins
 
-### Minify
 
-Uses [Terser](https://github.com/terser/terser) to minify the element files.
+### Babel
+
+Uses [Babel](https://github.com/babel/babel) to transpile `.js` and `.jsx` element files.
 
 
 ### TypeScript
@@ -219,9 +220,9 @@ Uses [Terser](https://github.com/terser/terser) to minify the element files.
 Uses [TypeScript](https://github.com/microsoft/TypeScript) to transpile `.ts` and `.tsx` element files.
 
 
-### Babel
+### Minify
 
-Uses [Babel](https://github.com/babel/babel) to transpile `.js` and `.jsx` element files.
+Uses [Terser](https://github.com/terser/terser) to minify the element files.
 
 
 
