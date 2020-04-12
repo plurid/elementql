@@ -76,6 +76,8 @@ import {
 } from '../../data/constants';
 
 import {
+    indexHTML,
+
     checkAvailablePort,
     extractFileImports,
 } from '../../utilities';
@@ -347,7 +349,7 @@ class ElementQLServer {
         }
 
         response.statusCode = HTTP_OK;
-        response.end('ElementQL');
+        response.end(indexHTML);
         return;
     }
 
