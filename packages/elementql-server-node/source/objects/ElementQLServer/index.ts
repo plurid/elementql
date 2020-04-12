@@ -218,6 +218,7 @@ class ElementQLServer {
     private async extractElementsFromPath(
         elementsPath: string,
         sourceDirectory: string,
+        basename?: string,
     ) {
         // TODO
         // done - loop over elements recursively, checking if some are folders
@@ -225,7 +226,21 @@ class ElementQLServer {
         // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
         // but maybe it also imports something else from the top
 
+        const {
+            elementsPaths,
+        } = this.options;
+
+        const elemPaths = typeof elementsPaths === 'string'
+            ? [elementsPaths]
+            : [...elementsPaths];
+
         const elements = await fsPromise.readdir(elementsPath);
+        const pathBasename = elemPaths.includes(path.basename(elementsPath))
+            ? ''
+            : path.basename(elementsPath);
+        const elementBasename = basename
+            ? basename + '/' + pathBasename
+            : pathBasename;
 
         const processedElements: ProcessedElementQL[] = [];
         const files: ProcessedElementQLFile[] = [];
@@ -239,6 +254,7 @@ class ElementQLServer {
                 const directoryElements = await this.extractElementsFromPath(
                     elementFilePath,
                     sourceDirectory,
+                    elementBasename,
                 );
                 processedElements.push(...directoryElements);
                 continue;
@@ -246,6 +262,7 @@ class ElementQLServer {
 
             /** Handle file */
             const file: ProcessedElementQLFile = await this.processElementFile(
+                elementBasename,
                 elementFilePath,
             );
             files.push(file);
@@ -889,6 +906,7 @@ class ElementQLServer {
     }
 
     private async processElementFile(
+        elementName: string,
         elementFilePath: string,
     ) {
         const fileType = path.extname(elementFilePath);
@@ -897,11 +915,12 @@ class ElementQLServer {
 
         const file: ProcessedElementQLFile = {
             id: uuid.generate(),
-            name: '',
+            name: elementName,
             type: fileType,
             path: elementFilePath,
             imports,
         };
+        console.log('file', file);
 
         return file;
     }
@@ -1075,7 +1094,7 @@ class ElementQLServer {
             generatedAt: Date.now() / 1000,
         };
 
-        const metadataFileContents = JSON.stringify(data);
+        const metadataFileContents = JSON.stringify(data, null, 4);
 
         await fsPromise.writeFile(
             metadataFilePath,
