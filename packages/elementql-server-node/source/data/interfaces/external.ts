@@ -137,15 +137,14 @@ export type ElementQLServerPlugin =
     | ElementQLServerMinify;
 
 
+export type LibrariesResolvers = Record<Libraries, LibraryResolver>;
+
 export interface LibraryResolver {
     version?: string;
     development: string,
     production: string,
 }
 
-
 export type Libraries =
-    | 'react';
-
-
-export type LibrariesResolvers = Record<Libraries, LibraryResolver>;
+    | 'react'
+    | 'react-dom';
