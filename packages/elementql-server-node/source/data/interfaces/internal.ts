@@ -1,25 +1,10 @@
 import {
-    ElementQLServerOptions
+    ElementQLServerOptions,
 } from './external';
 
 
 
 export type InternalElementQLServerOptions = Required<ElementQLServerOptions>;
-
-
-// export interface RegisteredElementQL {
-//     id: string;
-//     name: string;
-//     routes: RegisteredElementQLRoute[];
-// }
-
-// export interface RegisteredElementQLRoute {
-//     fileType: string;
-//     filePath: string;
-//     url: string;
-// }
-
-
 
 
 export interface ProcessedElementQL {
@@ -38,17 +23,19 @@ export type ElementQL = ProcessedElementQL & TranspiledElementQL;
 
 export interface ProcessedElementQLFile {
     id: string;
-    fileType: string;
-    filePath: string;
+    name: string;
+    type: string;
+    path: string;
     imports: ElementQLFileImport[];
 }
 
 
 export interface ProcessedElementQLTranspile {
     id: string;
-    sourceFileID: string;
-    fileType: string;
-    filePath: string;
+    sourceID: string;
+    name: string;
+    type: string;
+    path: string;
     url: string;
 }
 
