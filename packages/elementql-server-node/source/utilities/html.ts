@@ -1,4 +1,4 @@
-export const indexHTML = `<!DOCTYPE html>
+export const indexHTML = (message: string) => `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,7 @@ export const indexHTML = `<!DOCTYPE html>
             color: white;
             display: grid;
             place-content: center;
+            text-align: center;
             font-family: Ubuntu, sans-serif;
             font-size: 20px;
         }
@@ -19,12 +20,24 @@ export const indexHTML = `<!DOCTYPE html>
             color: #ccc;
             text-decoration: none;
         }
+        #message {
+            padding: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <a href="https://elementql.org" target="_blank" rel="noopener noreferrer">
-        ElementQL
-    </a>
+    <div>
+        <a href="https://elementql.org" target="_blank" rel="noopener noreferrer">
+            ElementQL
+        </a>
+    </div>
+
+    ${message && `
+        <div id="message">
+            ${message}
+        </div>
+    `}
 </body>
 </html>
 `;

@@ -440,7 +440,7 @@ class ElementQLServer {
         }
 
         response.statusCode = HTTP_OK;
-        response.end(html);
+        response.end(html(''));
         return;
     }
 
@@ -448,13 +448,17 @@ class ElementQLServer {
         request: IncomingMessage,
         response: ServerResponse,
     ) {
-        const invalidElementQLQuery = 'Not A Valid ElementQL Query.';
+        const {
+            html,
+        } = this.options;
+
+        const invalidElementQLQuery = 'Not a Valid ElementQL Query';
 
         if (request.method === METHOD_GET) {
             // MAYBE
             // return a special page with documentation/information
             response.statusCode = HTTP_METHOD_NOT_ALLOWED;
-            response.end(invalidElementQLQuery);
+            response.end(html(invalidElementQLQuery.toLowerCase()));
             return;
         }
 
