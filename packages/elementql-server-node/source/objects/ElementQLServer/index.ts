@@ -30,6 +30,7 @@ import {
     ProcessedElementQLTranspile,
     ElementQL,
     ElementQLMetadataFile,
+    ElementQLStore,
 } from '../../data/interfaces';
 
 import {
@@ -176,54 +177,51 @@ class ElementQLServer {
     private async registerElements() {
         const {
             store,
-            elementsDirectories,
+        } = this.options;
+
+        if (store) {
+            await this.registerElementsStore(store);
+            return;
+        }
+
+        await this.registerElementsLocal();
+    }
+
+    private async registerElementsStore(
+        store: ElementQLStore,
+    ) {
+        const {
             metadataFilename,
         } = this.options;
 
-
-        if (store) {
-            const metadataRaw = (await store.download(metadataFilename)).toString();
-            const metadata: ElementQLMetadataFile = JSON.parse(metadataRaw);
-            const {
-                elements,
-            } = metadata;
-            for (const element of elements) {
-                const {
-                    transpiles,
-                } = element;
-
-                for (const transpile of Object.values(transpiles)) {
-                    const {
-                        path,
-                    } = transpile;
-
-                    // download file?
-                }
-            }
+        if (!store) {
+            return;
         }
 
-        // if (typeof elementsPaths === 'string') {
-        //     const elementsPath = path.join(
-        //         process.cwd(),
-        //         this.options.buildDirectory,
-        //         elementsPaths,
-        //     );
-        //     const elements = await this.extractElementsFromPath(
-        //         elementsPath,
-        //         elementsPaths,
-        //     );
-        //     for (const element of elements) {
-        //         await this.registerElement(element);
-        //     }
+        const metadataRaw = (await store.download(metadataFilename)).toString();
+        const metadata: ElementQLMetadataFile = JSON.parse(metadataRaw);
+        const {
+            elements,
+        } = metadata;
+        for (const element of elements) {
+            const {
+                transpiles,
+            } = element;
 
-        //     for (const [_, registeredElement] of this.elementsRegistry) {
-        //         await this.resolveImports(registeredElement);
-        //     }
+            for (const transpile of Object.values(transpiles)) {
+                const {
+                    path,
+                } = transpile;
 
-        //     await this.writeMetadataFile();
+                // download file?
+            }
+        }
+    }
 
-        //     return;
-        // }
+    private async registerElementsLocal() {
+        const {
+            elementsDirectories,
+        } = this.options;
 
         for (const elementPath of elementsDirectories) {
             const elementsPath = path.join(
@@ -240,9 +238,9 @@ class ElementQLServer {
             }
         }
 
-        for (const [_, registeredElement] of this.elementsRegistry) {
+        this.elementsRegistry.forEach(async (registeredElement) => {
             await this.resolveImports(registeredElement);
-        }
+        });
 
         await this.writeMetadataFile();
     }
