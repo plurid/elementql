@@ -34,7 +34,7 @@ export const DEFAULT_PLAYGROUND_ENDPOINT = '/playground';
 export const DEFAULT_STORE = null;
 export const DEFAULT_METADATA_FILENAME = 'metadata.json';
 
-export const FAVICON = path.join(__dirname, './assets', 'favicon.ico');
+export const DEFAULT_FAVICON = path.join(__dirname, './assets', 'favicon.ico');
 
 
 export const METHOD_GET = 'GET';

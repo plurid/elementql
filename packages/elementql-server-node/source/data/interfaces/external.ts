@@ -35,6 +35,7 @@ export interface ElementQLServerOptions {
     open?: boolean;
     playground?: boolean;
     playgroundEndpoint?: string;
+    favicon?: string;
 
     /**
      * To be used to store/access the elements files in a network location

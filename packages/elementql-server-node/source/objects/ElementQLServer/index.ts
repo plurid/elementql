@@ -56,11 +56,10 @@ import {
     DEFAULT_OPEN,
     DEFAULT_PLAYGROUND,
     DEFAULT_PLAYGROUND_ENDPOINT,
+    DEFAULT_FAVICON,
 
     DEFAULT_STORE,
     DEFAULT_METADATA_FILENAME,
-
-    FAVICON,
 
     METHOD_GET,
     METHOD_POST,
@@ -193,6 +192,7 @@ class ElementQLServer {
             open: options?.open ?? DEFAULT_OPEN,
             playground: options?.playground ?? DEFAULT_PLAYGROUND,
             playgroundEndpoint: options?.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
+            favicon: options?.favicon || DEFAULT_FAVICON,
 
             store: options?.store || DEFAULT_STORE,
             metadataFilename: options?.metadataFilename || DEFAULT_METADATA_FILENAME,
@@ -301,6 +301,7 @@ class ElementQLServer {
             endpoint,
             playground,
             playgroundEndpoint,
+            favicon,
         } = options;
 
         /** Handle headers. */
@@ -324,7 +325,7 @@ class ElementQLServer {
                 HTTP_OK,
                 { HEADER_CONTENT_TYPE: 'image/x-icon' },
             );
-            fs.createReadStream(FAVICON).pipe(response);
+            fs.createReadStream(favicon).pipe(response);
             return;
         }
 
