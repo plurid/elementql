@@ -82,7 +82,7 @@ or
 yarn add @plurid/elementql-server
 ```
 
-The simplest `ElementQL` server requires only a relative path for the elements to be served
+The simplest `ElementQL` server requires only to be started, the elements will be served from the default `./elements` path
 
 ``` typescript
 // server.js
@@ -90,10 +90,6 @@ import ElementQLServer, {
     ElementQLServerOptions,
 } from '@plurid/elementql-server';
 
-
-const options: ElementQLServerOptions = {
-    elementsPaths: './elements',
-};
 
 const server = new ElementQLServer(options);
 
@@ -112,6 +108,45 @@ The `./elements` directory has a flat structure of folders with `.js` or `.css` 
 |   |   |- index.js
 |   |-
 |-
+```
+
+The `ElementQLServer` Object receives an options object
+
+``` typescript
+import {
+    ElementQLServerOptions,
+} from '@plurid/elementql-server';
+
+
+/** defaults */
+const options: ElementQLServerOptions = {
+    port: 21100,
+
+    rootDirectory: process.cwd(),
+    buildDirectory: 'build',                    /** relative to the root directory */
+    nodeModulesDirectory: 'node_modules',       /** relative to the root directory */
+    elementqlDirectory: '.elementql',           /** relative to the build directory */
+    transpilesDirectory: 'transpiles',          /** relative to the elementql directory */
+
+    elementsPaths: [                            /** relative to the build directory */
+        'elements',
+    ],
+    libraries: {},
+    endpoint: '/elementql',
+    allowOrigin: ['*'],
+    allowHeaders: ['*'],
+    plugins: [
+        'minify',
+    ],
+
+    verbose: true,
+    open: true,
+    playground: false,
+    playgroundEndpoint: '/playground',
+
+    store: null,
+    metadataFilename: 'metadata.json',
+};
 ```
 
 
