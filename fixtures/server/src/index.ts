@@ -14,7 +14,8 @@ const options: ElementQLServerOptions = {
         'typescript',
     ],
     libraries: {
-        react: librariesResolvers.react,
+        'react': librariesResolvers["react"],
+        'react-dom': librariesResolvers["react-dom"],
     },
     open: false,
 };
