@@ -223,10 +223,6 @@ class ElementQLServer {
             metadataFilename,
         } = this.options;
 
-        if (!store) {
-            return;
-        }
-
         const metadataRaw = (await store.download(metadataFilename)).toString();
         const metadata: ElementQLMetadataFile = JSON.parse(metadataRaw);
         const {
@@ -275,7 +271,7 @@ class ElementQLServer {
                 elementsDirectory,
             );
             for (const element of elements) {
-                await this.registerElement(element);
+                await this.registerProcessedElement(element);
             }
         }
 
@@ -284,107 +280,6 @@ class ElementQLServer {
         });
 
         await this.writeMetadataFile();
-    }
-
-    private async extractElementsFromPath(
-        elementsPath: string,
-        sourceDirectory: string,
-        basename?: string,
-    ) {
-        // TODO
-        // done - loop over elements recursively, checking if some are folders
-        // resolve transpilation (from typesript-react to pure javascript or w/e the plugins say)
-        // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
-        // but maybe it also imports something else from the top
-
-        const {
-            elementsDirectories,
-        } = this.options;
-
-        // const elemPaths = typeof elementsPaths === 'string'
-        //     ? [elementsPaths]
-        //     : [...elementsPaths];
-
-        const isElementsPath = (
-            path: string,
-            elementsPaths: string[],
-        ) => {
-            for (const elementPath of elementsPaths) {
-                if (elementPath.replace('/', '').includes(path.replace('/', ''))) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        const elements = await fsPromise.readdir(elementsPath);
-        const pathBasename = isElementsPath(path.basename(elementsPath), elementsDirectories)
-            ? ''
-            : path.basename(elementsPath);
-        const elementBasename = basename
-            ? basename + '/' + pathBasename
-            : pathBasename;
-
-        const processedElements: ProcessedElementQL[] = [];
-        const files: ProcessedElementQLFile[] = [];
-
-        for (const element of elements) {
-            const elementFilePath = path.join(elementsPath, element);
-
-            const isDirectory = fs.statSync(elementFilePath).isDirectory();
-            if (isDirectory) {
-                /** Handle directory */
-                const directoryElements = await this.extractElementsFromPath(
-                    elementFilePath,
-                    sourceDirectory,
-                    elementBasename,
-                );
-                processedElements.push(...directoryElements);
-                continue;
-            }
-
-            /** Handle file */
-            const file: ProcessedElementQLFile = await this.processElementFile(
-                elementBasename,
-                elementFilePath,
-            );
-            files.push(file);
-        }
-
-        const basePath = path.join(
-            process.cwd(),
-            this.options.buildDirectory,
-            sourceDirectory,
-        );
-
-        const relativePath = path.relative(
-            basePath,
-            elementsPath,
-        );
-
-        if (files.length > 0) {
-            const processedElement: ProcessedElementQL = {
-                id: uuid.generate(),
-                name: relativePath,
-                files: indexing.create(files),
-            };
-
-            processedElements.push(processedElement);
-        }
-
-        return processedElements;
-    }
-
-    private async registerElement(
-        element: ProcessedElementQL,
-    ) {
-        const elementql = await this.transpileElement(element);
-
-        for (const transpile of Object.values(elementql.transpiles)) {
-            this.elementsURLs.set(transpile.url, elementql.id);
-        }
-
-        this.elementsRegistry.set(elementql.id, elementql);
     }
 
 
@@ -782,6 +677,107 @@ class ElementQLServer {
             case 'elementql':
                 return body;
         }
+    }
+
+    private async extractElementsFromPath(
+        elementsPath: string,
+        sourceDirectory: string,
+        basename?: string,
+    ) {
+        // TODO
+        // done - loop over elements recursively, checking if some are folders
+        // resolve transpilation (from typesript-react to pure javascript or w/e the plugins say)
+        // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
+        // but maybe it also imports something else from the top
+
+        const {
+            elementsDirectories,
+        } = this.options;
+
+        // const elemPaths = typeof elementsPaths === 'string'
+        //     ? [elementsPaths]
+        //     : [...elementsPaths];
+
+        const isElementsPath = (
+            path: string,
+            elementsPaths: string[],
+        ) => {
+            for (const elementPath of elementsPaths) {
+                if (elementPath.replace('/', '').includes(path.replace('/', ''))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        const elements = await fsPromise.readdir(elementsPath);
+        const pathBasename = isElementsPath(path.basename(elementsPath), elementsDirectories)
+            ? ''
+            : path.basename(elementsPath);
+        const elementBasename = basename
+            ? basename + '/' + pathBasename
+            : pathBasename;
+
+        const processedElements: ProcessedElementQL[] = [];
+        const files: ProcessedElementQLFile[] = [];
+
+        for (const element of elements) {
+            const elementFilePath = path.join(elementsPath, element);
+
+            const isDirectory = fs.statSync(elementFilePath).isDirectory();
+            if (isDirectory) {
+                /** Handle directory */
+                const directoryElements = await this.extractElementsFromPath(
+                    elementFilePath,
+                    sourceDirectory,
+                    elementBasename,
+                );
+                processedElements.push(...directoryElements);
+                continue;
+            }
+
+            /** Handle file */
+            const file: ProcessedElementQLFile = await this.processElementFile(
+                elementBasename,
+                elementFilePath,
+            );
+            files.push(file);
+        }
+
+        const basePath = path.join(
+            process.cwd(),
+            this.options.buildDirectory,
+            sourceDirectory,
+        );
+
+        const relativePath = path.relative(
+            basePath,
+            elementsPath,
+        );
+
+        if (files.length > 0) {
+            const processedElement: ProcessedElementQL = {
+                id: uuid.generate(),
+                name: relativePath,
+                files: indexing.create(files),
+            };
+
+            processedElements.push(processedElement);
+        }
+
+        return processedElements;
+    }
+
+    private async registerProcessedElement(
+        element: ProcessedElementQL,
+    ) {
+        const elementql = await this.transpileElement(element);
+
+        for (const transpile of Object.values(elementql.transpiles)) {
+            this.elementsURLs.set(transpile.url, elementql.id);
+        }
+
+        this.elementsRegistry.set(elementql.id, elementql);
     }
 
     private resolveElementFile(
