@@ -414,7 +414,7 @@ class ElementQLServer {
         }
 
         if (playground && request.url === playgroundEndpoint) {
-            this.renderPlayground(request, response);
+            this.handlePlayground(request, response);
             return;
         }
 
@@ -430,6 +430,30 @@ class ElementQLServer {
         response.statusCode = HTTP_OK;
         response.end(html(''));
         return;
+    }
+
+    private handleHeaders(
+        request: IncomingMessage,
+        response: ServerResponse,
+        options: InternalElementQLServerOptions,
+    ) {
+        const {
+            protocol,
+            allowOrigin,
+            allowHeaders,
+        } = options;
+
+        /** Handle headers. */
+        const host = request.headers.host || '';
+        const origin = protocol + '://' + host;
+        const resolvedOrigin = allowOrigin.includes('*')
+            ? '*'
+            : allowOrigin.includes(origin)
+                ? origin
+                : 'null';
+        response.setHeader('Access-Control-Allow-Origin', resolvedOrigin);
+        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+        response.setHeader('Access-Control-Allow-Headers', allowHeaders.join(', '));
     }
 
     private async handleEndpoint(
@@ -526,40 +550,20 @@ class ElementQLServer {
 
 
     /** PLAYGROUND */
-    private renderPlayground(
+    private handlePlayground(
         request: IncomingMessage,
         response: ServerResponse,
     ) {
-        response.end('ElementQL Playground');
+        const {
+            html,
+        } = this.options;
+
+        response.end(html('playground in construction'));
+        return;
     }
 
 
     /** UTILITIES */
-    private handleHeaders(
-        request: IncomingMessage,
-        response: ServerResponse,
-        options: InternalElementQLServerOptions,
-    ) {
-        const {
-            protocol,
-            allowOrigin,
-            allowHeaders,
-        } = options;
-
-        /** Handle headers. */
-        const host = request.headers.host || '';
-        const origin = protocol + '://' + host;
-        const resolvedOrigin = allowOrigin.includes('*')
-            ? '*'
-            : allowOrigin.includes(origin)
-                ? origin
-                : 'null';
-        response.setHeader('Access-Control-Allow-Origin', resolvedOrigin);
-        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
-        response.setHeader('Access-Control-Allow-Headers', allowHeaders.join(', '));
-    }
-
-
     private async parseBody(
         request: IncomingMessage,
         type: 'json' | 'elementql',
