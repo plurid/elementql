@@ -98,7 +98,7 @@ server.start();
 
 The server will then accept requests on the `/elementql` path for the elements in the `./elements` directory.
 
-The `./elements` directory has a flat structure of folders with `.js` or `.css` files. For example
+The `./elements` directory has a structure of folders with element-specific files: `.js`, `.jsx`, `.ts`, `.tsx`, or `.css`. For example
 
 ```
 .
@@ -153,11 +153,20 @@ const options: ElementQLServerOptions = {
 The requests can be made using the `POST` method with a `Content-Type` header of `application/json` or `application/elementql`. For example
 
 
-```
+``` bash
 curl http://localhost:33300/elementql \
     -H "Content-Type: application/json" \
     -v --data '{"elements":[{"name":"HelloElementQL"}]}'
 ```
+
+
+In each element directory there can be a `elementql.yaml` file with metadata
+
+``` yaml
+# the element name derived from the directory name will be overwrriten with `OverwriteName`
+name: OverwriteName
+```
+
 
 
 #### Go
