@@ -1330,12 +1330,17 @@ class ElementQLServer {
         for (const element of elements) {
             for (const [id, registeredElement] of this.elementsRegistry) {
                 if (registeredElement.name === element.name) {
-                    const urls = Object
+                    const files = Object
                         .values(registeredElement.transpiles)
-                        .map(transpile => transpile.url);
+                        .map(transpile => {
+                            return {
+                                type: transpile.type,
+                                url: transpile.url,
+                            }
+                        });
                     const responseElement = {
                         name: element.name,
-                        urls,
+                        files,
                     };
                     responseElements.push(responseElement);
                 }
