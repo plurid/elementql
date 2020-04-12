@@ -25,8 +25,9 @@ import {
     InternalElementQLServerOptions,
 
     ElementQLJSONRequest,
-    ElementQLJSONResponse,
-    ElementQLJSONResponseFile,
+    ElementQLResponse,
+    ElementQLResponseFile,
+    ElementQLJSON,
 
     ProcessedElementQL,
     ProcessedElementQLFile,
@@ -500,10 +501,10 @@ class ElementQLServer {
         const contentType = request.headers[HEADER_CONTENT_TYPE.toLowerCase()];
         switch (contentType) {
             case APPLICATION_ELEMENTQL:
-                this.handleElementQLRequest(request, response);
+                this.handleEndpointRequest(request, response, 'elementql');
                 return;
             case APPLICATION_JSON:
-                this.handleJSONRequest(request, response);
+                this.handleEndpointRequest(request, response, 'json');
                 return;
             default:
                 response.statusCode = HTTP_UNSUPPORTED_MEDIA_TYPE;
@@ -599,7 +600,7 @@ class ElementQLServer {
     private async parseBody(
         request: IncomingMessage,
         type: 'json' | 'elementql',
-    ): Promise<ElementQLJSONRequest | string> {
+    ): Promise<ElementQLJSONRequest> {
         const bodyData = (): Promise<string> => {
             let body = '';
             return new Promise((resolve, reject) => {
@@ -623,7 +624,10 @@ class ElementQLServer {
             case 'json':
                 return JSON.parse(body);
             case 'elementql':
-                return body;
+                // TODO
+                // parse body elementql
+                return JSON.parse(body);
+                // return body;
         }
     }
 
@@ -1131,180 +1135,32 @@ class ElementQLServer {
 
 
 
-
-
-    private async handleElementQLRequest(
+    private async handleEndpointRequest(
         request: IncomingMessage,
         response: ServerResponse,
-    ) {
-        const bodyData = (): Promise<string> => {
-            let body = '';
-            return new Promise((resolve, reject) => {
-                request.on('data', (chunk: Buffer) => {
-                    body += chunk.toString();
-                });
-
-                request.on('error', (error) => {
-                    reject(error);
-                });
-
-                request.on('end', () => {
-                    resolve(body)
-                });
-            });
-        }
-
-        const body = await bodyData();
-
-        const handledBody = body.split(',');
-        const elements = handledBody.map(element => element.trim());
-
-        const responseElements: any[] = [];
-
-        for (const element of elements) {
-            const responseElement = await this.fetchElement(element, request);
-            responseElements.push(responseElement);
-        }
-        // console.log('responseElements', responseElements);
-
-        // console.log('body', body);
-        // console.log('body', body.replace(/"/g, ''));
-
-        // const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
-        // // console.log('parsedBody', parsedBody);
-
-        // const elementsPath = path.join(process.cwd(), this.elementsDir);
-
-        // const host = request.headers.host;
-        // const protocol = 'http://';
-
-        // const responseElements: any[] = [];
-
-
-
-        // for (let parsedElement of parsedBody) {
-        //     const {
-        //         name,
-        //     } = parsedElement;
-
-        //     await new Promise ((resolve, reject) => {
-        //         fs.readdir(elementsPath, (error, items) => {
-        //             if (error) {
-        //                 reject(error);
-        //             }
-
-        //             if (items.includes(name)) {
-        //                 // based on plugins
-        //                 // to compile the element files
-
-        //                 const jsRoute = `/elementql/${parsedElement.name}.js`;
-        //                 const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
-        //                 this.registerElementRoute(jsRoute);
-        //                 const cssRoute = `/elementql/${parsedElement.name}.css`;
-        //                 const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
-        //                 this.registerElementRoute(cssRoute);
-        //                 const responseElement = {
-        //                     js: jsPath,
-        //                     css: cssPath,
-        //                 };
-        //                 responseElements.push(responseElement);
-
-        //                 const registerElement: RegisteredElementQL = {
-        //                     name,
-        //                     routes: {
-        //                         js: jsRoute,
-        //                         css: cssRoute,
-        //                     },
-        //                     paths: {
-        //                         js: `${elementsPath}/${name}/index.js`,
-        //                         css: `${elementsPath}/${name}/index.css`,
-        //                     },
-        //                 };
-        //                 this.registerElement(registerElement);
-
-        //                 resolve();
-        //             }
-        //         });
-        //     });
-        // }
-
-        response.setHeader('Content-Type', APPLICATION_JSON);
-        response.end(JSON.stringify(responseElements));
-        return;
-    }
-
-    private async fetchElement(
-        name: string,
-        request: IncomingMessage,
-    ) {
-        // const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
-        // // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
-        // console.log('elementsPath', elementsPath);
-
-        // const host = request.headers.host;
-        // const protocol = 'http://';
-
-        // const element = await new Promise ((resolve, reject) => {
-        //     fs.readdir(elementsPath, (error, items) => {
-        //         if (error) {
-        //             reject(error);
-        //         }
-
-        //         if (items.includes(name)) {
-        //             // based on plugins
-        //             // to compile the element files
-
-        //             const jsRoute = `/elementql/${name}.mjs`;
-        //             const jsPath = `${protocol}${host}${jsRoute}`;
-        //             // this.registerElementRoute(jsRoute);
-        //             const cssRoute = `/elementql/${name}.css`;
-        //             const cssPath = `${protocol}${host}${cssRoute}`;
-        //             // this.registerElementRoute(cssRoute);
-        //             const responseElement = {
-        //                 js: jsPath,
-        //                 css: cssPath,
-        //             };
-        //             // responseElements.push(responseElement);
-
-        //             const registerElement: RegisteredElementQL = {
-        //                 id: uuid.generate(),
-        //                 name,
-        //                 routes: {
-        //                     js: jsRoute,
-        //                     css: cssRoute,
-        //                 },
-        //                 paths: {
-        //                     js: `${elementsPath}/${name}/index.mjs`,
-        //                     css: `${elementsPath}/${name}/index.css`,
-        //                 },
-        //             };
-        //             this.registerElement(registerElement);
-
-        //             resolve(responseElement);
-        //         }
-        //     });
-        // });
-
-        // return element;
-    }
-
-
-    /** JSON REQUEST */
-    private async handleJSONRequest(
-        request: IncomingMessage,
-        response: ServerResponse,
+        type: 'elementql' | 'json',
     ) {
         try {
             const body = await this.parseBody(
                 request,
-                'json',
+                type,
             );
-            const responseElements = await this.fetchElementsForJSONRequest(
-                body as ElementQLJSONRequest,
-            );
+            const {
+                elements,
+            } = body;
+            const responseElements = await this.fetchResponseElements(elements);
+
+            const responseData = {
+                status: true,
+                data: {
+                    elements: [
+                        ...responseElements,
+                    ],
+                },
+            };
 
             response.setHeader(HEADER_CONTENT_TYPE, APPLICATION_JSON);
-            response.end(JSON.stringify(responseElements));
+            response.end(JSON.stringify(responseData));
             return;
         } catch (error) {
             const badRequest = {
@@ -1315,20 +1171,17 @@ class ElementQLServer {
                     mesage: 'Could not parse the JSON request.',
                 },
             };
-            response.setHeader('Content-Type', APPLICATION_JSON);
+            response.statusCode = HTTP_BAD_REQUEST;
+            response.setHeader(HEADER_CONTENT_TYPE, APPLICATION_JSON);
             response.end(JSON.stringify(badRequest));
             return;
         }
     }
 
-    private async fetchElementsForJSONRequest(
-        jsonRequest: ElementQLJSONRequest,
+    private async fetchResponseElements(
+        elements: ElementQLJSON[],
     ) {
-        const {
-            elements,
-        } = jsonRequest;
-
-        const responseElements: ElementQLJSONResponse[] = [];
+        const responseElements: ElementQLResponse[] = [];
 
         for (const element of elements) {
             for (const [_, registeredElement] of this.elementsRegistry) {
@@ -1338,7 +1191,7 @@ class ElementQLServer {
                         name,
                     } = registeredElement;
 
-                    const files: ElementQLJSONResponseFile[] = Object
+                    const files: ElementQLResponseFile[] = Object
                         .values(transpiles)
                         .map(transpile => {
                             const {
@@ -1352,7 +1205,7 @@ class ElementQLServer {
                             };
                         });
 
-                    const responseElement: ElementQLJSONResponse = {
+                    const responseElement: ElementQLResponse = {
                         name,
                         files,
                     };

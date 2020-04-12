@@ -84,12 +84,12 @@ export type ElementQLJSONRequest = {
 }
 
 
-export interface ElementQLJSONResponse {
+export interface ElementQLResponse {
     name: string;
-    files: ElementQLJSONResponseFile[];
+    files: ElementQLResponseFile[];
 }
 
-export interface ElementQLJSONResponseFile {
+export interface ElementQLResponseFile {
     type: string;
     url: string;
 }
