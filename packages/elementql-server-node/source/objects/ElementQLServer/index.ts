@@ -23,7 +23,10 @@ import {
 import {
     ElementQLServerOptions,
     InternalElementQLServerOptions,
+
     ElementQLJSONRequest,
+    ElementQLJSONResponse,
+    ElementQLJSONResponseFile,
 
     ProcessedElementQL,
     ProcessedElementQLFile,
@@ -1230,39 +1233,6 @@ class ElementQLServer {
         return;
     }
 
-    private async handleJSONRequest(
-        request: IncomingMessage,
-        response: ServerResponse,
-    ) {
-        try {
-            const body = await this.parseBody(
-                request,
-                'json',
-            );
-            const responseElements = await this.fetchElementsFromJSONRequest(
-                body as ElementQLJSONRequest,
-            );
-            // console.log(this.elementsRegistry);
-            // console.log(this.elementsURLs);
-
-            response.setHeader('Content-Type', APPLICATION_JSON);
-            response.end(JSON.stringify(responseElements));
-            return;
-        } catch (error) {
-            const badRequest = {
-                status: false,
-                error: {
-                    path: 'elementQL/jsonRequest',
-                    type: 'BAD_REQUEST',
-                    mesage: 'Could not parse the JSON request.',
-                },
-            };
-            response.setHeader('Content-Type', APPLICATION_JSON);
-            response.end(JSON.stringify(badRequest));
-            return;
-        }
-    }
-
     private async fetchElement(
         name: string,
         request: IncomingMessage,
@@ -1318,30 +1288,75 @@ class ElementQLServer {
         // return element;
     }
 
-    private async fetchElementsFromJSONRequest(
+
+    /** JSON REQUEST */
+    private async handleJSONRequest(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        try {
+            const body = await this.parseBody(
+                request,
+                'json',
+            );
+            const responseElements = await this.fetchElementsForJSONRequest(
+                body as ElementQLJSONRequest,
+            );
+
+            response.setHeader(HEADER_CONTENT_TYPE, APPLICATION_JSON);
+            response.end(JSON.stringify(responseElements));
+            return;
+        } catch (error) {
+            const badRequest = {
+                status: false,
+                error: {
+                    path: 'elementQL/jsonRequest',
+                    type: 'BAD_REQUEST',
+                    mesage: 'Could not parse the JSON request.',
+                },
+            };
+            response.setHeader('Content-Type', APPLICATION_JSON);
+            response.end(JSON.stringify(badRequest));
+            return;
+        }
+    }
+
+    private async fetchElementsForJSONRequest(
         jsonRequest: ElementQLJSONRequest,
     ) {
         const {
             elements,
         } = jsonRequest;
 
-        const responseElements: any[] = [];
+        const responseElements: ElementQLJSONResponse[] = [];
 
         for (const element of elements) {
-            for (const [id, registeredElement] of this.elementsRegistry) {
+            for (const [_, registeredElement] of this.elementsRegistry) {
                 if (registeredElement.name === element.name) {
-                    const files = Object
-                        .values(registeredElement.transpiles)
+                    const {
+                        transpiles,
+                        name,
+                    } = registeredElement;
+
+                    const files: ElementQLJSONResponseFile[] = Object
+                        .values(transpiles)
                         .map(transpile => {
+                            const {
+                                type,
+                                url,
+                            } = transpile;
+
                             return {
-                                type: transpile.type,
-                                url: transpile.url,
-                            }
+                                type,
+                                url,
+                            };
                         });
-                    const responseElement = {
-                        name: element.name,
+
+                    const responseElement: ElementQLJSONResponse = {
+                        name,
                         files,
                     };
+
                     responseElements.push(responseElement);
                 }
             }
