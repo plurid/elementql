@@ -113,6 +113,11 @@ class ElementQLServer {
     ) {
         const internalOptions: InternalElementQLServerOptions = {
             port: options.port || DEFAULT_PORT,
+            rootDirectory: options.rootDirectory
+                ? options.rootDirectory
+                : options.store
+                    ? '/'
+                    : process.cwd(),
             buildDirectory: options.buildDirectory || 'build',
             elementqlDirectory: options.elementqlDirectory || '.elementql',
             transpilesDirectory: options.transpilesDirectory || 'transpiles',
@@ -128,7 +133,7 @@ class ElementQLServer {
             playgroundEndpoint: options.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
 
             store: options.store || null,
-            metadataFilename: 'metadata.json',
+            metadataFilename: options.metadataFilename || 'metadata.json',
         };
 
         return internalOptions;

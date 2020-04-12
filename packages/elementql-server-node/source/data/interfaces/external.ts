@@ -8,6 +8,16 @@ import Terser from 'terser';
 
 export interface ElementQLServerOptions {
     port?: number;
+
+    /**
+     * The mounting root for the file system.
+     *
+     * On a single process defaults to `process.cwd()`.
+     * On Kubernetes is a persistent volume.
+     * On a networked process defaults to `/`.
+     */
+    rootDirectory?: string;
+
     buildDirectory?: string;
     elementqlDirectory?: string;
     transpilesDirectory?: string;
