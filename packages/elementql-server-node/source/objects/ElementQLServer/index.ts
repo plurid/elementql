@@ -582,12 +582,64 @@ class ElementQLServer {
         request: IncomingMessage,
         response: ServerResponse,
     ) {
-        console.log(request.url);
+        const {
+            endpoint,
+            rootDirectory,
+            nodeModulesDirectory,
+        } = this.options;
 
         const libraryNotFound = 'Library Not Found';
 
-        response.statusCode = HTTP_NOT_FOUND;
-        response.end(libraryNotFound);
+        try {
+            const libraryData = request.url?.replace(endpoint + '/library/', '');
+
+            if (!libraryData) {
+                response.statusCode = HTTP_NOT_FOUND;
+                response.end(libraryNotFound);
+                return;
+            }
+
+            const librarySplit = libraryData.split('~');
+            const libraryName = librarySplit[0];
+            const libraryVersion = librarySplit[1] || 'latest';
+
+            if (!libraryName) {
+                response.statusCode = HTTP_NOT_FOUND;
+                response.end(libraryNotFound);
+                return;
+            }
+
+            const nodeModulesPath = path.join(
+                rootDirectory,
+                nodeModulesDirectory,
+            );
+
+            const libraryPath = path.join(
+                nodeModulesPath,
+                libraryName,
+            );
+
+            // const packageJSONPath = path.join(
+            //     libraryPath,
+            //     'package.json',
+            // );
+
+            // const packageJSONRawData = await fsPromise.readFile(packageJSONPath, 'utf-8');
+            // const packageJSONData = JSON.parse(packageJSONRawData);
+
+            console.log('libraryName', libraryName);
+            console.log('libraryVersion', libraryVersion);
+            console.log('libraryPath', libraryPath);
+            // console.log('packageJSONData', packageJSONData);
+
+            response.statusCode = 200;
+            response.end('Library File');
+            return;
+        } catch (error) {
+            response.statusCode = HTTP_NOT_FOUND;
+            response.end(libraryNotFound);
+            return;
+        }
     }
 
 
