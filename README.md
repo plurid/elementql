@@ -96,7 +96,7 @@ const server = new ElementQLServer();
 server.start();
 ```
 
-The server will then accept requests on the `/elementql` path for the elements in the `./elements` directory.
+The server will then accept requests on the `http://localhost:21100/elementql` URL for the elements in the `./elements` directory.
 
 The `./elements` directory has a structure of folders with element-specific files: `.js`, `.jsx`, `.ts`, `.tsx`, or `.css`. For example
 
@@ -110,7 +110,7 @@ The `./elements` directory has a structure of folders with element-specific file
 |-
 ```
 
-The `ElementQLServer` Object receives an options object
+The `ElementQLServer` Object can receive an options object
 
 ``` typescript
 import {
@@ -153,13 +153,22 @@ const options: ElementQLServerOptions = {
 ```
 
 
-The requests can be made using the `POST` method with a `Content-Type` header of `application/json` or `application/elementql`. For example
+The requests for elements can be made using the `POST` method with a `Content-Type` header of `application/json` or `application/elementql`. For example
 
+JSON
 
 ``` bash
-curl http://localhost:33300/elementql \
+curl http://localhost:21100/elementql \
     -H "Content-Type: application/json" \
     -v --data '{"elements":[{"name":"HelloElementQL"}]}'
+```
+
+ElementQL
+
+``` bash
+curl http://localhost:21100/elementql \
+    -H "Content-Type: application/elementql" \
+    -v --data 'elements{HelloElementQL}'
 ```
 
 
