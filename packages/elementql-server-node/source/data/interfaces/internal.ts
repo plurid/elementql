@@ -54,4 +54,4 @@ export interface ElementQLMetadataFile {
 }
 
 
-export type ElementQLID = string;
+export type ElementID = string;
