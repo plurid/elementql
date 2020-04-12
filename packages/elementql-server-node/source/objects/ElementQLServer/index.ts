@@ -91,7 +91,7 @@ class ElementQLServer {
 
 
     constructor(
-        options: ElementQLServerOptions,
+        options?: ElementQLServerOptions,
     ) {
         this.options = this.handleOptions(options);
         this.generateDirectories();
@@ -107,67 +107,95 @@ class ElementQLServer {
     }
 
 
-    public async start() {
-        const port = await checkAvailablePort(this.options.port);
-        this.options.port = port;
+    public async start(
+        callback?: (server: http.Server) => void,
+    ) {
+        try {
+            const port = await checkAvailablePort(this.options.port);
+            this.options.port = port;
 
-        const serverlink = `http://localhost:${port}`;
-        if (this.options.verbose) {
-            console.log(`\n\tElementQL Server Started on Port ${port}: ${serverlink}\n`);
-        }
+            const serverlink = `http://localhost:${port}`;
+            if (this.options.verbose) {
+                console.log(`\n\tElementQL Server Started on Port ${port}: ${serverlink}\n`);
+            }
 
-        this.server.listen(port);
+            this.server.listen(port);
 
-        if (this.options.open) {
-            open(serverlink);
+            if (callback) {
+                callback(this.server);
+            }
+
+            if (this.options.open) {
+                open(serverlink);
+            }
+        } catch (error) {
+            if (this.options.verbose) {
+                console.log('\n\tSomething Went Wrong. ElementQL Server Could Not Start.\n');
+            }
+            return;
         }
     }
 
-    public stop() {
-        if (this.options.verbose) {
-            console.log(`\n\tElementQL Server Closed on Port ${this.options.port}\n`);
-        }
+    public async stop(
+        callback?: (server: http.Server) => Promise<void>,
+    ) {
+        try {
+            if (this.options.verbose) {
+                console.log(`\n\tElementQL Server Closed on Port ${this.options.port}\n`);
+            }
 
-        this.server.close();
+            if (callback) {
+                await callback(this.server);
+            }
+
+            if (this.server) {
+                this.server.close();
+            }
+        } catch (error) {
+            if (this.options.verbose) {
+                console.log('\n\tSomething Went Wrong. ElementQL Server Could Not Stop.\n');
+            }
+            return;
+        }
     }
 
 
 
     /** OPTIONS */
     private handleOptions(
-        options: ElementQLServerOptions,
+        options?: ElementQLServerOptions,
     ) {
         const internalOptions: InternalElementQLServerOptions = {
-            protocol: options.protocol || DEFAULT_PROTOCOL,
-            domain: options.domain || DEFAULT_DOMAIN,
-            port: options.port || DEFAULT_PORT,
+            protocol: options?.protocol || DEFAULT_PROTOCOL,
+            domain: options?.domain || DEFAULT_DOMAIN,
+            port: options?.port || DEFAULT_PORT,
 
-            rootDirectory: options.rootDirectory
-                ? options.rootDirectory
-                : options.store
+            rootDirectory: options?.rootDirectory
+                ? options?.rootDirectory
+                : options?.store
                     ? '/'
                     : DEFAULT_ELEMENTQL_ROOT_DIRECTORY,
-            buildDirectory: options.buildDirectory || DEFAULT_ELEMENTQL_BUILD_DIRECTORY,
-            nodeModulesDirectory: options.nodeModulesDirectory || DEFAULT_ELEMENTQL_NODE_MODULES_DIRECTORY,
-            elementqlDirectory: options.elementqlDirectory || DEFAULT_ELEMENTQL_ELEMENTQL_DIRECTORY,
-            transpilesDirectory: options.transpilesDirectory || DEFAULT_ELEMENTQL_TRANSPILES_DIRECTORY,
+            buildDirectory: options?.buildDirectory || DEFAULT_ELEMENTQL_BUILD_DIRECTORY,
+            nodeModulesDirectory: options?.nodeModulesDirectory || DEFAULT_ELEMENTQL_NODE_MODULES_DIRECTORY,
+            elementqlDirectory: options?.elementqlDirectory || DEFAULT_ELEMENTQL_ELEMENTQL_DIRECTORY,
+            transpilesDirectory: options?.transpilesDirectory || DEFAULT_ELEMENTQL_TRANSPILES_DIRECTORY,
 
-            elementsDirectories: typeof options.elementsDirectories === 'undefined'
+            elementsDirectories: typeof options?.elementsDirectories === 'undefined'
                 ? DEFAULT_ELEMENTS_DIRECTORIES
-                : [ ...options.elementsDirectories ],
-            libraries: options.libraries || DEFAULT_LIBRARIES,
-            endpoint: options.endpoint || DEFAULT_ENDPOINT,
-            allowOrigin: options.allowOrigin || DEFAULT_ALLOW_ORIGIN,
-            allowHeaders: options.allowHeaders || DEFAULT_ALLOW_HEADERS,
-            plugins: options.plugins || DEFAULT_PLUGINS,
+                : [ ...options?.elementsDirectories ],
+            libraries: options?.libraries || DEFAULT_LIBRARIES,
+            endpoint: options?.endpoint || DEFAULT_ENDPOINT,
+            allowOrigin: options?.allowOrigin || DEFAULT_ALLOW_ORIGIN,
+            allowHeaders: options?.allowHeaders || DEFAULT_ALLOW_HEADERS,
+            plugins: options?.plugins || DEFAULT_PLUGINS,
 
-            verbose: options.verbose ?? DEFAULT_VERBOSE,
-            open: options.open ?? DEFAULT_OPEN,
-            playground: options.playground ?? DEFAULT_PLAYGROUND,
-            playgroundEndpoint: options.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
+            verbose: options?.verbose ?? DEFAULT_VERBOSE,
+            open: options?.open ?? DEFAULT_OPEN,
+            playground: options?.playground ?? DEFAULT_PLAYGROUND,
+            playgroundEndpoint: options?.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
 
-            store: options.store || DEFAULT_STORE,
-            metadataFilename: options.metadataFilename || DEFAULT_METADATA_FILENAME,
+            store: options?.store || DEFAULT_STORE,
+            metadataFilename: options?.metadataFilename || DEFAULT_METADATA_FILENAME,
         };
 
         return internalOptions;
@@ -225,8 +253,8 @@ class ElementQLServer {
         // to check if there isn't an already defined metadata file
         // and verify the local elements against the already registered ones
         // if all is already registered, simply load into memory
-        const handledLocal = await this.handleLocalMetadataFile();
-        if (handledLocal) {
+        const registeredLocalElements = await this.handleLocalMetadataFile();
+        if (registeredLocalElements) {
             return;
         }
 
@@ -975,7 +1003,6 @@ class ElementQLServer {
             path: elementFilePath,
             imports,
         };
-        console.log('file', file);
 
         return file;
     }
