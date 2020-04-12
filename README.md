@@ -18,7 +18,7 @@
 
 
 
-ElementQL is a query language specification and implementation to query a server for Web Elements.
+ElementQL is a query language specification and implementation to query a server for Web Elements source code in order to render them on the client.
 
 
 ### Contents
