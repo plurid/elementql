@@ -61,10 +61,19 @@ import {
     DEFAULT_STORE,
     DEFAULT_METADATA_FILENAME,
 
+    FILE_TYPE_JS,
+    FILE_TYPE_CSS,
+
     METHOD_GET,
     METHOD_POST,
 
     HEADER_CONTENT_TYPE,
+    HEADER_CONTENT_LENGTH,
+
+    HEADER_TEXT_JAVASCRIPT,
+    HEADER_TEXT_CSS,
+    HEADER_TEXT_PLAIN,
+
     APPLICATION_ELEMENTQL,
     APPLICATION_JSON,
 
@@ -474,8 +483,6 @@ class ElementQLServer {
         const invalidElementQLQuery = 'Not a Valid ElementQL Query';
 
         if (request.method === METHOD_GET) {
-            // MAYBE
-            // return a special page with documentation/information
             response.statusCode = HTTP_METHOD_NOT_ALLOWED;
             response.end(html(invalidElementQLQuery.toLowerCase()));
             return;
@@ -510,26 +517,21 @@ class ElementQLServer {
             return;
         }
 
-        const notFound = `Could not find element for ${request.url}.`;
         const elementID = this.elementsURLs.get(request.url);
         if (!elementID) {
-            response.setHeader('content-type', 'text/plain');
-            response.end(notFound);
+            this.requestNotFound(request, response);
             return;
         }
 
         const element = this.elementsRegistry.get(elementID);
         if (!element) {
-            response.setHeader('content-type', 'text/plain');
-            response.end(notFound);
+            this.requestNotFound(request, response);
             return;
         }
 
         const elementFile = this.resolveElementFile(request.url, element);
-
         if (!elementFile) {
-            response.statusCode = HTTP_NOT_FOUND;
-            response.end('Not Found.');
+            this.requestNotFound(request, response);
             return;
         }
 
@@ -539,18 +541,19 @@ class ElementQLServer {
         } = elementFile;
 
         switch (fileType) {
-            case '.mjs':
-            case '.js':
-                response.setHeader('Content-Type', 'text/javascript');
+            case FILE_TYPE_JS:
+                response.setHeader(HEADER_CONTENT_TYPE, HEADER_TEXT_JAVASCRIPT);
                 break;
-            case '.css':
-                response.setHeader('Content-Type', 'text/css');
+            case FILE_TYPE_CSS:
+                response.setHeader(HEADER_CONTENT_TYPE, HEADER_TEXT_CSS);
                 break;
+            default:
+                response.setHeader(HEADER_CONTENT_TYPE, HEADER_TEXT_PLAIN);
         }
 
         const fileStat = fs.statSync(filePath);
         response.statusCode = HTTP_OK;
-        response.setHeader('Content-Length', fileStat.size);
+        response.setHeader(HEADER_CONTENT_LENGTH, fileStat.size);
         const readStream = fs.createReadStream(filePath)
         readStream.pipe(response);
     }
@@ -577,6 +580,17 @@ class ElementQLServer {
         const date = new Date();
 
         console.log(`[${date.toLocaleTimeString()} - ${date.toLocaleDateString()}]: Request for ${request.url}`);
+    }
+
+    private requestNotFound(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        const notFound = `Could Not Find Element For ${request.url}.`;
+        response.statusCode = HTTP_NOT_FOUND;
+        response.setHeader(HEADER_CONTENT_TYPE, HEADER_TEXT_PLAIN);
+        response.end(notFound);
+        return;
     }
 
     private async parseBody(
