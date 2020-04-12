@@ -787,9 +787,10 @@ class ElementQLServer {
         );
 
         const fileContents = await fsPromise.readFile(filePath, 'utf-8');
+        const hashSource = name + fileContents;
         const elementHash = crypto
             .createHash('md5')
-            .update(fileContents)
+            .update(hashSource)
             .digest('hex');
 
         const transpileFilename = elementHash + fileType;
