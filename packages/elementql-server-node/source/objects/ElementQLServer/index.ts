@@ -389,12 +389,18 @@ class ElementQLServer {
         }
 
         const {
+            verbose,
+            logger,
             endpoint,
             playground,
             playgroundEndpoint,
             favicon,
             html,
         } = options;
+
+        if (verbose) {
+            logger(request);
+        }
 
         this.handleHeaders(request, response, options);
 
@@ -568,13 +574,9 @@ class ElementQLServer {
     private async logger(
         request: IncomingMessage,
     ) {
-        const {
-            verbose,
-        } = this.options;
+        const date = new Date();
 
-        if (verbose) {
-            console.log(`Request for ${request.url}`);
-        }
+        console.log(`[${date.toLocaleTimeString()} - ${date.toLocaleDateString()}]: Request for ${request.url}`);
     }
 
     private async parseBody(
