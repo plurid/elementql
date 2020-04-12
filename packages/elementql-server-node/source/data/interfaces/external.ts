@@ -84,6 +84,17 @@ export type ElementQLJSONRequest = {
 }
 
 
+export interface ElementQLJSONResponse {
+    name: string;
+    files: ElementQLJSONResponseFile[];
+}
+
+export interface ElementQLJSONResponseFile {
+    type: string;
+    url: string;
+}
+
+
 export type ElementQLServerPluginKind = 'typescript' | 'babel' | 'minify';
 
 export interface ElementQLServerPluginBase {
