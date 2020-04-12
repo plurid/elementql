@@ -207,18 +207,72 @@ class ElementQLServer {
     }
 
 
+    /** DIRECTORIES */
+    private generateDirectories() {
+        const {
+            rootDirectory,
+            buildDirectory,
+            elementqlDirectory,
+            transpilesDirectory,
+            verbose,
+        } = this.options;
+
+        try {
+            const elementQLDirectory = path.join(
+                rootDirectory,
+                buildDirectory,
+                elementqlDirectory,
+            );
+            if (!fs.existsSync(elementQLDirectory)) {
+                fs.mkdirSync(elementQLDirectory, {
+                    recursive: true,
+                });
+            }
+
+            const transpilesDirectoryPath = path.join(
+                elementQLDirectory,
+                transpilesDirectory,
+            );
+            if (!fs.existsSync(transpilesDirectoryPath)) {
+                fs.mkdirSync(transpilesDirectoryPath, {
+                    recursive: true,
+                });
+            } else {
+                fs.rmdirSync(transpilesDirectoryPath, {
+                    recursive: true,
+                });
+                fs.mkdirSync(transpilesDirectoryPath);
+            }
+        } catch (error) {
+            if (verbose) {
+                console.log('\n\tSomething Went Wrong. ElementQL Server Could Not Generate Directories.\n');
+            }
+            return;
+        }
+    }
+
+
     /** ELEMENTS */
     private async registerElements() {
         const {
             store,
+            verbose,
         } = this.options;
 
-        if (store) {
-            await this.registerStoreElements(store);
+        try {
+
+            if (store) {
+                await this.registerStoreElements(store);
+                return;
+            }
+
+            await this.registerLocalElements();
+        } catch (error) {
+            if (verbose) {
+                console.log('\n\tSomething Went Wrong. ElementQL Server Could Not Register Elements.\n');
+            }
             return;
         }
-
-        await this.registerLocalElements();
     }
 
     private async registerStoreElements(
@@ -1024,41 +1078,6 @@ class ElementQLServer {
         };
 
         return file;
-    }
-
-    private generateDirectories() {
-        const {
-            rootDirectory,
-            buildDirectory,
-            elementqlDirectory,
-            transpilesDirectory,
-        } = this.options;
-
-        const elementQLDirectory = path.join(
-            rootDirectory,
-            buildDirectory,
-            elementqlDirectory,
-        );
-        if (!fs.existsSync(elementQLDirectory)) {
-            fs.mkdirSync(elementQLDirectory, {
-                recursive: true,
-            });
-        }
-
-        const transpilesDirectoryPath = path.join(
-            elementQLDirectory,
-            transpilesDirectory,
-        );
-        if (!fs.existsSync(transpilesDirectoryPath)) {
-            fs.mkdirSync(transpilesDirectoryPath, {
-                recursive: true,
-            });
-        } else {
-            fs.rmdirSync(transpilesDirectoryPath, {
-                recursive: true,
-            });
-            fs.mkdirSync(transpilesDirectoryPath);
-        }
     }
 
     private async resolveImports(
