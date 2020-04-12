@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Service Worker | ElementQL Concept</title>
+
+        <style>
+            html, body {
+                background: #22222c;
+                color: white;
+                font-family: Ubuntu, -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+
+            #react-root {
+                background: #3d3d4e;
+                padding: 30px;
+            }
+        </style>
+
+        <!-- the scripts that import react, could be loaded locally -->
+        <!-- <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script> -->
+
+        <!-- <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script> -->
+
+        <!-- <script crossorigin src="http://localhost:21100/elementql/library/react.js"></script>
+        <script crossorigin src="http://localhost:21100/elementql/library/react-dom.js"></script> -->
+    </head>
+    <body>
+        <div>
+            <h1>
+                ElementQL Concept
+            </h1>
+        </div>
+
+        <!-- the react root where the element will be injected -->
+        <div id="react-root"></div>
+
+        <!--
+            the module which is injected by elementql client
+            the path './element.mjs' will actually be somewhere on the network, on the elementql server
+        -->
+        <script type="module">
+            import APage from 'http://localhost:21100/elementql/f81e1fc60496f2d169bf753be33c7ab7.js';
+
+            // window.elementql = window.elementql || {};
+            // window.elementql.APage = APage;
+        </script>
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js');
+            }
+        </script>
+
+
+        <!-- the element root injection -->
+        <script>
+            // delay to give time to the browser to parse(?) the element
+            setTimeout(() => {
+                // const APage = window.elementql.APage;
+                // // console.log(APage);
+
+                // ReactDOM.render(
+                //     React.createElement(APage, null),
+                //     document.getElementById('react-root')
+                // );
+            }, 100);
+        </script>
+    </body>
+</html>
