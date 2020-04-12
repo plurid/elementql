@@ -1053,6 +1053,7 @@ class ElementQLServer {
             endpoint,
             rootDirectory,
             buildDirectory,
+            libraries,
         } = this.options;
 
         for (const transpile of Object.values(transpiles)) {
@@ -1081,7 +1082,16 @@ class ElementQLServer {
                 const importValueRE = new RegExp(`('|")${value}('|")`);
 
                 if (library) {
-                    const replaceValue = '"' + hostURL + 'library/' + value + '.js"';
+                    const libraryData = libraries[value as Libraries];
+                    if (!libraryData) {
+                        continue;
+                    }
+                    const {
+                        module: moduleLibrary,
+                    } = libraryData;
+
+                    const moduleValue= moduleLibrary ? '-module' : '-global';
+                    const replaceValue = '"' + hostURL + 'library' + moduleValue + '/' + value + '.js"';
                     transpileContents = transpileContents.replace(importValueRE, replaceValue);
                     continue;
                 }
