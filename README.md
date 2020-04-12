@@ -222,7 +222,7 @@ import ElementQLClientReact from '@plurid/elementql-client-react';
 
 
 const elementQLClient = new ElementQLClientReact({
-    url: 'http://localhost:33300/elementql',
+    url: 'http://localhost:21100/elementql',
 });
 
 const HelloElementQLJSONRequest = {
