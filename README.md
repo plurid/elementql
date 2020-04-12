@@ -120,6 +120,8 @@ import {
 
 /** defaults */
 const options: ElementQLServerOptions = {
+    protocol: 'https',                          /** default for production; for development: `'http'` */
+    domain: '',                                 /** the domain for the server, e.g. example.com */
     port: 21100,
 
     rootDirectory: process.cwd(),
