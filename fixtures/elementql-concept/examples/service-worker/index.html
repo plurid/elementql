@@ -68,16 +68,16 @@
             // delay to give time to the browser to parse(?) the element
             setTimeout(() => {
                 const APage = window.elementql.APage;
-                console.log(APage);
+                console.log(APage(React));
 
                 console.log(React);
                 console.log(ReactDOM);
                 // console.log(React.createElement(APage, null));
                 ReactDOM.render(
-                    React.createElement(APage, null),
+                    React.createElement(APage(React), null),
                     document.getElementById('react-root')
                 );
-            }, 3000);
+            }, 100);
         </script>
     </body>
 </html>
