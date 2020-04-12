@@ -93,6 +93,7 @@ import {
 
     checkAvailablePort,
     extractFileImports,
+    computeElementBaseName,
 } from '../../utilities';
 
 
@@ -646,39 +647,19 @@ class ElementQLServer {
         sourceDirectory: string,
         basename?: string,
     ) {
-        // TODO
-        // done - loop over elements recursively, checking if some are folders
-        // resolve transpilation (from typesript-react to pure javascript or w/e the plugins say)
-        // resolve dependencies - APage imports AHeader and AFooter from it's subfolders,
-        // but maybe it also imports something else from the top
-
         const {
+            rootDirectory,
+            buildDirectory,
             elementsDirectories,
         } = this.options;
 
-        // const elemPaths = typeof elementsPaths === 'string'
-        //     ? [elementsPaths]
-        //     : [...elementsPaths];
-
-        const isElementsPath = (
-            path: string,
-            elementsPaths: string[],
-        ) => {
-            for (const elementPath of elementsPaths) {
-                if (elementPath.replace('/', '').includes(path.replace('/', ''))) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         const elements = await fsPromise.readdir(elementsPath);
-        const pathBasename = isElementsPath(path.basename(elementsPath), elementsDirectories)
-            ? ''
-            : path.basename(elementsPath);
-        const elementBasename = basename
-            ? basename + '/' + pathBasename
-            : pathBasename;
+
+        const elementBasename = computeElementBaseName(
+            elementsPath,
+            elementsDirectories,
+            basename,
+        );
 
         const processedElements: ProcessedElementQL[] = [];
         const files: ProcessedElementQLFile[] = [];
@@ -707,8 +688,8 @@ class ElementQLServer {
         }
 
         const basePath = path.join(
-            process.cwd(),
-            this.options.buildDirectory,
+            rootDirectory,
+            buildDirectory,
             sourceDirectory,
         );
 
