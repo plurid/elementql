@@ -162,7 +162,7 @@ class ElementQLServer {
 
                 for (const transpile of Object.values(transpiles)) {
                     const {
-                        filePath,
+                        path,
                     } = transpile;
 
                     // download file?
@@ -539,8 +539,8 @@ class ElementQLServer {
         }
 
         const {
-            fileType,
-            filePath,
+            type: fileType,
+            path: filePath,
         } = elementFile;
 
         switch (fileType) {
@@ -731,8 +731,8 @@ class ElementQLServer {
 
         const {
             id,
-            filePath,
-            fileType,
+            path: filePath,
+            type: fileType,
         } = file;
 
         const transpilesDirectory = path.join(
@@ -764,9 +764,10 @@ class ElementQLServer {
 
             const transpile: ProcessedElementQLTranspile = {
                 id: uuid.generate(),
-                sourceFileID: id,
-                filePath: transpilePath,
-                fileType,
+                sourceID: id,
+                name: '',
+                path: transpilePath,
+                type: fileType,
                 url,
             };
 
@@ -862,9 +863,10 @@ class ElementQLServer {
 
         const transpile: ProcessedElementQLTranspile = {
             id: uuid.generate(),
-            sourceFileID: id,
-            filePath: updatedTranspilePath,
-            fileType: updatedFileType,
+            sourceID: id,
+            name: '',
+            path: updatedTranspilePath,
+            type: updatedFileType,
             url: updatedURL,
         };
 
@@ -895,8 +897,9 @@ class ElementQLServer {
 
         const file: ProcessedElementQLFile = {
             id: uuid.generate(),
-            fileType,
-            filePath: elementFilePath,
+            name: '',
+            type: fileType,
+            path: elementFilePath,
             imports,
         };
 
@@ -940,13 +943,13 @@ class ElementQLServer {
 
         for (const transpile of Object.values(transpiles)) {
             const {
-                filePath,
-                fileType,
-                sourceFileID,
+                path: filePath,
+                type: fileType,
+                sourceID,
             } = transpile;
-            const sourceFile = files[sourceFileID];
+            const sourceFile = files[sourceID];
             const {
-                filePath: sourceFilePath,
+                path: sourceFilePath,
                 imports,
             } = sourceFile;
 
@@ -1003,7 +1006,7 @@ class ElementQLServer {
 
                     let linkedTranspileURL;
                     for (const transpile of Object.values(importElement.transpiles)) {
-                        if (transpile.fileType === fileType) {
+                        if (transpile.type === fileType) {
                             linkedTranspileURL = transpile.url;
                         }
                     }
