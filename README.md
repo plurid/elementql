@@ -70,6 +70,8 @@ The manner proposed by `ElementQL` is to let the client request only the require
 
 #### NodeJS
 
+##### Install
+
 The [`NodeJS`](https://nodejs.org) server can be installed running the command
 
 ``` bash
@@ -81,6 +83,8 @@ or
 ``` bash
 yarn add @plurid/elementql-server
 ```
+
+##### Start
 
 The simplest `ElementQL` server requires only to be started, the elements will be served from the default `./elements` path
 
@@ -98,6 +102,8 @@ server.start();
 
 The server will then accept requests on the `http://localhost:21100/elementql` URL for the elements in the `./elements` directory.
 
+##### Elements
+
 The `./elements` directory has a structure of folders with element-specific files: `.js`, `.jsx`, `.ts`, `.tsx`, or `.css`. For example
 
 ```
@@ -109,6 +115,8 @@ The `./elements` directory has a structure of folders with element-specific file
 |   |-
 |-
 ```
+
+##### Options
 
 The `ElementQLServer` Object can receive an options object
 
@@ -152,6 +160,7 @@ const options: ElementQLServerOptions = {
 };
 ```
 
+##### Requests
 
 The requests for elements can be made using the `POST` method with a `Content-Type` header of `application/json` or `application/elementql`. For example
 
@@ -171,6 +180,7 @@ curl http://localhost:21100/elementql \
     -v --data 'elements{HelloElementQL}'
 ```
 
+##### Metadata
 
 In each element directory there can be an `elementql.yaml` file with metadata specific to the element
 
