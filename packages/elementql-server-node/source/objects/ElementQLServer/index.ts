@@ -113,7 +113,11 @@ class ElementQLServer {
         this.registerElements();
 
         this.server = http.createServer(
-            (request, response) => this.createServer(request, response, this.options),
+            (request, response) => this.createServer(
+                request,
+                response,
+                this.options,
+            ),
         );
 
         process.addListener('SIGINT', () => {
@@ -135,7 +139,13 @@ class ElementQLServer {
             const port = await checkAvailablePort(this.options.port);
             this.options.port = port;
 
-            const serverlink = `http://localhost:${port}`;
+            const {
+                protocol,
+                domain,
+                open: openServer,
+            } = this.options;
+
+            const serverlink = protocol + '://' + domain + ':' + port;
             if (this.options.verbose) {
                 console.log(`\n\tElementQL Server Started on Port ${port}: ${serverlink}\n`);
             }
@@ -146,7 +156,7 @@ class ElementQLServer {
                 callback(this.server);
             }
 
-            if (this.options.open) {
+            if (openServer) {
                 open(serverlink);
             }
         } catch (error) {
