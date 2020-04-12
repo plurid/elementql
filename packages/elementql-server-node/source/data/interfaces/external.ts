@@ -141,6 +141,7 @@ export type LibrariesResolvers = Record<Libraries, LibraryResolver>;
 
 export interface LibraryResolver {
     version?: string;
+    module: boolean;
     development: string,
     production: string,
 }
