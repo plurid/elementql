@@ -173,7 +173,7 @@ class ElementQLServer {
     }
 
     /**
-     * Obliterate the build directory.
+     * Obliterate the `build` directory.
      */
     public cleanup() {
         this.obliterateDirectories();
@@ -293,13 +293,13 @@ class ElementQLServer {
         } = this.options;
 
         try {
-
             if (store) {
                 await this.registerStoreElements(store);
                 return;
             }
 
             await this.registerLocalElements();
+            return;
         } catch (error) {
             if (verbose) {
                 console.log('\n\tSomething Went Wrong. ElementQL Server Could Not Register Elements.\n');
@@ -388,9 +388,6 @@ class ElementQLServer {
         }
 
         const {
-            protocol,
-            allowOrigin,
-            allowHeaders,
             endpoint,
             playground,
             playgroundEndpoint,
@@ -398,20 +395,26 @@ class ElementQLServer {
             html,
         } = options;
 
-        /** Handle headers. */
-        const host = request.headers.host;
-        const origin = protocol + '://' + host;
-        const resolvedOrigin = allowOrigin.includes('*')
-            ? '*'
-            : allowOrigin.includes(origin)
-                ? origin
-                : 'null';
-        response.setHeader('Access-Control-Allow-Origin', resolvedOrigin);
-        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
-        response.setHeader('Access-Control-Allow-Headers', allowHeaders.join(', '));
+        this.handleHeaders(request, response, options);
+
         if (request.method === 'OPTIONS') {
             response.writeHead(200);
             response.end();
+            return;
+        }
+
+        if (request.url === endpoint) {
+            this.handleEndpoint(request, response);
+            return;
+        }
+
+        if (this.elementsURLs.has(request.url)) {
+            this.handleRequest(request, response);
+            return;
+        }
+
+        if (playground && request.url === playgroundEndpoint) {
+            this.renderPlayground(request, response);
             return;
         }
 
@@ -424,27 +427,12 @@ class ElementQLServer {
             return;
         }
 
-        if (playground && request.url === playgroundEndpoint) {
-            this.renderPlayground(request, response);
-            return;
-        }
-
-        if (request.url === endpoint) {
-            this.handleElements(request, response);
-            return;
-        }
-
-        if (this.elementsURLs.has(request.url)) {
-            this.handleElementRequest(request, response);
-            return;
-        }
-
         response.statusCode = HTTP_OK;
         response.end(html(''));
         return;
     }
 
-    private async handleElements(
+    private async handleEndpoint(
         request: IncomingMessage,
         response: ServerResponse,
     ) {
@@ -471,10 +459,10 @@ class ElementQLServer {
         const contentType = request.headers[HEADER_CONTENT_TYPE];
         switch (contentType) {
             case APPLICATION_ELEMENTQL:
-                this.handleElementQLSpecificRequest(request, response);
+                this.handleElementQLRequest(request, response);
                 return;
             case APPLICATION_JSON:
-                this.handleElementQLJSONRequest(request, response);
+                this.handleJSONRequest(request, response);
                 return;
             default:
                 response.statusCode = HTTP_UNSUPPORTED_MEDIA_TYPE;
@@ -483,140 +471,7 @@ class ElementQLServer {
         }
     }
 
-    private async handleElementQLSpecificRequest(
-        request: IncomingMessage,
-        response: ServerResponse,
-    ) {
-        const bodyData = (): Promise<string> => {
-            let body = '';
-            return new Promise((resolve, reject) => {
-                request.on('data', (chunk: Buffer) => {
-                    body += chunk.toString();
-                });
-
-                request.on('error', (error) => {
-                    reject(error);
-                });
-
-                request.on('end', () => {
-                    resolve(body)
-                });
-            });
-        }
-
-        const body = await bodyData();
-
-        const handledBody = body.split(',');
-        const elements = handledBody.map(element => element.trim());
-
-        const responseElements: any[] = [];
-
-        for (const element of elements) {
-            const responseElement = await this.fetchElement(element, request);
-            responseElements.push(responseElement);
-        }
-        // console.log('responseElements', responseElements);
-
-        // console.log('body', body);
-        // console.log('body', body.replace(/"/g, ''));
-
-        // const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
-        // // console.log('parsedBody', parsedBody);
-
-        // const elementsPath = path.join(process.cwd(), this.elementsDir);
-
-        // const host = request.headers.host;
-        // const protocol = 'http://';
-
-        // const responseElements: any[] = [];
-
-
-
-        // for (let parsedElement of parsedBody) {
-        //     const {
-        //         name,
-        //     } = parsedElement;
-
-        //     await new Promise ((resolve, reject) => {
-        //         fs.readdir(elementsPath, (error, items) => {
-        //             if (error) {
-        //                 reject(error);
-        //             }
-
-        //             if (items.includes(name)) {
-        //                 // based on plugins
-        //                 // to compile the element files
-
-        //                 const jsRoute = `/elementql/${parsedElement.name}.js`;
-        //                 const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
-        //                 this.registerElementRoute(jsRoute);
-        //                 const cssRoute = `/elementql/${parsedElement.name}.css`;
-        //                 const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
-        //                 this.registerElementRoute(cssRoute);
-        //                 const responseElement = {
-        //                     js: jsPath,
-        //                     css: cssPath,
-        //                 };
-        //                 responseElements.push(responseElement);
-
-        //                 const registerElement: RegisteredElementQL = {
-        //                     name,
-        //                     routes: {
-        //                         js: jsRoute,
-        //                         css: cssRoute,
-        //                     },
-        //                     paths: {
-        //                         js: `${elementsPath}/${name}/index.js`,
-        //                         css: `${elementsPath}/${name}/index.css`,
-        //                     },
-        //                 };
-        //                 this.registerElement(registerElement);
-
-        //                 resolve();
-        //             }
-        //         });
-        //     });
-        // }
-
-        response.setHeader('Content-Type', APPLICATION_JSON);
-        response.end(JSON.stringify(responseElements));
-        return;
-    }
-
-    private async handleElementQLJSONRequest(
-        request: IncomingMessage,
-        response: ServerResponse,
-    ) {
-        try {
-            const body = await this.parseBody(
-                request,
-                'json',
-            );
-            const responseElements = await this.fetchElementsFromJSONRequest(
-                body as ElementQLJSONRequest,
-            );
-            // console.log(this.elementsRegistry);
-            // console.log(this.elementsURLs);
-
-            response.setHeader('Content-Type', APPLICATION_JSON);
-            response.end(JSON.stringify(responseElements));
-            return;
-        } catch (error) {
-            const badRequest = {
-                status: false,
-                error: {
-                    path: 'elementQL/jsonRequest',
-                    type: 'BAD_REQUEST',
-                    mesage: 'Could not parse the JSON request.',
-                },
-            };
-            response.setHeader('Content-Type', APPLICATION_JSON);
-            response.end(JSON.stringify(badRequest));
-            return;
-        }
-    }
-
-    private async handleElementRequest(
+    private async handleRequest(
         request: IncomingMessage,
         response: ServerResponse,
     ) {
@@ -669,88 +524,6 @@ class ElementQLServer {
         readStream.pipe(response);
     }
 
-    private async fetchElement(
-        name: string,
-        request: IncomingMessage,
-    ) {
-        // const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
-        // // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
-        // console.log('elementsPath', elementsPath);
-
-        // const host = request.headers.host;
-        // const protocol = 'http://';
-
-        // const element = await new Promise ((resolve, reject) => {
-        //     fs.readdir(elementsPath, (error, items) => {
-        //         if (error) {
-        //             reject(error);
-        //         }
-
-        //         if (items.includes(name)) {
-        //             // based on plugins
-        //             // to compile the element files
-
-        //             const jsRoute = `/elementql/${name}.mjs`;
-        //             const jsPath = `${protocol}${host}${jsRoute}`;
-        //             // this.registerElementRoute(jsRoute);
-        //             const cssRoute = `/elementql/${name}.css`;
-        //             const cssPath = `${protocol}${host}${cssRoute}`;
-        //             // this.registerElementRoute(cssRoute);
-        //             const responseElement = {
-        //                 js: jsPath,
-        //                 css: cssPath,
-        //             };
-        //             // responseElements.push(responseElement);
-
-        //             const registerElement: RegisteredElementQL = {
-        //                 id: uuid.generate(),
-        //                 name,
-        //                 routes: {
-        //                     js: jsRoute,
-        //                     css: cssRoute,
-        //                 },
-        //                 paths: {
-        //                     js: `${elementsPath}/${name}/index.mjs`,
-        //                     css: `${elementsPath}/${name}/index.css`,
-        //                 },
-        //             };
-        //             this.registerElement(registerElement);
-
-        //             resolve(responseElement);
-        //         }
-        //     });
-        // });
-
-        // return element;
-    }
-
-    private async fetchElementsFromJSONRequest(
-        jsonRequest: ElementQLJSONRequest,
-    ) {
-        const {
-            elements,
-        } = jsonRequest;
-
-        const responseElements: any[] = [];
-
-        for (const element of elements) {
-            for (const [id, registeredElement] of this.elementsRegistry) {
-                if (registeredElement.name === element.name) {
-                    const urls = Object
-                        .values(registeredElement.transpiles)
-                        .map(transpile => transpile.url);
-                    const responseElement = {
-                        name: element.name,
-                        urls,
-                    };
-                    responseElements.push(responseElement);
-                }
-            }
-        }
-
-        return responseElements;
-    }
-
 
     /** PLAYGROUND */
     private renderPlayground(
@@ -762,6 +535,31 @@ class ElementQLServer {
 
 
     /** UTILITIES */
+    private handleHeaders(
+        request: IncomingMessage,
+        response: ServerResponse,
+        options: InternalElementQLServerOptions,
+    ) {
+        const {
+            protocol,
+            allowOrigin,
+            allowHeaders,
+        } = options;
+
+        /** Handle headers. */
+        const host = request.headers.host || '';
+        const origin = protocol + '://' + host;
+        const resolvedOrigin = allowOrigin.includes('*')
+            ? '*'
+            : allowOrigin.includes(origin)
+                ? origin
+                : 'null';
+        response.setHeader('Access-Control-Allow-Origin', resolvedOrigin);
+        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+        response.setHeader('Access-Control-Allow-Headers', allowHeaders.join(', '));
+    }
+
+
     private async parseBody(
         request: IncomingMessage,
         type: 'json' | 'elementql',
@@ -1293,6 +1091,225 @@ class ElementQLServer {
 
     private async handleLocalMetadataFile() {
         return false;
+    }
+
+
+
+
+
+    private async handleElementQLRequest(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        const bodyData = (): Promise<string> => {
+            let body = '';
+            return new Promise((resolve, reject) => {
+                request.on('data', (chunk: Buffer) => {
+                    body += chunk.toString();
+                });
+
+                request.on('error', (error) => {
+                    reject(error);
+                });
+
+                request.on('end', () => {
+                    resolve(body)
+                });
+            });
+        }
+
+        const body = await bodyData();
+
+        const handledBody = body.split(',');
+        const elements = handledBody.map(element => element.trim());
+
+        const responseElements: any[] = [];
+
+        for (const element of elements) {
+            const responseElement = await this.fetchElement(element, request);
+            responseElements.push(responseElement);
+        }
+        // console.log('responseElements', responseElements);
+
+        // console.log('body', body);
+        // console.log('body', body.replace(/"/g, ''));
+
+        // const parsedBody = new ElementQLParser(body.replace(/"/g, '')).parse();
+        // // console.log('parsedBody', parsedBody);
+
+        // const elementsPath = path.join(process.cwd(), this.elementsDir);
+
+        // const host = request.headers.host;
+        // const protocol = 'http://';
+
+        // const responseElements: any[] = [];
+
+
+
+        // for (let parsedElement of parsedBody) {
+        //     const {
+        //         name,
+        //     } = parsedElement;
+
+        //     await new Promise ((resolve, reject) => {
+        //         fs.readdir(elementsPath, (error, items) => {
+        //             if (error) {
+        //                 reject(error);
+        //             }
+
+        //             if (items.includes(name)) {
+        //                 // based on plugins
+        //                 // to compile the element files
+
+        //                 const jsRoute = `/elementql/${parsedElement.name}.js`;
+        //                 const jsPath = `${protocol}${host}/elementql/${parsedElement.name}.js`;
+        //                 this.registerElementRoute(jsRoute);
+        //                 const cssRoute = `/elementql/${parsedElement.name}.css`;
+        //                 const cssPath = `${protocol}${host}/elementql/${parsedElement.name}.css`;
+        //                 this.registerElementRoute(cssRoute);
+        //                 const responseElement = {
+        //                     js: jsPath,
+        //                     css: cssPath,
+        //                 };
+        //                 responseElements.push(responseElement);
+
+        //                 const registerElement: RegisteredElementQL = {
+        //                     name,
+        //                     routes: {
+        //                         js: jsRoute,
+        //                         css: cssRoute,
+        //                     },
+        //                     paths: {
+        //                         js: `${elementsPath}/${name}/index.js`,
+        //                         css: `${elementsPath}/${name}/index.css`,
+        //                     },
+        //                 };
+        //                 this.registerElement(registerElement);
+
+        //                 resolve();
+        //             }
+        //         });
+        //     });
+        // }
+
+        response.setHeader('Content-Type', APPLICATION_JSON);
+        response.end(JSON.stringify(responseElements));
+        return;
+    }
+
+    private async handleJSONRequest(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        try {
+            const body = await this.parseBody(
+                request,
+                'json',
+            );
+            const responseElements = await this.fetchElementsFromJSONRequest(
+                body as ElementQLJSONRequest,
+            );
+            // console.log(this.elementsRegistry);
+            // console.log(this.elementsURLs);
+
+            response.setHeader('Content-Type', APPLICATION_JSON);
+            response.end(JSON.stringify(responseElements));
+            return;
+        } catch (error) {
+            const badRequest = {
+                status: false,
+                error: {
+                    path: 'elementQL/jsonRequest',
+                    type: 'BAD_REQUEST',
+                    mesage: 'Could not parse the JSON request.',
+                },
+            };
+            response.setHeader('Content-Type', APPLICATION_JSON);
+            response.end(JSON.stringify(badRequest));
+            return;
+        }
+    }
+
+    private async fetchElement(
+        name: string,
+        request: IncomingMessage,
+    ) {
+        // const elementsPath = path.join(process.cwd(), 'build', 'this.options.elementsPaths');
+        // // const elementsPath = path.join(process.cwd(), 'build', this.options.elementsPaths);
+        // console.log('elementsPath', elementsPath);
+
+        // const host = request.headers.host;
+        // const protocol = 'http://';
+
+        // const element = await new Promise ((resolve, reject) => {
+        //     fs.readdir(elementsPath, (error, items) => {
+        //         if (error) {
+        //             reject(error);
+        //         }
+
+        //         if (items.includes(name)) {
+        //             // based on plugins
+        //             // to compile the element files
+
+        //             const jsRoute = `/elementql/${name}.mjs`;
+        //             const jsPath = `${protocol}${host}${jsRoute}`;
+        //             // this.registerElementRoute(jsRoute);
+        //             const cssRoute = `/elementql/${name}.css`;
+        //             const cssPath = `${protocol}${host}${cssRoute}`;
+        //             // this.registerElementRoute(cssRoute);
+        //             const responseElement = {
+        //                 js: jsPath,
+        //                 css: cssPath,
+        //             };
+        //             // responseElements.push(responseElement);
+
+        //             const registerElement: RegisteredElementQL = {
+        //                 id: uuid.generate(),
+        //                 name,
+        //                 routes: {
+        //                     js: jsRoute,
+        //                     css: cssRoute,
+        //                 },
+        //                 paths: {
+        //                     js: `${elementsPath}/${name}/index.mjs`,
+        //                     css: `${elementsPath}/${name}/index.css`,
+        //                 },
+        //             };
+        //             this.registerElement(registerElement);
+
+        //             resolve(responseElement);
+        //         }
+        //     });
+        // });
+
+        // return element;
+    }
+
+    private async fetchElementsFromJSONRequest(
+        jsonRequest: ElementQLJSONRequest,
+    ) {
+        const {
+            elements,
+        } = jsonRequest;
+
+        const responseElements: any[] = [];
+
+        for (const element of elements) {
+            for (const [id, registeredElement] of this.elementsRegistry) {
+                if (registeredElement.name === element.name) {
+                    const urls = Object
+                        .values(registeredElement.transpiles)
+                        .map(transpile => transpile.url);
+                    const responseElement = {
+                        name: element.name,
+                        urls,
+                    };
+                    responseElements.push(responseElement);
+                }
+            }
+        }
+
+        return responseElements;
     }
 }
 
