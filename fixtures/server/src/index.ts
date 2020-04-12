@@ -5,7 +5,7 @@ import ElementQLServer, {
 
 
 const options: ElementQLServerOptions = {
-    elementsPaths: [
+    elementsDirectories: [
         './elementsB',
     ],
     plugins: [
