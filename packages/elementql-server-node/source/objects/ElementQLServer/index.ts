@@ -784,20 +784,25 @@ class ElementQLServer {
         file: ProcessedElementQLFile,
     ) {
         const {
+            rootDirectory,
+            buildDirectory,
+            elementqlDirectory,
+            transpilesDirectory,
             plugins,
         } = this.options;
 
         const {
             id,
+            name,
             path: filePath,
             type: fileType,
         } = file;
 
-        const transpilesDirectory = path.join(
-            process.cwd(),
-            this.options.buildDirectory,
-            '.elementql',
-            'transpiles',
+        const transpilesDirectoryPath = path.join(
+            rootDirectory,
+            buildDirectory,
+            elementqlDirectory,
+            transpilesDirectory,
         );
 
         const fileContents = await fsPromise.readFile(filePath, 'utf-8');
@@ -808,7 +813,7 @@ class ElementQLServer {
 
         const transpileFilename = elementHash + fileType;
         const transpilePath = path.join(
-            transpilesDirectory,
+            transpilesDirectoryPath,
             transpileFilename,
         );
 
@@ -823,7 +828,7 @@ class ElementQLServer {
             const transpile: ProcessedElementQLTranspile = {
                 id: uuid.generate(),
                 sourceID: id,
-                name: '',
+                name,
                 path: transpilePath,
                 type: fileType,
                 url,
@@ -908,7 +913,7 @@ class ElementQLServer {
 
         const updatedTranspileFilename = elementHash + updatedFileType;
         const updatedTranspilePath = path.join(
-            transpilesDirectory,
+            transpilesDirectoryPath,
             updatedTranspileFilename,
         );
 
@@ -922,7 +927,7 @@ class ElementQLServer {
         const transpile: ProcessedElementQLTranspile = {
             id: uuid.generate(),
             sourceID: id,
-            name: '',
+            name,
             path: updatedTranspilePath,
             type: updatedFileType,
             url: updatedURL,
