@@ -604,7 +604,7 @@ class ElementQLServer {
                 return;
             }
 
-            const librarySplit = libraryData.split('~');
+            const librarySplit = libraryData.replace('.js', '').split('~');
             const libraryName = librarySplit[0];
             const libraryVersion = librarySplit[1] || 'latest';
 
@@ -636,6 +636,7 @@ class ElementQLServer {
                 nodeModulesDirectory,
                 libraryName,
                 libraryFile,
+                // libraryResolver.production,
             );
 
             console.log('libraryName', libraryName);
@@ -1080,7 +1081,7 @@ class ElementQLServer {
                 const importValueRE = new RegExp(`('|")${value}('|")`);
 
                 if (library) {
-                    const replaceValue = '"' + hostURL + 'library/' + value + '"';
+                    const replaceValue = '"' + hostURL + 'library/' + value + '.js"';
                     transpileContents = transpileContents.replace(importValueRE, replaceValue);
                     continue;
                 }
