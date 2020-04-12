@@ -34,15 +34,37 @@ import {
 
 import {
     DEFAULT_PORT,
-    DEFAULT_ELEMENTS_DIR,
-    DEFAULT_ELEMENTQL_ENDPOINT,
+
+    DEFAULT_ELEMENTQL_ROOT_DIRECTORY,
+    DEFAULT_ELEMENTQL_BUILD_DIRECTORY,
+    DEFAULT_ELEMENTQL_NODE_MODULES_DIRECTORY,
+    DEFAULT_ELEMENTQL_ELEMENTQL_DIRECTORY,
+    DEFAULT_ELEMENTQL_TRANSPILES_DIRECTORY,
+
+    DEFAULT_ELEMENTS_DIRECTORIES,
+    DEFAULT_LIBRARIES,
+    DEFAULT_ENDPOINT,
+    DEFAULT_ALLOW_ORIGIN,
+    DEFAULT_ALLOW_HEADERS,
+    DEFAULT_PLUGINS,
+
+    DEFAULT_VERBOSE,
+    DEFAULT_OPEN,
+    DEFAULT_PLAYGROUND,
     DEFAULT_PLAYGROUND_ENDPOINT,
+
+    DEFAULT_STORE,
+    DEFAULT_METADATA_FILENAME,
+
     FAVICON,
+
     METHOD_GET,
     METHOD_POST,
+
     HEADER_CONTENT_TYPE,
     APPLICATION_ELEMENTQL,
     APPLICATION_JSON,
+
     HTTP_OK,
     HTTP_BAD_REQUEST,
     HTTP_NOT_FOUND,
@@ -113,30 +135,33 @@ class ElementQLServer {
     ) {
         const internalOptions: InternalElementQLServerOptions = {
             port: options.port || DEFAULT_PORT,
+
             rootDirectory: options.rootDirectory
                 ? options.rootDirectory
                 : options.store
                     ? '/'
-                    : process.cwd(),
-            buildDirectory: options.buildDirectory || 'build',
-            elementqlDirectory: options.elementqlDirectory || '.elementql',
-            transpilesDirectory: options.transpilesDirectory || 'transpiles',
-            nodeModulesDirectory: options.nodeModulesDirectory || 'node_modules',
-            elementsPaths: typeof options.elementsPaths === 'undefined'
-                ? [ DEFAULT_ELEMENTS_DIR ]
-                : [ ...options.elementsPaths ],
-            libraries: options.libraries || {},
-            endpoint: options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT,
-            allowOrigin: options.allowOrigin || ['*'],
-            allowHeaders: options.allowHeaders || ['*'],
-            plugins: options.plugins || [],
-            verbose: options.verbose ?? true,
-            open: options.open ?? true,
-            playground: options.playground ?? false,
+                    : DEFAULT_ELEMENTQL_ROOT_DIRECTORY,
+            buildDirectory: options.buildDirectory || DEFAULT_ELEMENTQL_BUILD_DIRECTORY,
+            nodeModulesDirectory: options.nodeModulesDirectory || DEFAULT_ELEMENTQL_NODE_MODULES_DIRECTORY,
+            elementqlDirectory: options.elementqlDirectory || DEFAULT_ELEMENTQL_ELEMENTQL_DIRECTORY,
+            transpilesDirectory: options.transpilesDirectory || DEFAULT_ELEMENTQL_TRANSPILES_DIRECTORY,
+
+            elementsDirectories: typeof options.elementsDirectories === 'undefined'
+                ? DEFAULT_ELEMENTS_DIRECTORIES
+                : [ ...options.elementsDirectories ],
+            libraries: options.libraries || DEFAULT_LIBRARIES,
+            endpoint: options.endpoint || DEFAULT_ENDPOINT,
+            allowOrigin: options.allowOrigin || DEFAULT_ALLOW_ORIGIN,
+            allowHeaders: options.allowHeaders || DEFAULT_ALLOW_HEADERS,
+            plugins: options.plugins || DEFAULT_PLUGINS,
+
+            verbose: options.verbose ?? DEFAULT_VERBOSE,
+            open: options.open ?? DEFAULT_OPEN,
+            playground: options.playground ?? DEFAULT_PLAYGROUND,
             playgroundEndpoint: options.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
 
-            store: options.store || null,
-            metadataFilename: options.metadataFilename || 'metadata.json',
+            store: options.store || DEFAULT_STORE,
+            metadataFilename: options.metadataFilename || DEFAULT_METADATA_FILENAME,
         };
 
         return internalOptions;
@@ -147,7 +172,7 @@ class ElementQLServer {
     private async registerElements() {
         const {
             store,
-            elementsPaths,
+            elementsDirectories,
             metadataFilename,
         } = this.options;
 
@@ -196,7 +221,7 @@ class ElementQLServer {
         //     return;
         // }
 
-        for (const elementPath of elementsPaths) {
+        for (const elementPath of elementsDirectories) {
             const elementsPath = path.join(
                 process.cwd(),
                 this.options.buildDirectory,
@@ -230,7 +255,7 @@ class ElementQLServer {
         // but maybe it also imports something else from the top
 
         const {
-            elementsPaths,
+            elementsDirectories,
         } = this.options;
 
         // const elemPaths = typeof elementsPaths === 'string'
@@ -250,7 +275,7 @@ class ElementQLServer {
         }
 
         const elements = await fsPromise.readdir(elementsPath);
-        const pathBasename = isElementsPath(path.basename(elementsPath), elementsPaths)
+        const pathBasename = isElementsPath(path.basename(elementsPath), elementsDirectories)
             ? ''
             : path.basename(elementsPath);
         const elementBasename = basename

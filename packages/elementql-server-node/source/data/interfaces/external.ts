@@ -22,12 +22,14 @@ export interface ElementQLServerOptions {
     elementqlDirectory?: string;
     transpilesDirectory?: string;
     nodeModulesDirectory?: string;
-    elementsPaths?: string[];
+
+    elementsDirectories?: string[];
     libraries?: Record<string, string | ElementQLLibray>;
     endpoint?: string;
     allowOrigin?: string[]
     allowHeaders?: string[];
     plugins?: ElementQLServerPluginKind[] | ElementQLServerPlugin[];
+
     verbose?: boolean;
     open?: boolean;
     playground?: boolean;
