@@ -494,7 +494,7 @@ class ElementQLServer {
             return;
         }
 
-        const contentType = request.headers[HEADER_CONTENT_TYPE];
+        const contentType = request.headers[HEADER_CONTENT_TYPE.toLowerCase()];
         switch (contentType) {
             case APPLICATION_ELEMENTQL:
                 this.handleElementQLRequest(request, response);

@@ -44,8 +44,8 @@ export const FILE_TYPE_CSS = '.css';
 export const METHOD_GET = 'GET';
 export const METHOD_POST = 'POST';
 
-export const HEADER_CONTENT_TYPE = 'content-type';
-export const HEADER_CONTENT_LENGTH = 'content-length';
+export const HEADER_CONTENT_TYPE = 'Content-Type';
+export const HEADER_CONTENT_LENGTH = 'Content-Length';
 
 export const HEADER_TEXT_JAVASCRIPT = 'text/javascript';
 export const HEADER_TEXT_CSS = 'text/css';
