@@ -17,13 +17,12 @@ export interface ElementQLServerOptions {
      * On a networked process defaults to `/`.
      */
     rootDirectory?: string;
+    buildDirectory?: string;                                    /** relative to the root directory */
+    nodeModulesDirectory?: string;                              /** relative to the build directory */
+    elementqlDirectory?: string;                                /** relative to the root directory */
+    transpilesDirectory?: string;                               /** relative to the elementql directory */
 
-    buildDirectory?: string;
-    elementqlDirectory?: string;
-    transpilesDirectory?: string;
-    nodeModulesDirectory?: string;
-
-    elementsDirectories?: string[];
+    elementsDirectories?: string[];                             /** relative to the build directory */
     libraries?: Record<string, string | ElementQLLibray>;
     endpoint?: string;
     allowOrigin?: string[]
