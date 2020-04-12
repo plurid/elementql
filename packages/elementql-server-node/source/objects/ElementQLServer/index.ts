@@ -289,18 +289,32 @@ class ElementQLServer {
         response: ServerResponse,
         options: InternalElementQLServerOptions,
     ) {
-        // Set CORS headers
-        response.setHeader('Access-Control-Allow-Origin', '*');
-        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
-        response.setHeader('Access-Control-Allow-Headers', '*');
-        if (request.method === 'OPTIONS') {
-            response.writeHead(200);
+        if (!request.url) {
+            response.statusCode = HTTP_BAD_REQUEST;
             response.end();
             return;
         }
 
-        if (!request.url) {
-            response.statusCode = HTTP_BAD_REQUEST;
+        const {
+            allowOrigin,
+            allowHeaders,
+            endpoint,
+            playground,
+            playgroundEndpoint,
+        } = options;
+
+        /** Handle headers. */
+        const requestURL = new URL(request.url);
+        const resolvedOrigin = allowOrigin.includes('*')
+            ? '*'
+            : allowOrigin.includes(requestURL.origin)
+                ? requestURL.origin
+                : '';
+        response.setHeader('Access-Control-Allow-Origin', resolvedOrigin);
+        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+        response.setHeader('Access-Control-Allow-Headers', allowHeaders.join(', '));
+        if (request.method === 'OPTIONS') {
+            response.writeHead(200);
             response.end();
             return;
         }
@@ -314,12 +328,12 @@ class ElementQLServer {
             return;
         }
 
-        if (options.playground && request.url === options.playgroundEndpoint) {
+        if (playground && request.url === playgroundEndpoint) {
             this.renderPlayground(request, response);
             return;
         }
 
-        if (request.url === options.endpoint) {
+        if (request.url === endpoint) {
             this.handleElements(request, response);
             return;
         }
