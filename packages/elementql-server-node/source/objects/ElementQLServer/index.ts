@@ -1140,6 +1140,7 @@ class ElementQLServer {
     }
 
     private async handleLocalMetadataFile() {
+        const data = await this.readLocalMetadataFile();
         return false;
     }
 
