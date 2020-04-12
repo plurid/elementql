@@ -195,6 +195,7 @@ class ElementQLServer {
             playground: options?.playground ?? DEFAULT_PLAYGROUND,
             playgroundEndpoint: options?.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
             favicon: options?.favicon || DEFAULT_FAVICON,
+            html: options?.html || indexHTML,
 
             store: options?.store || DEFAULT_STORE,
             metadataFilename: options?.metadataFilename || DEFAULT_METADATA_FILENAME,
@@ -305,6 +306,7 @@ class ElementQLServer {
             playground,
             playgroundEndpoint,
             favicon,
+            html,
         } = options;
 
         /** Handle headers. */
@@ -349,7 +351,7 @@ class ElementQLServer {
         }
 
         response.statusCode = HTTP_OK;
-        response.end(indexHTML);
+        response.end(html);
         return;
     }
 
