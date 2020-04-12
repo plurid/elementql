@@ -160,7 +160,7 @@ curl http://localhost:33300/elementql \
 ```
 
 
-In each element directory there can be a `elementql.yaml` file with metadata
+In each element directory there can be an `elementql.yaml` file with metadata specific to the element
 
 ``` yaml
 # the element name derived from the directory name will be overwrriten with `OverwriteName`
