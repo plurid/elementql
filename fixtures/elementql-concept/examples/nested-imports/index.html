@@ -40,18 +40,26 @@
             the path './element.mjs' will actually be somewhere on the network, on the elementql server
         -->
         <script type="module">
+            // import * as React from 'http://localhost:21100/elementql/library/react.js';
+            // import * as ReactDOM from 'http://localhost:21100/elementql/library/react-dom.js';
+
             // import APage from './APage/index.js';
-            import APage from 'http://localhost:21100/elementql/f81e1fc60496f2d169bf753be33c7ab7.js';
-            console.log(APage);
+            // import APage from 'http://localhost:21100/elementql/f81e1fc60496f2d169bf753be33c7ab7.js';
+            import APage from './transpiles/f81e1fc60496f2d169bf753be33c7ab7.js';
+            // console.log(APage);
+            // console.log(React);
 
             window.elementql = window.elementql || {};
             window.elementql.APage = APage;
+            window.ReactDOM = ReactDOM;
         </script>
 
         <!-- the element root injection -->
         <script>
             // delay to give time to the browser to parse(?) the element
             setTimeout(() => {
+                // console.log(window.ReactDOM);
+
                 const APage = window.elementql.APage;
 
                 ReactDOM.render(
