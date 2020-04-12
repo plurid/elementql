@@ -93,7 +93,7 @@ class ElementQLServer {
         options: ElementQLServerOptions,
     ) {
         this.options = this.handleOptions(options);
-        this.generateElementQLDirectories(this.options);
+        this.generateElementQLDirectories();
         this.registerElements();
         this.server = http.createServer(
             (request, response) => this.createServer(request, response, this.options),
@@ -968,12 +968,11 @@ class ElementQLServer {
     }
 
     private generateElementQLDirectories(
-        options: InternalElementQLServerOptions,
     ) {
         const elementQLDirectory = path.join(
-            process.cwd(),
-            options.buildDirectory,
-            options.elementqlDirectory,
+            this.options.rootDirectory,
+            this.options.buildDirectory,
+            this.options.elementqlDirectory,
         );
         if (!fs.existsSync(elementQLDirectory)) {
             fs.mkdirSync(elementQLDirectory);
@@ -981,7 +980,7 @@ class ElementQLServer {
 
         const transpilesDirectory = path.join(
             elementQLDirectory,
-            options.transpilesDirectory,
+            this.options.transpilesDirectory,
         );
         if (!fs.existsSync(transpilesDirectory)) {
             fs.mkdirSync(transpilesDirectory);
