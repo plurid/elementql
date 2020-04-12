@@ -121,11 +121,14 @@ class ElementQLServer {
             buildDirectory: options.buildDirectory || 'build',
             elementqlDirectory: options.elementqlDirectory || '.elementql',
             transpilesDirectory: options.transpilesDirectory || 'transpiles',
-            elementsPaths: options.elementsPaths || DEFAULT_ELEMENTS_DIR,
+            nodeModulesDirectory: options.nodeModulesDirectory || 'node_modules',
+            elementsPaths: typeof options.elementsPaths === 'undefined'
+                ? [ DEFAULT_ELEMENTS_DIR ]
+                : [ ...options.elementsPaths ],
             libraries: options.libraries || {},
             endpoint: options.endpoint || DEFAULT_ELEMENTQL_ENDPOINT,
-            allowOrigin: options.allowOrigin || '*',
-            allowHeaders: options.allowHeaders || '*',
+            allowOrigin: options.allowOrigin || ['*'],
+            allowHeaders: options.allowHeaders || ['*'],
             plugins: options.plugins || [],
             verbose: options.verbose ?? true,
             open: options.open ?? true,
@@ -170,28 +173,28 @@ class ElementQLServer {
             }
         }
 
-        if (typeof elementsPaths === 'string') {
-            const elementsPath = path.join(
-                process.cwd(),
-                this.options.buildDirectory,
-                elementsPaths,
-            );
-            const elements = await this.extractElementsFromPath(
-                elementsPath,
-                elementsPaths,
-            );
-            for (const element of elements) {
-                await this.registerElement(element);
-            }
+        // if (typeof elementsPaths === 'string') {
+        //     const elementsPath = path.join(
+        //         process.cwd(),
+        //         this.options.buildDirectory,
+        //         elementsPaths,
+        //     );
+        //     const elements = await this.extractElementsFromPath(
+        //         elementsPath,
+        //         elementsPaths,
+        //     );
+        //     for (const element of elements) {
+        //         await this.registerElement(element);
+        //     }
 
-            for (const [_, registeredElement] of this.elementsRegistry) {
-                await this.resolveImports(registeredElement);
-            }
+        //     for (const [_, registeredElement] of this.elementsRegistry) {
+        //         await this.resolveImports(registeredElement);
+        //     }
 
-            await this.writeMetadataFile();
+        //     await this.writeMetadataFile();
 
-            return;
-        }
+        //     return;
+        // }
 
         for (const elementPath of elementsPaths) {
             const elementsPath = path.join(
@@ -230,12 +233,24 @@ class ElementQLServer {
             elementsPaths,
         } = this.options;
 
-        const elemPaths = typeof elementsPaths === 'string'
-            ? [elementsPaths]
-            : [...elementsPaths];
+        // const elemPaths = typeof elementsPaths === 'string'
+        //     ? [elementsPaths]
+        //     : [...elementsPaths];
+
+        const isElementsPath = (
+            path: string,
+            elementsPaths: string[],
+        ) => {
+            for (const elementPath of elementsPaths) {
+                if (elementPath.replace('/', '').includes(path.replace('/', ''))) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         const elements = await fsPromise.readdir(elementsPath);
-        const pathBasename = elemPaths.includes(path.basename(elementsPath))
+        const pathBasename = isElementsPath(path.basename(elementsPath), elementsPaths)
             ? ''
             : path.basename(elementsPath);
         const elementBasename = basename
