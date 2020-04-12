@@ -37,10 +37,19 @@ export const DEFAULT_METADATA_FILENAME = 'metadata.json';
 export const DEFAULT_FAVICON = path.join(__dirname, './assets', 'favicon.ico');
 
 
+export const FILE_TYPE_JS = '.js';
+export const FILE_TYPE_CSS = '.css';
+
+
 export const METHOD_GET = 'GET';
 export const METHOD_POST = 'POST';
 
 export const HEADER_CONTENT_TYPE = 'content-type';
+export const HEADER_CONTENT_LENGTH = 'content-length';
+
+export const HEADER_TEXT_JAVASCRIPT = 'text/javascript';
+export const HEADER_TEXT_CSS = 'text/css';
+export const HEADER_TEXT_PLAIN = 'text/plain';
 
 export const APPLICATION_ELEMENTQL = 'application/elementql';
 export const APPLICATION_JSON = 'application/json';
