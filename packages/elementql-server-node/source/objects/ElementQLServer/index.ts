@@ -444,6 +444,11 @@ class ElementQLServer {
             return;
         }
 
+        if (request.url.includes('/library')) {
+            this.handleLibrary(request, response);
+            return;
+        }
+
         if (playground && request.url === playgroundEndpoint) {
             this.handlePlayground(request, response);
             return;
@@ -571,6 +576,18 @@ class ElementQLServer {
         response.setHeader(HEADER_CONTENT_LENGTH, fileStat.size);
         const readStream = fs.createReadStream(filePath)
         readStream.pipe(response);
+    }
+
+    private async handleLibrary(
+        request: IncomingMessage,
+        response: ServerResponse,
+    ) {
+        console.log(request.url);
+
+        const libraryNotFound = 'Library Not Found';
+
+        response.statusCode = HTTP_NOT_FOUND;
+        response.end(libraryNotFound);
     }
 
 
@@ -961,6 +978,15 @@ class ElementQLServer {
         } = element;
         // console.log(element);
 
+        const {
+            protocol,
+            domain,
+            port,
+            endpoint,
+            rootDirectory,
+            buildDirectory,
+        } = this.options;
+
         for (const transpile of Object.values(transpiles)) {
             const {
                 path: filePath,
@@ -975,7 +1001,7 @@ class ElementQLServer {
 
             let transpileContents = await fsPromise.readFile(filePath, 'utf-8');
 
-            const hostURL = 'http://localhost:33300' + this.options.endpoint + '/';
+            const hostURL = protocol + '://' + domain + ':' + port + endpoint + '/';
 
             for (const importData of imports) {
                 const {
@@ -987,7 +1013,7 @@ class ElementQLServer {
                 const importValueRE = new RegExp(`('|")${value}('|")`);
 
                 if (library) {
-                    const replaceValue = '"' + hostURL + 'node_modules/' + value + '"';
+                    const replaceValue = '"' + hostURL + 'library/' + value + '"';
                     transpileContents = transpileContents.replace(importValueRE, replaceValue);
                     continue;
                 }
@@ -1001,8 +1027,8 @@ class ElementQLServer {
                         value,
                     );
                     const basePath = path.join(
-                        process.cwd(),
-                        this.options.buildDirectory,
+                        rootDirectory,
+                        buildDirectory,
                     );
                     const basePathElement = path.relative(
                         basePath,
@@ -1040,7 +1066,7 @@ class ElementQLServer {
                     // console.log('value', value);
                     // console.log('elementName', elementName);
 
-                    const replaceValue = '"' + 'http://localhost:33300' + linkedTranspileURL + '"';
+                    const replaceValue = '"' + protocol + '://' + domain + ':' + port + linkedTranspileURL + '"';
                     // console.log('replaceValue', replaceValue);
 
                     transpileContents = transpileContents.replace(importValueRE, replaceValue);
