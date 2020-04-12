@@ -2,6 +2,7 @@ import path from 'path';
 
 import {
     ElementQLServerPluginKind,
+    LibrariesResolvers,
 } from '../interfaces';
 
 
@@ -20,7 +21,7 @@ export const DEFAULT_ELEMENTQL_ELEMENTQL_DIRECTORY = '.elementql';
 export const DEFAULT_ELEMENTQL_TRANSPILES_DIRECTORY = 'transpiles';
 
 export const DEFAULT_ELEMENTS_DIRECTORIES = ['elements'];
-export const DEFAULT_LIBRARIES = {};
+export const DEFAULT_LIBRARIES: Partial<LibrariesResolvers> = {};
 export const DEFAULT_ENDPOINT = '/elementql';
 export const DEFAULT_ALLOW_ORIGIN = ['*'];
 export const DEFAULT_ALLOW_HEADERS = ['*'];

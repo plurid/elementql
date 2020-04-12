@@ -29,7 +29,7 @@ export interface ElementQLServerOptions {
     transpilesDirectory?: string;                               /** relative to the elementql directory */
 
     elementsDirectories?: string[];                             /** relative to the build directory */
-    libraries?: Record<string, string | ElementQLLibray>;
+    libraries?: Partial<LibrariesResolvers>;
     endpoint?: string;
     allowOrigin?: string[]
     allowHeaders?: string[];
@@ -137,8 +137,15 @@ export type ElementQLServerPlugin =
     | ElementQLServerMinify;
 
 
-export interface ElementQLLibray {
+export interface LibraryResolver {
     version?: string;
-    file?: string;
-    link?: string;
+    development: string,
+    production: string,
 }
+
+
+export type Libraries =
+    | 'react';
+
+
+export type LibrariesResolvers = Record<Libraries, LibraryResolver>;

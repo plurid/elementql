@@ -36,9 +36,13 @@ import {
     ElementQLStore,
     ElementQL,
     ElementID,
+
+    Libraries,
 } from '../../data/interfaces';
 
 import {
+    isProduction,
+
     DEFAULT_PROTOCOL,
     DEFAULT_DOMAIN,
     DEFAULT_PORT,
@@ -586,6 +590,7 @@ class ElementQLServer {
             endpoint,
             rootDirectory,
             nodeModulesDirectory,
+            libraries,
         } = this.options;
 
         const libraryNotFound = 'Library Not Found';
@@ -609,31 +614,40 @@ class ElementQLServer {
                 return;
             }
 
-            const nodeModulesPath = path.join(
-                rootDirectory,
-                nodeModulesDirectory,
-            );
+            let libraryResolver;
+            for (const library of Object.keys(libraries)) {
+                if (library === libraryName) {
+                    libraryResolver = libraries[library as Libraries];
+                }
+            }
+
+            if (!libraryResolver) {
+                response.statusCode = HTTP_NOT_FOUND;
+                response.end(libraryNotFound);
+                return;
+            }
+
+            const libraryFile = isProduction
+                ? libraryResolver.production
+                : libraryResolver.development;
 
             const libraryPath = path.join(
-                nodeModulesPath,
+                rootDirectory,
+                nodeModulesDirectory,
                 libraryName,
+                libraryFile,
             );
-
-            // const packageJSONPath = path.join(
-            //     libraryPath,
-            //     'package.json',
-            // );
-
-            // const packageJSONRawData = await fsPromise.readFile(packageJSONPath, 'utf-8');
-            // const packageJSONData = JSON.parse(packageJSONRawData);
 
             console.log('libraryName', libraryName);
             console.log('libraryVersion', libraryVersion);
             console.log('libraryPath', libraryPath);
-            // console.log('packageJSONData', packageJSONData);
+            console.log('libraryResolver', libraryResolver);
 
-            response.statusCode = 200;
-            response.end('Library File');
+            const fileStat = fs.statSync(libraryPath);
+            response.statusCode = HTTP_OK;
+            response.setHeader(HEADER_CONTENT_LENGTH, fileStat.size);
+            const readStream = fs.createReadStream(libraryPath)
+            readStream.pipe(response);
             return;
         } catch (error) {
             response.statusCode = HTTP_NOT_FOUND;
