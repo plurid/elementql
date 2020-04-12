@@ -162,7 +162,7 @@ const options: ElementQLServerOptions = {
 
 ##### Requests
 
-The requests for elements can be made using the `POST` method with a `Content-Type` header of `application/json` or `application/elementql`. For example
+In production, an [ElementQL Client](#client) is recommended. In development/testing, the requests for elements can be made using the `POST` method with a `Content-Type` header of `application/json` or `application/elementql`. For example
 
 JSON
 
