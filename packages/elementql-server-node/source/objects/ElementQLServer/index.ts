@@ -646,6 +646,7 @@ class ElementQLServer {
             const fileStat = fs.statSync(libraryPath);
             response.statusCode = HTTP_OK;
             response.setHeader(HEADER_CONTENT_LENGTH, fileStat.size);
+            response.setHeader(HEADER_CONTENT_TYPE, HEADER_TEXT_JAVASCRIPT);
             const readStream = fs.createReadStream(libraryPath)
             readStream.pipe(response);
             return;
