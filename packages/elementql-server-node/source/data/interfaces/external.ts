@@ -7,6 +7,7 @@ import Terser from 'terser';
 
 
 export interface ElementQLServerOptions {
+    domain?: string;
     port?: number;
 
     /**

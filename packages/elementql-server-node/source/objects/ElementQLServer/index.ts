@@ -33,6 +33,7 @@ import {
 } from '../../data/interfaces';
 
 import {
+    DEFAULT_DOMAIN,
     DEFAULT_PORT,
 
     DEFAULT_ELEMENTQL_ROOT_DIRECTORY,
@@ -134,6 +135,7 @@ class ElementQLServer {
         options: ElementQLServerOptions,
     ) {
         const internalOptions: InternalElementQLServerOptions = {
+            domain: options.domain || DEFAULT_DOMAIN,
             port: options.port || DEFAULT_PORT,
 
             rootDirectory: options.rootDirectory

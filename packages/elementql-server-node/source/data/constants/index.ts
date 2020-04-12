@@ -8,6 +8,7 @@ import {
 
 export const isProduction = process.env.ENV_MODE === 'production';
 
+export const DEFAULT_DOMAIN = '';
 export const DEFAULT_PORT = 21100;
 
 export const DEFAULT_ELEMENTQL_ROOT_DIRECTORY = process.cwd();
