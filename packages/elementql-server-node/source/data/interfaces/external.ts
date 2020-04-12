@@ -43,8 +43,6 @@ export interface ElementQLServerOptions {
      */
     store?: ElementQLStore | null;
     metadataFilename?: string;
-
-    debug: boolean;
 }
 
 export interface ElementQLStore {

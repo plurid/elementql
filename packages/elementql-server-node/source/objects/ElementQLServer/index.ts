@@ -95,8 +95,10 @@ class ElementQLServer {
         options?: ElementQLServerOptions,
     ) {
         this.options = this.handleOptions(options);
+
         this.generateDirectories();
         this.registerElements();
+
         this.server = http.createServer(
             (request, response) => this.createServer(request, response, this.options),
         );
@@ -108,6 +110,11 @@ class ElementQLServer {
     }
 
 
+    /**
+     * Start the ElementQL Server.
+     *
+     * @param callback
+     */
     public async start(
         callback?: (server: http.Server) => void,
     ) {
@@ -137,6 +144,11 @@ class ElementQLServer {
         }
     }
 
+    /**
+     * Stop the ElementQL Server.
+     *
+     * @param callback
+     */
     public async stop(
         callback?: (server: http.Server) => Promise<void>,
     ) {
@@ -158,6 +170,13 @@ class ElementQLServer {
             }
             return;
         }
+    }
+
+    /**
+     * Obliterate the build directory.
+     */
+    public cleanup() {
+        this.obliterateDirectories();
     }
 
 
@@ -199,8 +218,6 @@ class ElementQLServer {
 
             store: options?.store || DEFAULT_STORE,
             metadataFilename: options?.metadataFilename || DEFAULT_METADATA_FILENAME,
-
-            debug: options?.debug || false,
         };
 
         return internalOptions;
@@ -249,6 +266,22 @@ class ElementQLServer {
             }
             return;
         }
+    }
+
+    private obliterateDirectories() {
+        const {
+            rootDirectory,
+            buildDirectory,
+        } = this.options;
+
+        const buildDirectoryPath = path.join(
+            rootDirectory,
+            buildDirectory,
+        );
+
+        fs.rmdirSync(buildDirectoryPath, {
+            recursive: true,
+        });
     }
 
 
