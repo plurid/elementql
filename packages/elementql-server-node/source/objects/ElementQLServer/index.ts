@@ -215,6 +215,7 @@ class ElementQLServer {
             playgroundEndpoint: options?.playgroundEndpoint || DEFAULT_PLAYGROUND_ENDPOINT,
             favicon: options?.favicon || DEFAULT_FAVICON,
             html: options?.html || indexHTML,
+            logger: options?.logger || this.logger,
 
             store: options?.store || DEFAULT_STORE,
             metadataFilename: options?.metadataFilename || DEFAULT_METADATA_FILENAME,
@@ -564,6 +565,18 @@ class ElementQLServer {
 
 
     /** UTILITIES */
+    private async logger(
+        request: IncomingMessage,
+    ) {
+        const {
+            verbose,
+        } = this.options;
+
+        if (verbose) {
+            console.log(`Request for ${request.url}`);
+        }
+    }
+
     private async parseBody(
         request: IncomingMessage,
         type: 'json' | 'elementql',

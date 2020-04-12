@@ -1,4 +1,8 @@
 import {
+    IncomingMessage,
+} from 'http';
+
+import {
     CompilerOptions,
 } from 'typescript';
 
@@ -37,6 +41,7 @@ export interface ElementQLServerOptions {
     playgroundEndpoint?: string;
     favicon?: string;
     html?: (message: string) => string;
+    logger?: (request: IncomingMessage) => void;
 
     /**
      * To be used to store/access the elements files in a network location
