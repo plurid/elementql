@@ -28,9 +28,10 @@ import {
     ProcessedElementQL,
     ProcessedElementQLFile,
     ProcessedElementQLTranspile,
-    ElementQL,
     ElementQLMetadataFile,
     ElementQLStore,
+    ElementQL,
+    ElementQLID,
 } from '../../data/interfaces';
 
 import {
@@ -84,7 +85,7 @@ import {
 
 class ElementQLServer {
     private options: InternalElementQLServerOptions;
-    private elementsURLs: Map<string, string> = new Map();
+    private elementsURLs: Map<string, ElementQLID> = new Map();
     private elementsRegistry: Map<string, ElementQL> = new Map();
     private server: http.Server;
 
@@ -93,7 +94,7 @@ class ElementQLServer {
         options: ElementQLServerOptions,
     ) {
         this.options = this.handleOptions(options);
-        this.generateElementQLDirectories();
+        this.generateDirectories();
         this.registerElements();
         this.server = http.createServer(
             (request, response) => this.createServer(request, response, this.options),
@@ -967,8 +968,7 @@ class ElementQLServer {
         return file;
     }
 
-    private generateElementQLDirectories(
-    ) {
+    private generateDirectories() {
         const elementQLDirectory = path.join(
             this.options.rootDirectory,
             this.options.buildDirectory,
