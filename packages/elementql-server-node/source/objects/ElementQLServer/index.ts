@@ -147,7 +147,7 @@ class ElementQLServer {
                 await callback(this.server);
             }
 
-            if (this.server) {
+            if (this.server.listening) {
                 this.server.close();
             }
         } catch (error) {
@@ -296,6 +296,7 @@ class ElementQLServer {
         }
 
         const {
+            protocol,
             allowOrigin,
             allowHeaders,
             endpoint,
@@ -305,12 +306,13 @@ class ElementQLServer {
         } = options;
 
         /** Handle headers. */
-        const requestURL = new URL(request.url);
+        const host = request.headers.host;
+        const origin = protocol + '://' + host;
         const resolvedOrigin = allowOrigin.includes('*')
             ? '*'
-            : allowOrigin.includes(requestURL.origin)
-                ? requestURL.origin
-                : '';
+            : allowOrigin.includes(origin)
+                ? origin
+                : 'null';
         response.setHeader('Access-Control-Allow-Origin', resolvedOrigin);
         response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
         response.setHeader('Access-Control-Allow-Headers', allowHeaders.join(', '));
@@ -344,7 +346,7 @@ class ElementQLServer {
             return;
         }
 
-        response.statusCode = HTTP_NOT_FOUND;
+        response.statusCode = HTTP_OK;
         response.end('ElementQL');
         return;
     }
