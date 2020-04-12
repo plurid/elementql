@@ -1027,10 +1027,17 @@ class ElementQLServer {
     }
 
     private generateDirectories() {
+        const {
+            rootDirectory,
+            buildDirectory,
+            elementqlDirectory,
+            transpilesDirectory,
+        } = this.options;
+
         const elementQLDirectory = path.join(
-            this.options.rootDirectory,
-            this.options.buildDirectory,
-            this.options.elementqlDirectory,
+            rootDirectory,
+            buildDirectory,
+            elementqlDirectory,
         );
         if (!fs.existsSync(elementQLDirectory)) {
             fs.mkdirSync(elementQLDirectory, {
@@ -1038,19 +1045,19 @@ class ElementQLServer {
             });
         }
 
-        const transpilesDirectory = path.join(
+        const transpilesDirectoryPath = path.join(
             elementQLDirectory,
-            this.options.transpilesDirectory,
+            transpilesDirectory,
         );
-        if (!fs.existsSync(transpilesDirectory)) {
-            fs.mkdirSync(transpilesDirectory, {
+        if (!fs.existsSync(transpilesDirectoryPath)) {
+            fs.mkdirSync(transpilesDirectoryPath, {
                 recursive: true,
             });
         } else {
-            fs.rmdirSync(transpilesDirectory, {
+            fs.rmdirSync(transpilesDirectoryPath, {
                 recursive: true,
             });
-            fs.mkdirSync(transpilesDirectory);
+            fs.mkdirSync(transpilesDirectoryPath);
         }
     }
 
