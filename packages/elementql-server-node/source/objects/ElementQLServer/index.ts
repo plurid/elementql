@@ -199,6 +199,8 @@ class ElementQLServer {
 
             store: options?.store || DEFAULT_STORE,
             metadataFilename: options?.metadataFilename || DEFAULT_METADATA_FILENAME,
+
+            debug: options?.debug || false,
         };
 
         return internalOptions;
@@ -1031,7 +1033,9 @@ class ElementQLServer {
             this.options.elementqlDirectory,
         );
         if (!fs.existsSync(elementQLDirectory)) {
-            fs.mkdirSync(elementQLDirectory);
+            fs.mkdirSync(elementQLDirectory, {
+                recursive: true,
+            });
         }
 
         const transpilesDirectory = path.join(
@@ -1039,7 +1043,9 @@ class ElementQLServer {
             this.options.transpilesDirectory,
         );
         if (!fs.existsSync(transpilesDirectory)) {
-            fs.mkdirSync(transpilesDirectory);
+            fs.mkdirSync(transpilesDirectory, {
+                recursive: true,
+            });
         } else {
             fs.rmdirSync(transpilesDirectory, {
                 recursive: true,
