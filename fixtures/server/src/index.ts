@@ -1,5 +1,6 @@
 import ElementQLServer, {
     ElementQLServerOptions,
+    librariesResolvers,
 } from '@plurid/elementql-server';
 
 
@@ -12,6 +13,9 @@ const options: ElementQLServerOptions = {
         'minify',
         'typescript',
     ],
+    libraries: {
+        react: librariesResolvers.react,
+    },
     open: false,
 };
 
