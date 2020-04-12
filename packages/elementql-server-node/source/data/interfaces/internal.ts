@@ -52,3 +52,6 @@ export interface ElementQLMetadataFile {
     elements: ElementQL[];
     generatedAt: number;
 }
+
+
+export type ElementQLID = string;
