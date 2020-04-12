@@ -12,7 +12,6 @@ const options: ElementQLServerOptions = {
         'minify',
         'typescript',
     ],
-    verbose: true,
     open: false,
 };
 
