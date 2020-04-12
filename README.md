@@ -128,7 +128,7 @@ const options: ElementQLServerOptions = {
     elementqlDirectory: '.elementql',           /** relative to the build directory */
     transpilesDirectory: 'transpiles',          /** relative to the elementql directory */
 
-    elementsPaths: [                            /**/
+    elementsDirectories: [                      /**/
         'elements',                             /** relative to the build directory */
     ],                                          /**/
     libraries: {},
@@ -136,7 +136,7 @@ const options: ElementQLServerOptions = {
     allowOrigin: ['*'],
     allowHeaders: ['*'],
     plugins: [                                  /**/
-        'minify',                               /** default for production; for development is `[]` */
+        'minify',                               /** default for production; for development: `[]` */
     ],                                          /**/
 
     verbose: true,
