@@ -1092,7 +1092,7 @@ class ElementQLServer {
 
         const data = {
             elements,
-            generatedAt: Date.now() / 1000,
+            generatedAt: Math.ceil(Date.now() / 1000),
         };
 
         const metadataFileContents = JSON.stringify(data, null, 4);
