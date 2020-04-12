@@ -58,3 +58,10 @@ export interface ElementQLFileImport {
     library: boolean;
     value: string;
 }
+
+
+
+export interface ElementQLMetadataFile {
+    elements: ElementQL[];
+    generatedAt: number;
+}

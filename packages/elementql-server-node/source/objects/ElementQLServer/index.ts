@@ -29,6 +29,7 @@ import {
     ProcessedElementQLFile,
     ProcessedElementQLTranspile,
     ElementQL,
+    ElementQLMetadataFile,
 } from '../../data/interfaces';
 
 import {
@@ -51,7 +52,6 @@ import {
 
 import {
     checkAvailablePort,
-    checkRelativeImport,
     extractFileImports,
 } from '../../utilities';
 
@@ -138,8 +138,32 @@ class ElementQLServer {
     /** ELEMENTS */
     private async registerElements() {
         const {
+            store,
             elementsPaths,
+            metadataFilename,
         } = this.options;
+
+
+        if (store) {
+            const metadataRaw = (await store.download(metadataFilename)).toString();
+            const metadata: ElementQLMetadataFile = JSON.parse(metadataRaw);
+            const {
+                elements,
+            } = metadata;
+            for (const element of elements) {
+                const {
+                    transpiles,
+                } = element;
+
+                for (const transpile of Object.values(transpiles)) {
+                    const {
+                        filePath,
+                    } = transpile;
+
+                    // download file?
+                }
+            }
+        }
 
         if (typeof elementsPaths === 'string') {
             const elementsPath = path.join(
@@ -1031,7 +1055,7 @@ class ElementQLServer {
             metadataFilename,
         );
 
-        const elements: any = [];
+        const elements: ElementQL[] = [];
         for (const [_, element] of this.elementsRegistry) {
             elements.push({
                 ...element,
