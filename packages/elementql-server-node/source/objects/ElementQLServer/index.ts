@@ -593,7 +593,7 @@ class ElementQLServer {
     ) {
         const date = new Date();
 
-        console.log(`[${date.toLocaleTimeString()} - ${date.toLocaleDateString()}]: Request for ${request.url}`);
+        console.log(`[${date.toLocaleTimeString()} - ${date.toLocaleDateString()}]: ${request.method} Request for ${request.url}`);
     }
 
     private requestNotFound(
