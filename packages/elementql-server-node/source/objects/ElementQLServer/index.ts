@@ -596,7 +596,7 @@ class ElementQLServer {
         const libraryNotFound = 'Library Not Found';
 
         try {
-            const libraryData = request.url?.replace(endpoint + '/library/', '');
+            const libraryData = request.url?.replace(endpoint + '/library-global/', '');
 
             if (!libraryData) {
                 response.statusCode = HTTP_NOT_FOUND;
