@@ -31,7 +31,7 @@ import {
     ElementQLMetadataFile,
     ElementQLStore,
     ElementQL,
-    ElementQLID,
+    ElementID,
 } from '../../data/interfaces';
 
 import {
@@ -85,7 +85,7 @@ import {
 
 class ElementQLServer {
     private options: InternalElementQLServerOptions;
-    private elementsURLs: Map<string, ElementQLID> = new Map();
+    private elementsURLs: Map<string, ElementID> = new Map();
     private elementsRegistry: Map<string, ElementQL> = new Map();
     private server: http.Server;
 
@@ -181,14 +181,14 @@ class ElementQLServer {
         } = this.options;
 
         if (store) {
-            await this.registerElementsStore(store);
+            await this.registerStoreElements(store);
             return;
         }
 
-        await this.registerElementsLocal();
+        await this.registerLocalElements();
     }
 
-    private async registerElementsStore(
+    private async registerStoreElements(
         store: ElementQLStore,
     ) {
         const {
@@ -219,20 +219,32 @@ class ElementQLServer {
         }
     }
 
-    private async registerElementsLocal() {
+    private async registerLocalElements() {
+        // TODO
+        // in case of a shared persistent root/volume (Kubernetes)
+        // to check if there isn't an already defined metadata file
+        // and verify the local elements against the already registered ones
+        // if all is already registered, simply load into memory
+        const handledLocal = await this.handleLocalMetadataFile();
+        if (handledLocal) {
+            return;
+        }
+
         const {
+            rootDirectory,
+            buildDirectory,
             elementsDirectories,
         } = this.options;
 
-        for (const elementPath of elementsDirectories) {
+        for (const elementsDirectory of elementsDirectories) {
             const elementsPath = path.join(
-                process.cwd(),
-                this.options.buildDirectory,
-                elementPath,
+                rootDirectory,
+                buildDirectory,
+                elementsDirectory,
             );
             const elements = await this.extractElementsFromPath(
                 elementsPath,
-                elementPath,
+                elementsDirectory,
             );
             for (const element of elements) {
                 await this.registerElement(element);
@@ -1141,6 +1153,33 @@ class ElementQLServer {
             metadataFilePath,
             metadataFileContents,
         );
+    }
+
+    private async readLocalMetadataFile() {
+        try {
+            const {
+                rootDirectory,
+                buildDirectory,
+                elementqlDirectory,
+                metadataFilename,
+            } = this.options;
+
+            const metadataFilePath = path.join(
+                rootDirectory,
+                buildDirectory,
+                elementqlDirectory,
+                metadataFilename,
+            );
+
+            const metadataContents = await fsPromise.readFile(metadataFilePath, 'utf-8');
+            return JSON.parse(metadataContents);
+        } catch (error) {
+            return;
+        }
+    }
+
+    private async handleLocalMetadataFile() {
+        return false;
     }
 }
 
