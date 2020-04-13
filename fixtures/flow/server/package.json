@@ -1,0 +1,13 @@
+{
+    "name": "fixture-flow-server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@plurid/elementql-server": "^0.0.5",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "typescript": "^3.8.3"
+    }
+}
