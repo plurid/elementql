@@ -1,6 +1,6 @@
 ---
 packages:
-  - fixtures/*
+  - fixtures/complete/react/*
 
 package:
   manager: yarn
