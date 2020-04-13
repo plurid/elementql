@@ -32,10 +32,23 @@ class ElementQLClientReact {
         elementsRequest: any,
         type: 'elementql' | 'json' = 'elementql',
     ) {
-        const data = await this.client.get(
+        const {
+            status,
+            data,
+        } = await this.client.get(
             elementsRequest,
             type,
         );
+
+        if (!status) {
+            const response = {
+                status: false,
+                Elements: null,
+            };
+            return response;
+        }
+
+        console.log(data);
 
         const {
             elements,
@@ -47,19 +60,33 @@ class ElementQLClientReact {
                 files,
             } = element;
 
-            console.log(element);
+            const safeName = name.replace('/', '');
 
-//             const elementModule = document.createElement('script');
-//             elementModule.type = 'module';
-//             elementModule.text =
-// `
-// import ${name} from '${this.options.url}${urls[0]}';
+            for (const file of files) {
+                const {
+                    type,
+                    url,
+                } = file;
 
-// window.elementql = window.elementql || {};
-// window.elementql.${name} = ${name};
-// `;
+                const safeURL = url.replace('/elementql', '');
 
-//             document.body.appendChild(elementModule);
+                switch (type) {
+                    case '.js':
+                        {
+                            const elementModule = document.createElement('script');
+                            elementModule.type = 'module';
+                            elementModule.text =
+`
+import ${safeName} from '${this.options.url}${safeURL}';
+
+window.elementql = window.elementql || {};
+window.elementql.${safeName} = ${safeName};
+`;
+
+                            document.body.appendChild(elementModule);
+                        }
+                }
+            }
         }
 
         const Elements = await new Promise((resolve, _) => {
@@ -71,7 +98,12 @@ class ElementQLClientReact {
 
         console.log(Elements);
 
-        return Elements;
+        const response = {
+            status: true,
+            Elements,
+        };
+
+        return response;
     }
 }
 
