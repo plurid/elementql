@@ -1,13 +1,15 @@
-import ElementQLServer, {
+import ElementQLServer from '@plurid/elementql-server';
+
+import {
     libraries,
-} from '@plurid/elementql-server';
+} from '@plurid/elementql';
 
 
 
 const server = new ElementQLServer({
     libraries: {
         react: libraries.react,
-        "react-dom": libraries["react-dom"]
+        reactDom: libraries.reactDom,
     },
     plugins: [
         'typescript',
