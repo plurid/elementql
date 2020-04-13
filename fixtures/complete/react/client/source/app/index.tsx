@@ -37,13 +37,12 @@ const App = () => {
                 AppElementQLJSONRequest,
                 'json',
             );
-            console.log(status);
+            // console.log(status);
+            // console.log(Elements);
 
             if (!status) {
                 return;
             }
-
-            console.log(Elements);
 
             const ReactAppElementQL = React.createElement(
                 Elements.AppElementQL,
