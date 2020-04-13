@@ -13,4 +13,4 @@ export interface BootloaderConfigurationOrigins {
 export interface UseLibrariesOptions {
     libraries: Record<string, any>;
     buildDirectory: string;
-};
+}
