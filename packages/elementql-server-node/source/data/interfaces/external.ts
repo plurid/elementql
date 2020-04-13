@@ -8,6 +8,10 @@ import {
 
 import Terser from 'terser';
 
+import {
+    Libraries,
+} from '@plurid/elementql';
+
 
 
 export interface ElementQLServerOptions {
@@ -29,7 +33,7 @@ export interface ElementQLServerOptions {
     transpilesDirectory?: string;                               /** relative to the elementql directory */
 
     elementsDirectories?: string[];                             /** relative to the build directory */
-    libraries?: Partial<LibrariesResolvers>;
+    libraries?: Partial<Libraries>;
     endpoint?: string;
     allowOrigin?: string[]
     allowHeaders?: string[];
@@ -135,17 +139,3 @@ export type ElementQLServerPlugin =
     | ElementQLServerTypescript
     | ElementQLServerBabel
     | ElementQLServerMinify;
-
-
-export type LibrariesResolvers = Record<Libraries, LibraryResolver>;
-
-export interface LibraryResolver {
-    version?: string;
-    module: boolean;
-    development: string,
-    production: string,
-}
-
-export type Libraries =
-    | 'react'
-    | 'react-dom';
