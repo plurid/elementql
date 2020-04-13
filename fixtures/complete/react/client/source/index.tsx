@@ -31,14 +31,21 @@ const App = () => {
     useEffect(() => {
         const fetchElement = async () => {
             const {
-                AppElementQL,
+                status,
+                Elements,
             }: any = await elementQLClient.get(
                 AppElementQLJSONRequest,
                 'json',
             );
 
+            if (!status) {
+                return;
+            }
+
+            console.log(Elements);
+
             const ReactAppElementQL = React.createElement(
-                AppElementQL,
+                Elements.AppElementQL,
                 null,
             );
             setAppElement(ReactAppElementQL);
