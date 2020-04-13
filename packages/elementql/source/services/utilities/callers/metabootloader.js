@@ -43,11 +43,13 @@ const metabootloader = async () => {
         const {
             globals,
             origins,
+            entry,
         } = configuration;
 
         const bootloaderConfiguration = {
             globals,
             origins,
+            entry,
         };
 
         const bootloaderContents =
