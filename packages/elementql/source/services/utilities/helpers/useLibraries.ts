@@ -28,11 +28,11 @@ const useLibraries = async (
             } = library;
 
             const nodeModulePath = path.join(
-                __dirname,
+                process.cwd(),
                 isProduction ? production : development,
             );
             const appModulePath = path.join(
-                __dirname,
+                process.cwd(),
                 buildDirectory,
                 isProduction ? production : development,
             );
@@ -50,7 +50,7 @@ const useLibraries = async (
             );
         }
     } catch (error) {
-        console.log(`\n\tCould not port node_modules libraries to the application folder.\n`);
+        console.log(`\n\tCould not port node_modules libraries to the application folder.\n`, error);
     }
 }
 
