@@ -4,16 +4,15 @@
 // importScripts(elementQLServiceWorker);
 
 
+
+const { globals } = JSON.parse((decodeURIComponent(self.location.search) || '?{}').substr(1));
+
+
 const removeSpaces = str => str.split(/^ +/m).join('').trim();
 
-const globalMap = {
-    'react': 'React',
-    'react-dom': 'ReactDOM'
-};
-
-const getGlobalByUrl = (url) => Object.keys(globalMap).reduce((res, key) => {
+const getGlobalByUrl = (url) => Object.keys(globals).reduce((res, key) => {
     if (res) return res;
-    if (matchUrl(url, key)) return globalMap[key];
+    if (matchUrl(url, key)) return globals[key];
     return res;
 }, null);
 

@@ -8,11 +8,15 @@ const CopyPlugin = require('copy-webpack-plugin');
 const copyPlugin = new CopyPlugin([
     {
         from: path.resolve(__dirname, './public'),
-        to: './',
+        to: '../',
     },
     {
         from: path.resolve(__dirname, './source/service-worker.js'),
-        to: './',
+        to: '../',
+    },
+    {
+        from: path.resolve(__dirname, './source/index.js'),
+        to: '../',
     },
 ]);
 
@@ -56,12 +60,12 @@ const babelRule = {
 /** CONFIGURATION */
 const configuration = {
     entry: {
-        index: path.join(__dirname, 'source/index.tsx'),
+        index: path.join(__dirname, 'source/app/index.tsx'),
     },
 
     output: {
         filename: '[name].js',
-        path: path.join(__dirname, 'build'),
+        path: path.join(__dirname, 'build/app'),
     },
 
     resolve: {
