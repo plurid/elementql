@@ -5,7 +5,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "useLibraries": "node useLibraries.js",
+        "useLibraries": "ENV_MODE=production node useLibraries.js",
         "build": "webpack && yarn useLibraries"
     },
     "dependencies": {

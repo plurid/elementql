@@ -1,4 +1,4 @@
-const elementQLServiceWorker = '../node_modules/@plurid/elementql/distribution/service-worker.js';
+const elementQLServiceWorker = './node_modules/@plurid/elementql/distribution/service-worker.js';
 
 
 importScripts(elementQLServiceWorker);
