@@ -5,7 +5,8 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "build": "webpack"
+        "useLibraries": "node useLibraries.js",
+        "build": "webpack && yarn useLibraries"
     },
     "dependencies": {
         "@plurid/elementql-client-react": "^0.0.4",
