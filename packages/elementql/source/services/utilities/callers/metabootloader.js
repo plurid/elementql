@@ -1,6 +1,8 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
+
+const fsPromise = fs.promises;
 
 
 
@@ -19,7 +21,7 @@ const readConfigurationData = async () => {
         );
 
         if (fs.existsSync(configurationFileLocation)) {
-            const configurationFile = await fs.readFile(configurationFileLocation);
+            const configurationFile = await fsPromise.readFile(configurationFileLocation);
             const configuration = yaml.safeLoad(configurationFile, 'utf8');
             return configuration;
         }
@@ -63,7 +65,7 @@ bootloader(configuration);
 `;
 
         const bootloaderPath = configuration.bootloader;
-        await fs.writeFile(
+        await fsPromise.writeFile(
             bootloaderPath,
             bootloaderContents,
         );
@@ -75,4 +77,4 @@ bootloader(configuration);
 }
 
 
-metabootloader();
+exports.default = metabootloader;
