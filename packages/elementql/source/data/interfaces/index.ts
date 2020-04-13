@@ -1,20 +1,12 @@
-export interface IElementQL {
-
-}
-
-
-export interface ElementQLOptions {
-
-}
-
-
 export interface BootloaderConfiguration {
     globals: Record<string, string>,
-    origins: {
-        elementql: string,
-        application: string,
-    },
-    entry: string,
+    origins: BootloaderConfigurationOrigins;
+    entry: string;
+}
+
+export interface BootloaderConfigurationOrigins {
+    elementql: string;
+    application: string;
 }
 
 
