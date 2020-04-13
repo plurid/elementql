@@ -37,6 +37,7 @@ const App = () => {
                 AppElementQLJSONRequest,
                 'json',
             );
+            console.log(status);
 
             if (!status) {
                 return;
