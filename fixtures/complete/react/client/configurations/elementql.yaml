@@ -4,6 +4,6 @@ globals:
   react-dom: ReactDOM
 origins:
   elementql: http://localhost:21100/elementql
-  application: http://localhost:8002
+  application: http://localhost:8010
 bootloader: './source/index.js'
 entry: './app/index.js'

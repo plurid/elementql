@@ -8,7 +8,7 @@
         "build": "rollup -c rollup.config.js"
     },
     "dependencies": {
-        "@plurid/elementql-server": "^0.0.6",
+        "@plurid/elementql-server": "^0.0.7",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "typescript": "^3.8.3"

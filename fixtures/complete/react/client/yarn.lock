@@ -821,27 +821,27 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@plurid/elementql-client-react@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-client-react/-/elementql-client-react-0.0.5.tgz#3345e17b30a25efa596d87072ab16a0d28dd8627"
-  integrity sha512-ZuXoo5vbUlFjCYke76zIY2JkqsCMrX7D+FD0ifDTcVwl52RtM42PI/URnxmXgbNj0LkmIFu0KslJCXZ3wvoCNA==
+"@plurid/elementql-client-react@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-client-react/-/elementql-client-react-0.0.6.tgz#d96399106becf5c1c65fd555aeaca9d9aeb42c4d"
+  integrity sha512-L6Cvix2/YUzr7zuPUAeXFsBhGJ9D4Vr+RSzMcKwKyiq0qhXIvM0qiw8ikYXUvBDn2XKodiRn5mI7zMdnXWKf/A==
   dependencies:
-    "@plurid/elementql-client" "^0.0.5"
+    "@plurid/elementql-client" "^0.0.6"
 
-"@plurid/elementql-client@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.5.tgz#bcdf82ac1682ddd593a497d7f1f33721ad423721"
-  integrity sha512-G9NID1vTfXRRJbFwm5PwhxdIHKrHSKwiadjTTHuiTNlVx2ieQr6aiPuCzYbOuN0wmchQ2/s3LP0EDn4XKelyUA==
+"@plurid/elementql-client@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.6.tgz#3f685ba57d56772f7a7af8d899e5e4663df5184b"
+  integrity sha512-StQF1s75h4Pyq4hPBRdiq1/44HKp4HGbX9/qNH9AtfY/ccNhQIl1auNN8V/proF0jY4vv09OD9UmHtRtoMrRxg==
 
 "@plurid/elementql-tag@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.5.tgz#fc964d0f357c52e3dcb2d757ef3a3d62461cd92e"
   integrity sha512-5/W5TWffFWOQV5fTwa9BtiOnYOd47623vVrwM0a2nXJtkyXNcE0zxK29Ct8H3MqoRg9ax1p16QB0qKLjUx/wTQ==
 
-"@plurid/elementql@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql/-/elementql-0.0.5.tgz#9db34518be12d91e00dfc2fa81063cb031aaa810"
-  integrity sha512-1dm4sPanUFpR7P6rRfrSEJ0ruF24LGq7iTT6XH5kT9kmxUgHvISToPZ0+lppu9dJt+hp9EZTzi+ddBmHihPxeA==
+"@plurid/elementql@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql/-/elementql-0.0.6.tgz#879fc757c0ac2c683b0ceaa5842017ddc1ba3a3b"
+  integrity sha512-UuhunNuZn/PROV1BqBpK9ExpE5kSayDl5rtXdspB8saEeZ3sSnQwkIOyQC6WSJ6di2leYWlCo+wVIZl8TJCdMg==
   dependencies:
     "@plurid/elementql-tag" "^0.0.5"
 
