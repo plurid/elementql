@@ -1,5 +1,5 @@
 export interface BootloaderConfiguration {
-    globals: Record<string, string>,
+    globals: Record<string, string>;
     origins: BootloaderConfigurationOrigins;
     entry: string;
 }
