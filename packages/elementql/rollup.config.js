@@ -1,3 +1,5 @@
+import copy from 'rollup-plugin-copy';
+
 import plugins from '../rollup.plugins';
 
 import pkg from './package.json';
@@ -22,5 +24,13 @@ export default {
     ],
     plugins: [
         ...plugins,
+        copy({
+            targets: [
+                {
+                    src: 'source/services/utilities/callers/*',
+                    dest: 'distribution'
+                },
+            ],
+        }),
     ],
 }
