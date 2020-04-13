@@ -16,6 +16,10 @@ import Terser from 'terser';
 // import ElementQLParser from '@plurid/elementql-parser';
 
 import {
+    LibraryName,
+} from '@plurid/elementql';
+
+import {
     indexing,
     uuid,
 } from '@plurid/plurid-functions';
@@ -36,8 +40,6 @@ import {
     ElementQLStore,
     ElementQL,
     ElementID,
-
-    Libraries,
 } from '../../data/interfaces';
 
 import {
@@ -617,7 +619,7 @@ class ElementQLServer {
             let libraryResolver;
             for (const library of Object.keys(libraries)) {
                 if (library === libraryName) {
-                    libraryResolver = libraries[library as Libraries];
+                    libraryResolver = libraries[library as LibraryName];
                 }
             }
 
@@ -1082,7 +1084,7 @@ class ElementQLServer {
                 const importValueRE = new RegExp(`('|")${value}('|")`);
 
                 if (library) {
-                    const libraryData = libraries[value as Libraries];
+                    const libraryData = libraries[value as LibraryName];
                     if (!libraryData) {
                         continue;
                     }
