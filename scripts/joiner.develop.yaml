@@ -2,6 +2,7 @@
 packages:
   - packages/*
   - fixtures/complete/react/*
+  - fixtures/specific/*
 
 package:
   manager: yarn
