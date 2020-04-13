@@ -90,9 +90,7 @@ The simplest `ElementQL` server requires only to be started, the elements will b
 
 ``` typescript
 // server.js
-import ElementQLServer, {
-    ElementQLServerOptions,
-} from '@plurid/elementql-server';
+import ElementQLServer from '@plurid/elementql-server';
 
 
 const server = new ElementQLServer();
