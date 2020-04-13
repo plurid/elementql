@@ -1,6 +1,6 @@
 {
     "name": "@plurid/elementql-server",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "",
     "keywords": [
         "elementql",
@@ -39,7 +39,7 @@
         "typescript": "^3.8.3"
     },
     "dependencies": {
-        "@plurid/elementql": "^0.0.5",
+        "@plurid/elementql": "^0.0.6",
         "@plurid/elementql-parser": "^0.0.4",
         "@plurid/plurid-functions": "^0.1.12",
         "open": "^7.0.3",
