@@ -833,6 +833,18 @@
   resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.5.tgz#bcdf82ac1682ddd593a497d7f1f33721ad423721"
   integrity sha512-G9NID1vTfXRRJbFwm5PwhxdIHKrHSKwiadjTTHuiTNlVx2ieQr6aiPuCzYbOuN0wmchQ2/s3LP0EDn4XKelyUA==
 
+"@plurid/elementql-tag@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.5.tgz#fc964d0f357c52e3dcb2d757ef3a3d62461cd92e"
+  integrity sha512-5/W5TWffFWOQV5fTwa9BtiOnYOd47623vVrwM0a2nXJtkyXNcE0zxK29Ct8H3MqoRg9ax1p16QB0qKLjUx/wTQ==
+
+"@plurid/elementql@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql/-/elementql-0.0.5.tgz#9db34518be12d91e00dfc2fa81063cb031aaa810"
+  integrity sha512-1dm4sPanUFpR7P6rRfrSEJ0ruF24LGq7iTT6XH5kT9kmxUgHvISToPZ0+lppu9dJt+hp9EZTzi+ddBmHihPxeA==
+  dependencies:
+    "@plurid/elementql-tag" "^0.0.5"
+
 "@types/prop-types@*":
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
