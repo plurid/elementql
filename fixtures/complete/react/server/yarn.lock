@@ -203,12 +203,12 @@
   resolved "https://registry.yarnpkg.com/@plurid/elementql-parser/-/elementql-parser-0.0.4.tgz#29bce54f7eafaf6c489dd2ae1057f06d62233649"
   integrity sha512-sMzOd55IKsXSQ9Gf9Kstmol2/MLe8A9MEoPV31oXl4mkT4fq6NYSHw2+t08tz/tgdoA2a+VXK4/nuoZJF05JlA==
 
-"@plurid/elementql-server@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-server/-/elementql-server-0.0.6.tgz#19792186ea9a2fdbd86d5280e7257ad52bd383bf"
-  integrity sha512-+VxPFi3TEV9Qsp+APW9fMcWkYTSqzyKqm4rkQOn6ioBPn9rhMJV9Rn9O9FYz5WqcPIjOqmttRtafGnfRQIDWyw==
+"@plurid/elementql-server@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-server/-/elementql-server-0.0.7.tgz#976ec40104ff8a9e1b916c2434fa40ba883e3548"
+  integrity sha512-654h6EO/TS7edxN20Rg8QW0lm4D8fkkU5s9eZD+8rB3qszGJq3sgyBr0Jha2ZRXe99RNT7DOKTqCA+7hh/jefg==
   dependencies:
-    "@plurid/elementql" "^0.0.5"
+    "@plurid/elementql" "^0.0.6"
     "@plurid/elementql-parser" "^0.0.4"
     "@plurid/plurid-functions" "^0.1.12"
     open "^7.0.3"
@@ -220,10 +220,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.5.tgz#fc964d0f357c52e3dcb2d757ef3a3d62461cd92e"
   integrity sha512-5/W5TWffFWOQV5fTwa9BtiOnYOd47623vVrwM0a2nXJtkyXNcE0zxK29Ct8H3MqoRg9ax1p16QB0qKLjUx/wTQ==
 
-"@plurid/elementql@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql/-/elementql-0.0.5.tgz#9db34518be12d91e00dfc2fa81063cb031aaa810"
-  integrity sha512-1dm4sPanUFpR7P6rRfrSEJ0ruF24LGq7iTT6XH5kT9kmxUgHvISToPZ0+lppu9dJt+hp9EZTzi+ddBmHihPxeA==
+"@plurid/elementql@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql/-/elementql-0.0.6.tgz#879fc757c0ac2c683b0ceaa5842017ddc1ba3a3b"
+  integrity sha512-UuhunNuZn/PROV1BqBpK9ExpE5kSayDl5rtXdspB8saEeZ3sSnQwkIOyQC6WSJ6di2leYWlCo+wVIZl8TJCdMg==
   dependencies:
     "@plurid/elementql-tag" "^0.0.5"
 
