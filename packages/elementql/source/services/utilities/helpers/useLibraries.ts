@@ -48,6 +48,29 @@ const useLibraries = async (
                 nodeModulePath,
                 appModulePath,
             );
+
+
+            const serviceWorkerNodeModule = 'node_modules/@plurid/elementql/distribution/service-worker.js';
+            const serviceWorkerPath = path.join(
+                process.cwd(),
+                serviceWorkerNodeModule,
+            );
+            const serviceWorkerAppPath = path.join(
+                process.cwd(),
+                buildDirectory,
+                serviceWorkerNodeModule,
+            );
+            const serviceWorkerAppDirectory = path.dirname(
+                serviceWorkerAppPath,
+            );
+            await fs.mkdir(
+                serviceWorkerAppDirectory,
+                { recursive: true },
+            );
+            await fs.copyFile(
+                serviceWorkerPath,
+                serviceWorkerAppPath,
+            );
         }
     } catch (error) {
         console.log(`\n\tCould not port node_modules libraries to the application folder.\n`, error);
