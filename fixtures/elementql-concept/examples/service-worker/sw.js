@@ -27,13 +27,17 @@ self.addEventListener('fetch', (event) => {
     console.log('url', url);
 
     if (
-        url.includes('/library-global/')
-        && url.endsWith('.js')
+        url.includes('/node_modules/')
+        // globalMap && Object.keys(globalMap).some(key => matchUrl(url, key))
+        // url.includes('/library-global/')
+        // && url.endsWith('.js')
     ) {
         console.log('GLOBAL url', url);
+        const replace = url.replace('21100/elementql', '8000');
+        console.log('replace', replace);
 
         event.respondWith(
-            fetch(event.request)
+            fetch(replace)
                 .then(response => response.text())
                 .then(body => {
                     // console.log('body', body);
