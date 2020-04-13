@@ -13,33 +13,44 @@ import {
 const useLibraries = async (
     options: UseLibrariesOptions,
 ) => {
-    const {
-        libraries,
-        buildDirectory,
-    } = options;
-
-    for (const library of Object.values(libraries)) {
-        const libraryPath = path.join(
-            __dirname,
-            library.production,
-        );
-        const appModulePath = path.join(
-            __dirname,
+    try {
+        const {
+            libraries,
             buildDirectory,
-            library.production,
-        );
-        const appModuleDirectory = path.dirname(
-            appModulePath,
-        );
+        } = options;
 
-        await fs.mkdir(
-            appModuleDirectory,
-            { recursive: true },
-        );
-        await fs.copyFile(
-            libraryPath,
-            appModulePath,
-        );
+        const isProduction = process.env.ENV_MODE === 'production';
+
+        for (const library of Object.values(libraries)) {
+            const {
+                development,
+                production,
+            } = library;
+
+            const nodeModulePath = path.join(
+                __dirname,
+                isProduction ? production : development,
+            );
+            const appModulePath = path.join(
+                __dirname,
+                buildDirectory,
+                isProduction ? production : development,
+            );
+            const appModuleDirectory = path.dirname(
+                appModulePath,
+            );
+
+            await fs.mkdir(
+                appModuleDirectory,
+                { recursive: true },
+            );
+            await fs.copyFile(
+                nodeModulePath,
+                appModulePath,
+            );
+        }
+    } catch (error) {
+        console.log(`\n\tCould not port node_modules libraries to the application folder.\n`);
     }
 }
 
