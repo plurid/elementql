@@ -1087,11 +1087,16 @@ class ElementQLServer {
                         continue;
                     }
                     const {
-                        module: moduleLibrary,
+                        // development,
+                        production,
+                        // module: moduleLibrary,
                     } = libraryData;
 
-                    const moduleValue= moduleLibrary ? '-module' : '-global';
-                    const replaceValue = '"' + hostURL + 'library' + moduleValue + '/' + value + '.js"';
+                    // node_modules/react/umd/react.production.min.js
+
+                    // const moduleValue = moduleLibrary ? '-module' : '-global';
+                    const replaceValue = '"' + production + '"';
+                    // const replaceValue = '"' + hostURL + 'library' + moduleValue + '/' + value + '.js"';
                     transpileContents = transpileContents.replace(importValueRE, replaceValue);
                     continue;
                 }
