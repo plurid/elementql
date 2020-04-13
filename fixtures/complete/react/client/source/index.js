@@ -44,7 +44,8 @@ const configuration = {
     "origins": {
         "elementql": "http://localhost:21100/elementql",
         "application": "http://localhost:8002"
-    }
+    },
+    "entry": "./app/index.js"
 };
 
 bootloader(configuration);
