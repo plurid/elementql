@@ -36,7 +36,7 @@ self.addEventListener('fetch', (event) => {
         url.includes('/node_modules/')
     ) {
         console.log('GLOBAL url', url);
-        const replace = url.replace('21100/elementql', '8000');
+        const replace = url.replace('21100/elementql/', '8000/');
         console.log('replace', replace);
 
         event.respondWith(
