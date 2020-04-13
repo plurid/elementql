@@ -48,8 +48,6 @@ class ElementQLClientReact {
             return response;
         }
 
-        console.log(data);
-
         const {
             elements,
         } = data;
@@ -95,8 +93,6 @@ window.elementql.${safeName} = ${safeName};
                 resolve(Elements);
             }, 700);
         });
-
-        console.log(Elements);
 
         const response = {
             status: true,
