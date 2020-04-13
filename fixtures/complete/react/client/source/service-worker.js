@@ -35,11 +35,11 @@ self.addEventListener('fetch', (event) => {
         url.includes('/node_modules/')
     ) {
         console.log('GLOBAL url', url);
-        const replace = url.replace('21100/elementql/', '8000/');
+        const replace = url.replace('21100/elementql/', '8002/');
         console.log('replace', replace);
 
         event.respondWith(
-            fetch(replace)
+            fetch(replace, { mode: 'no-cors' })
                 .then(response => response.text())
                 .then(body => {
                     // console.log('body', body);

@@ -56,13 +56,25 @@ const App = () => {
     }, []);
 
     return (
-        <>
+        <div>
+            <div style={{textAlign: 'center', padding: '30px'}}>
+                ElementQL Client React
+            </div>
+
             {AppElement && (
-                <>
-                    {AppElement}
-                </>
+                <div>
+                    <div style={{margin:'5px', fontSize: '12px'}}>
+                        render zone
+                    </div>
+
+                    <div
+                        style={{padding: '20px', background: 'hsl(220, 10%, 26%)'}}
+                    >
+                        {AppElement}
+                    </div>
+                </div>
             )}
-        </>
+        </div>
     );
 }
 
