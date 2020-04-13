@@ -838,10 +838,10 @@
   resolved "https://registry.yarnpkg.com/@plurid/elementql-tag/-/elementql-tag-0.0.5.tgz#fc964d0f357c52e3dcb2d757ef3a3d62461cd92e"
   integrity sha512-5/W5TWffFWOQV5fTwa9BtiOnYOd47623vVrwM0a2nXJtkyXNcE0zxK29Ct8H3MqoRg9ax1p16QB0qKLjUx/wTQ==
 
-"@plurid/elementql@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql/-/elementql-0.0.6.tgz#879fc757c0ac2c683b0ceaa5842017ddc1ba3a3b"
-  integrity sha512-UuhunNuZn/PROV1BqBpK9ExpE5kSayDl5rtXdspB8saEeZ3sSnQwkIOyQC6WSJ6di2leYWlCo+wVIZl8TJCdMg==
+"@plurid/elementql@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql/-/elementql-0.0.7.tgz#41aeafc137c0b51aba282e9a4cafc324819fd750"
+  integrity sha512-oqerrCTle8/3IvnEhMNAWXHdrUtynmuLQy0VoTFuHx94aWnFDeywWL4kBaIQO+voeJ6sonj4uxHUdFGjMv2lJA==
   dependencies:
     "@plurid/elementql-tag" "^0.0.5"
 
