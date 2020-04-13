@@ -32,28 +32,34 @@ class ElementQLClientReact {
         elementsRequest: any,
         type: 'elementql' | 'json' = 'elementql',
     ) {
-        const elements = await this.client.get(
+        const data = await this.client.get(
             elementsRequest,
             type,
         );
 
+        const {
+            elements,
+        } = data;
+
         for (const element of elements) {
             const {
                 name,
-                urls,
+                files,
             } = element;
 
-            const elementModule = document.createElement('script');
-            elementModule.type = 'module';
-            elementModule.text =
-`
-import ${name} from '${this.options.url}${urls[0]}';
+            console.log(element);
 
-window.elementql = window.elementql || {};
-window.elementql.${name} = ${name};
-`;
+//             const elementModule = document.createElement('script');
+//             elementModule.type = 'module';
+//             elementModule.text =
+// `
+// import ${name} from '${this.options.url}${urls[0]}';
 
-            document.body.appendChild(elementModule);
+// window.elementql = window.elementql || {};
+// window.elementql.${name} = ${name};
+// `;
+
+//             document.body.appendChild(elementModule);
         }
 
         const Elements = await new Promise((resolve, _) => {
