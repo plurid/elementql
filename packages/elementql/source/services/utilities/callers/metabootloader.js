@@ -1,4 +1,5 @@
-const fs = require('fs');
+const fs = require('fs').promises;
+const path = require('path');
 const yaml = require('js-yaml');
 
 
@@ -12,8 +13,13 @@ const readConfigurationData = async () => {
     ];
 
     for (const configurationFilePath of configurationFilePaths) {
-        if (fs.existsSync(configurationFilePath)) {
-            const configurationFile = fs.readFileSync(configurationFilePath);
+        const configurationFileLocation = path.join(
+            process.cwd(),
+            configurationFilePath,
+        );
+
+        if (fs.existsSync(configurationFileLocation)) {
+            const configurationFile = await fs.readFile(configurationFileLocation);
             const configuration = yaml.safeLoad(configurationFile, 'utf8');
             return configuration;
         }
@@ -25,13 +31,10 @@ const readConfigurationData = async () => {
 
 const metabootloader = async () => {
     try {
-        // const configurationFilePath = './configurations/elementql.yaml';
-        // const configurationFile = fs.readFileSync(configurationFilePath);
-        // const configuration = yaml.safeLoad(configurationFile, 'utf8');
         const configuration = await readConfigurationData();
 
         if (!configuration) {
-            console.log('\n\tMetabootloader could not locate the \'elementql.yaml\' file.');
+            console.log('\n\tMetabootloader could not locate the \'elementql.yaml\' file.\n');
             return;
         }
 
@@ -54,19 +57,20 @@ const {
     bootloader,
 } = require('@plurid/elementql');
 
-const configuration = ${JSON.stringify(bootloaderConfiguration)};
+const configuration = ${JSON.stringify(bootloaderConfiguration, null, 4)};
 
 bootloader(configuration);
 `;
 
-        const bootloaderPath = configuration.bootloaderPath;
-        // const bootloaderPath = './source/index.js';
-        fs.writeFileSync(
+        const bootloaderPath = configuration.bootloader;
+        await fs.writeFile(
             bootloaderPath,
             bootloaderContents,
         );
+
+        console.log(`\n\tMetabootloader generated the bootloader '${bootloaderPath}'.\n`);
     } catch (error) {
-        console.log('\n\tMetabootloader failed to generate the bootloader.');
+        console.log('\n\tMetabootloader failed to generate the bootloader.\n');
     }
 }
 
