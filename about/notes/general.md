@@ -11,7 +11,7 @@ User writes a React application
         <title>React ElementQL App</title>
     </head>
     <body>
-        <div id="roo"></div>
+        <div id="root"></div>
         <script src="index.js"></script>
     </body>
 </html>
@@ -52,7 +52,7 @@ const App = () => {
             const {
                 AppElementQL,
             }: any = await elementQLClient.get(
-                HelloElementQLJSONRequest,
+                AppElementQLJSONRequest,
                 'json',
             );
 
@@ -60,7 +60,7 @@ const App = () => {
                 AppElementQL,
                 null,
             );
-            setElement(ReactAppElementQL);
+            setAppElement(ReactAppElementQL);
         }
 
         fetchElement();
@@ -78,7 +78,7 @@ const App = () => {
 }
 
 ReactDOM.render(
-    <App>,
+    <App />,
     document.getElementByID('root'),
 );
 ```
