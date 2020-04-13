@@ -10,7 +10,7 @@ import ElementQLClientReact from '@plurid/elementql-client-react';
 
 
 const elementQLClient = new ElementQLClientReact({
-    url: 'http://localhost:33300/elementql',
+    url: 'http://localhost:21100/elementql',
 });
 
 // const ELEMENT = elementql`
@@ -18,16 +18,13 @@ const elementQLClient = new ElementQLClientReact({
 //         <element>
 //     }
 // `;
-const ELEMENT = 'AnElement';
+// const ELEMENT = 'AnElement';
 
 const AnElementJSONRequest = {
     elements: [
         {
-            name: 'AnElement',
+            name: 'ASimplePage',
         },
-        {
-            name: 'AnElementWithName',
-        }
     ],
 };
 
@@ -38,20 +35,22 @@ const App: React.FC = () => {
     useEffect(() => {
         const fetchElement = async () => {
             const {
-                // AnElement,
-                AnElementWithName,
+                status,
+                Elements,
             }: any = await elementQLClient.get(
                 AnElementJSONRequest,
                 'json',
             );
 
-            const ReactAnElementWithName = React.createElement(
-                AnElementWithName,
-                {
-                    name: 'AnElementWithName from properties',
-                },
+            if (!status) {
+                return;
+            }
+
+            console.log(Elements.ASimplePage);
+            const ReactASimplePage = React.createElement(
+                Elements.ASimplePage,
             );
-            setElement(ReactAnElementWithName);
+            setElement(ReactASimplePage);
         }
 
         fetchElement();
@@ -59,12 +58,22 @@ const App: React.FC = () => {
 
     return (
         <div>
-            ElementQL Client React
+            <div style={{textAlign: 'center', padding: '30px'}}>
+                ElementQL Client React
+            </div>
 
             {Element && (
-                <>
-                    {Element}
-                </>
+                <div>
+                    <div style={{margin:'5px', fontSize: '12px'}}>
+                        render zone
+                    </div>
+
+                    <div
+                        style={{padding: '20px', background: 'hsl(220, 10%, 26%)'}}
+                    >
+                        {Element}
+                    </div>
+                </div>
             )}
         </div>
     );
