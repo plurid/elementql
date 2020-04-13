@@ -1,12 +1,19 @@
 import elementql from '@plurid/elementql-tag';
 
-import ElementQL from './objects/ElementQL';
+import {
+    bootloader,
+    useLibraries,
+} from './services/utilities/helpers';
 
+
+
+export * from './data/interfaces';
 
 
 export {
     elementql,
+
+    /** utilities */
+    bootloader,
+    useLibraries,
 }
-
-
-export default ElementQL;

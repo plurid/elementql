@@ -4,15 +4,13 @@ import {
 
 import path from 'path';
 
+import {
+    UseLibrariesOptions,
+} from '../../../data/interfaces';
 
 
-export interface UseLibrariesOptions {
-    libraries: Record<string, any>;
-    buildDirectory: string;
-};
 
-
-export const useLibraries = async (
+const useLibraries = async (
     options: UseLibrariesOptions,
 ) => {
     const {
@@ -44,3 +42,6 @@ export const useLibraries = async (
         );
     }
 }
+
+
+export default useLibraries;
