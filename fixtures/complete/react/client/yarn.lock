@@ -821,17 +821,17 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@plurid/elementql-client-react@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-client-react/-/elementql-client-react-0.0.4.tgz#c077f87f807110fe08c57a1f87a70eccac9f465b"
-  integrity sha512-iElerJ4dwpKaoncJQ1dzwjTUm6heKRGC97szVkyP/w/rt6CnF2BIJxDdQcUvoNlxe3NtQurCDFPFd8EQvYPsew==
+"@plurid/elementql-client-react@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-client-react/-/elementql-client-react-0.0.5.tgz#3345e17b30a25efa596d87072ab16a0d28dd8627"
+  integrity sha512-ZuXoo5vbUlFjCYke76zIY2JkqsCMrX7D+FD0ifDTcVwl52RtM42PI/URnxmXgbNj0LkmIFu0KslJCXZ3wvoCNA==
   dependencies:
-    "@plurid/elementql-client" "^0.0.3"
+    "@plurid/elementql-client" "^0.0.5"
 
-"@plurid/elementql-client@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.3.tgz#6f8ec8ced4e4fb40f6b180f4ea69329194346d29"
-  integrity sha512-1ik9AFMN6QZpkrw51ptkSVPoT7tXlp6iopUo/3ZYZiTcnUycJFf8mE2ncyHdvMhulz5FUm2iX8f9gs4pm9bYGw==
+"@plurid/elementql-client@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@plurid/elementql-client/-/elementql-client-0.0.5.tgz#bcdf82ac1682ddd593a497d7f1f33721ad423721"
+  integrity sha512-G9NID1vTfXRRJbFwm5PwhxdIHKrHSKwiadjTTHuiTNlVx2ieQr6aiPuCzYbOuN0wmchQ2/s3LP0EDn4XKelyUA==
 
 "@types/prop-types@*":
   version "15.7.3"

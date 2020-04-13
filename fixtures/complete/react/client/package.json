@@ -9,7 +9,7 @@
         "build": "webpack && yarn useLibraries"
     },
     "dependencies": {
-        "@plurid/elementql-client-react": "^0.0.4",
+        "@plurid/elementql-client-react": "^0.0.5",
         "react": "^16.13.1",
         "react-dom": "^16.13.1"
     },
