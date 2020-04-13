@@ -1,4 +1,4 @@
-const config = {
+const configuration = {
     globals: {
         'react': 'React',
         'react-dom': 'ReactDOM',
@@ -6,9 +6,11 @@ const config = {
 };
 
 
-const bootloader = async () => {
+const bootloader = async (
+    configuration,
+) => {
     try {
-        await navigator.serviceWorker.register('service-worker.js?' + JSON.stringify(config));
+        await navigator.serviceWorker.register('service-worker.js?' + JSON.stringify(configuration));
         await navigator.serviceWorker.ready;
 
         const launch = async () => {
@@ -28,4 +30,4 @@ const bootloader = async () => {
 }
 
 
-bootloader();
+bootloader(configuration);
