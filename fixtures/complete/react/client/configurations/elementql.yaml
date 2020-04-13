@@ -2,3 +2,6 @@
 globals:
   react: React
   react-dom: ReactDOM
+origins:
+  elementql: http://localhost:21100/elementql
+  application: http://localhost:8002
