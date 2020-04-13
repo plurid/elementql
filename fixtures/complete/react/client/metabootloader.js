@@ -1,4 +1,4 @@
-const metabootloader = require('@plurid/elementql/distribution/metabootloader');
+const metabootloader = require('@plurid/elementql/distribution/metabootloader').default;
 
 
 metabootloader();
