@@ -43,7 +43,7 @@ const configuration = {
     },
     "origins": {
         "elementql": "http://localhost:21100/elementql",
-        "application": "http://localhost:8010"
+        "application": "http://localhost:8005"
     },
     "entry": "./app/index.js"
 };
