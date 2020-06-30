@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1000 1000">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 700px;
+        font-family: Arial-BoldMT, Arial;
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+    </style>
+    <symbol id="elementql-de" data-name="elementql-de" viewBox="0 0 1036.2 1231.06">
+      <text class="cls-1" transform="translate(0 967.54)">&lt;</text>
+      <text class="cls-1" transform="translate(592 600.54)">&gt;</text>
+      <path class="cls-2" d="M393,153.66h70.75l125.44,760H517.05Z"/>
+    </symbol>
+  </defs>
+  <title>Artboard 5</title>
+  <g id="Layer_5" data-name="Layer 5">
+    <use width="1036.2" height="1231.06" transform="translate(3.14 -31.94)" xlink:href="#elementql-de"/>
+  </g>
+</svg>
