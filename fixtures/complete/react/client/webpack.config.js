@@ -5,20 +5,22 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 
 /** PLUGINS */
-const copyPlugin = new CopyPlugin([
-    {
-        from: path.resolve(__dirname, './public'),
-        to: '../',
-    },
-    {
-        from: path.resolve(__dirname, './source/service-worker.js'),
-        to: '../',
-    },
-    {
-        from: path.resolve(__dirname, './source/index.js'),
-        to: '../',
-    },
-]);
+const copyPlugin = new CopyPlugin({
+    patterns: [
+        {
+            from: path.resolve(__dirname, './public'),
+            to: '../',
+        },
+        {
+            from: path.resolve(__dirname, './source/service-worker.js'),
+            to: '../',
+        },
+        {
+            from: path.resolve(__dirname, './source/index.js'),
+            to: '../',
+        },
+    ],
+});
 
 
 

@@ -5,8 +5,9 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
+        "metabootloader": "node metabootloader.js",
         "useLibraries": "ENV_MODE=production node useLibraries.js",
-        "build": "webpack && yarn useLibraries"
+        "build": "yarn metabootloader && webpack && yarn useLibraries"
     },
     "dependencies": {
         "@plurid/elementql": "^0.0.7",
