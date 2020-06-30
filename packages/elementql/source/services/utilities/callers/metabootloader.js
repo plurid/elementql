@@ -10,7 +10,7 @@ const readConfigurationData = async () => {
     const configurationFilePaths = [
         './configurations/elementql.yaml',
         './src/elementql.yaml',
-        '/source/elementql.yaml',
+        './source/elementql.yaml',
         './elementql.yaml',
     ];
 
