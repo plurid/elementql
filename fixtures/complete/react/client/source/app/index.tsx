@@ -3,7 +3,10 @@ import React, {
     useEffect,
 } from 'react';
 import ReactDOM from 'react-dom';
-import ElementQLClient from '@plurid/elementql-client-react';
+
+import ElementQLClient, {
+    useElementQL,
+} from '@plurid/elementql-client-react';
 
 
 
@@ -26,49 +29,6 @@ const ElementQLJSONRequest = {
         },
     ],
 };
-
-
-const useElementQL = (
-    client: ElementQLClient,
-    request: any,
-    type: 'json' | 'elementql',
-) => {
-    /** state */
-    const [Elements, setElements] = useState<any>();
-
-
-    /** effects */
-    useEffect(() => {
-        let mounted = true;
-
-        const fetchElements = async () => {
-            const {
-                status,
-                Elements,
-            }: any = await client.get(
-                request,
-                type,
-            );
-
-            if (!status || !mounted) {
-                return;
-            }
-
-            setElements(Elements);
-        }
-
-        fetchElements();
-
-        return () => {
-            mounted = false;
-        }
-    }, []);
-
-
-    /** return */
-    return Elements;
-}
-
 
 
 const App = () => {
