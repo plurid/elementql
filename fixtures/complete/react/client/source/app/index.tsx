@@ -29,6 +29,7 @@ const ElementQLJSONRequest = {
 
 
 const useElementQL = (
+    client: ElementQLClient,
     request: any,
     type: 'json' | 'elementql',
 ) => {
@@ -44,9 +45,9 @@ const useElementQL = (
             const {
                 status,
                 Elements,
-            }: any = await elementQLClient.get(
-                ElementQLJSONRequest,
-                'json',
+            }: any = await client.get(
+                request,
+                type,
             );
 
             if (!status || !mounted) {
@@ -72,7 +73,11 @@ const useElementQL = (
 
 const App = () => {
     /** hooks */
-    const HookElements = useElementQL(ElementQLJSONRequest, 'json');
+    const HookElements = useElementQL(
+        elementQLClient,
+        ElementQLJSONRequest,
+        'json',
+    );
 
     /** state */
     const [Elements, setElements] = useState<any>();
