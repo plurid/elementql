@@ -8,7 +8,7 @@ const {
 const usedLibraries = {
     react: libraries.react,
     reactDom: libraries.reactDom,
-}
+};
 
 const buildDirectory = 'build';
 
