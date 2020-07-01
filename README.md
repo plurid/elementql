@@ -205,9 +205,70 @@ The `elementql-server` for `Go` is a `go 1.14` module.
 
 Considering the standard `React` application, using `ElementQL` involves
 
++ creating an `elementql.yaml` configuration file,
+
+``` yaml
+---
+globals:
+  react: React
+  react-dom: ReactDOM
+origins:
+  elementql: http://localhost:21100/elementql
+  application: http://localhost:8005
+bootloader: './source/index.js'
+entry: './app/index.js'
+```
+
+
++ creating the `service-worker`,
+
+``` js
+const elementQLServiceWorker = './node_modules/@plurid/elementql/distribution/service-worker.js';
+
+
+importScripts(elementQLServiceWorker);
+```
+
+
++ creating and running the `metabootloader`,
+
+``` js
+const metabootloader = require('@plurid/elementql/distribution/metabootloader').default;
+
+
+metabootloader();
+```
+
+
++ creating and running `useLibraries`
+
+``` js
+const {
+    libraries,
+    useLibraries,
+} = require('@plurid/elementql');
+
+
+
+const usedLibraries = {
+    react: libraries.react,
+    reactDom: libraries.reactDom,
+};
+
+const buildDirectory = 'build';
+
+
+useLibraries({
+    libraries: usedLibraries,
+    buildDirectory,
+});
+```
+
+
 + defining an `ElementQL`/`JSON` request,
 + instantiating an `ElementQLClient` with the `URL` for the `ElementQL` server endpoint,
-+ and making the request with the `useEffect`, `useState` standard `React` hooks.
++ and making the request with the `useEffect`, `useState` standard `React` hooks,
++ or with the `useElementQL` custom hook.
 
 
 ``` tsx
@@ -216,14 +277,17 @@ import React, {
     useState,
 } from 'react';
 
-import ElementQLClientReact from '@plurid/elementql-client-react';
+import ElementQLClientReact, {
+    useElementQL,
+} from '@plurid/elementql-client-react';
+
 
 
 const elementQLClient = new ElementQLClientReact({
     url: 'http://localhost:21100/elementql',
 });
 
-const HelloElementQLJSONRequest = {
+const ElementQLJSONRequest = {
     elements: [
         {
             name: 'HelloElementQL',
@@ -232,34 +296,56 @@ const HelloElementQLJSONRequest = {
 };
 
 
-const App: React.FC = () => {
-    const [HelloElement, setHelloElement] = useState<any>();
+const AppWithHook: React.FC<any> = () => {
+     const Elements = useElementQL(
+        elementQLClient,
+        ElementQLJSONRequest,
+        'json',
+    );
+
+    return (
+        <>
+            {Elements && (
+                <Elements.HelloElementQL />
+            )}
+        </>
+    );
+}
+
+
+const App: React.FC<any> = () => {
+    const [Elements, setElements] = useState<any>();
 
     useEffect(() => {
-        const fetchElement = async () => {
+        let mounted = true;
+
+        const fetchElements = async () => {
             const {
-                HelloElementQL,
+                status,
+                Elements,
             }: any = await elementQLClient.get(
-                HelloElementQLJSONRequest,
+                ElementQLJSONRequest,
                 'json',
             );
 
-            const ReactHelloElementQL = React.createElement(
-                HelloElementQL,
-                null,
-            );
-            setElement(ReactHelloElementQL);
+            if (!status || !mounted) {
+                return;
+            }
+
+            setElements(Elements);
         }
 
-        fetchElement();
+        fetchElements();
+
+        return () => {
+            mounted = false;
+        }
     }, []);
 
     return (
         <>
-            {HelloElement && (
-                <>
-                    {HelloElement}
-                </>
+            {Elements && (
+                <Elements.HelloElementQL />
             )}
         </>
     );
