@@ -1,13 +1,13 @@
 {
     "name": "@plurid/elementql-server",
-    "version": "0.0.7",
+    "version": "0.0.0-0",
     "description": "",
     "keywords": [
         "elementql",
         "server"
     ],
     "main": "distribution/index.js",
-    "module": "distribution/index.es5.js",
+    "module": "distribution/index.es.js",
     "typings": "distribution/index.d.ts",
     "files": [
         "distribution"
@@ -17,11 +17,13 @@
         "type": "git",
         "url": "https://github.com/plurid/elementql"
     },
-    "license": "MIT",
+    "license": "SEE LICENSE IN LICENSE",
     "engines": {
-        "node": ">=6.0.0"
+        "node": ">=12",
+        "npm": ">=6"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
     "scripts": {
@@ -39,9 +41,9 @@
         "typescript": "^3.9.5"
     },
     "dependencies": {
-        "@plurid/elementql": "^0.0.7",
-        "@plurid/elementql-parser": "^0.0.4",
-        "@plurid/plurid-functions": "^0.1.15",
+        "@plurid/elementql": "^0.0.0-0",
+        "@plurid/elementql-parser": "^0.0.0-0",
+        "@plurid/plurid-functions": "^0.0.0-0",
         "open": "^7.0.4",
         "portscanner": "^2.2.0",
         "terser": "^4.8.0"

@@ -1,7 +1,7 @@
 {
     "name": "@plurid/elementql-client",
-    "version": "0.0.6",
-    "description": "",
+    "version": "0.0.0-0",
+    "description": "elementql-client",
     "keywords": [
         "elementql",
         "client"
@@ -17,11 +17,13 @@
         "type": "git",
         "url": "https://github.com/plurid/elementql"
     },
-    "license": "MIT",
+    "license": "SEE LICENSE IN LICENSE",
     "engines": {
-        "node": ">=8.0.0"
+        "node": ">=12",
+        "npm": ">=6"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
     "scripts": {

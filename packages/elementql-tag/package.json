@@ -17,11 +17,13 @@
         "type": "git",
         "url": "https://github.com/plurid/elementql"
     },
-    "license": "MIT",
+    "license": "SEE LICENSE IN LICENSE",
     "engines": {
-        "node": ">=6.0.0"
+        "node": ">=12",
+        "npm": ">=6"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
     "scripts": {

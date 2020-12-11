@@ -1,6 +1,6 @@
 {
     "name": "@plurid/elementql",
-    "version": "0.0.7",
+    "version": "0.0.0-0",
     "description": "",
     "keywords": [
         "elementql"
@@ -16,11 +16,13 @@
         "type": "git",
         "url": "https://github.com/plurid/elementql"
     },
-    "license": "MIT",
+    "license": "SEE LICENSE IN LICENSE",
     "engines": {
-        "node": ">=8.0.0"
+        "node": ">=12",
+        "npm": ">=6"
     },
     "publishConfig": {
+        "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
     "scripts": {
@@ -35,7 +37,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "@plurid/elementql-tag": "^0.0.5"
+        "@plurid/elementql-tag": "^0.0.0-0"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^13.0.0",
