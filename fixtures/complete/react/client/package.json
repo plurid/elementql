@@ -1,10 +1,11 @@
 {
     "name": "fixture-complete-react.client",
-    "version": "1.0.0",
-    "main": "index.js",
+    "version": "0.0.0",
+    "main": "build/index.js",
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
+        "start": "node build/index.js",
         "metabootloader": "node metabootloader.js",
         "useLibraries": "ENV_MODE=production node useLibraries.js",
         "build": "yarn metabootloader && webpack && yarn useLibraries"

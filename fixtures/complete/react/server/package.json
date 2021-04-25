@@ -1,10 +1,11 @@
 {
-    "name": "fixture-complete-react.server",
-    "version": "1.0.0",
-    "main": "index.js",
+    "name": "@plurid/elementql.fixtures.complete.react.server",
+    "version": "0.0.0",
+    "main": "build/index.js",
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
+        "start": "node build/index.js",
         "build": "rollup -c rollup.config.js"
     },
     "dependencies": {
