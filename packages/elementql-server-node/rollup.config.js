@@ -8,6 +8,11 @@ import pkg from './package.json';
 
 export default {
     input: 'source/index.ts',
+    external: [
+        'open',
+        'portscanner',
+        'source-map',
+    ],
     output: [
         {
             file: pkg.main,
