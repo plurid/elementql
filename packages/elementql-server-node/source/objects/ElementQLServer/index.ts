@@ -11,7 +11,7 @@ import crypto from 'crypto';
 import open from 'open';
 
 import typescript from 'typescript';
-import Terser from 'terser';
+import * as Terser from 'terser';
 
 // import ElementQLParser from '@plurid/elementql-parser';
 
@@ -967,7 +967,7 @@ class ElementQLServer {
         }
 
         if (indexedPlugins.minify) {
-            const terser = Terser.minify(
+            const terser = await Terser.minify(
                 updatedFileContents,
                 minifyOptions,
             );

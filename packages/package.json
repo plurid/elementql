@@ -7,8 +7,7 @@
         "elementql-org",
         "elementql-parser",
         "elementql-server-node",
-        "elementql-server-express",
-        "elementql-tag"
+        "elementql-server-express"
     ],
     "dependencies": {
         "express": "^4.17.1",

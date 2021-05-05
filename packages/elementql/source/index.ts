@@ -1,9 +1,11 @@
-import elementql from '@plurid/elementql-tag';
-
 import {
     bootloader,
     useLibraries,
 } from './services/utilities/helpers';
+
+import elementql from './functions/elementql';
+
+import ElementQLParser from './functions/parser';
 
 
 
@@ -13,8 +15,9 @@ export * from './data/interfaces';
 
 export {
     elementql,
+    ElementQLParser,
 
     /** utilities */
     bootloader,
     useLibraries,
-}
+};

@@ -2,8 +2,8 @@ import ElementQLParser from '../';
 
 
 
-describe('ElementQLParser basic', () => {
-    it.only('gets a single element', () => {
+xdescribe('ElementQLParser basic', () => {
+    it('gets a single element', () => {
         const query = `
 import {
     ElementOne
