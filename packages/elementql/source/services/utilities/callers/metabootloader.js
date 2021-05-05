@@ -22,7 +22,7 @@ const readConfigurationData = async () => {
 
         if (fs.existsSync(configurationFileLocation)) {
             const configurationFile = await fsPromise.readFile(configurationFileLocation);
-            const configuration = yaml.safeLoad(configurationFile, 'utf8');
+            const configuration = yaml.load(configurationFile, 'utf8');
             return configuration;
         }
     }
