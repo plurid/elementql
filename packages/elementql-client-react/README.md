@@ -454,16 +454,6 @@ Uses [Terser](https://github.com/terser/terser) to minify the element files.
 
 
 
-<a target="_blank" href="https://www.npmjs.com/package/@plurid/elementql-tag">
-    <img src="https://img.shields.io/npm/v/@plurid/elementql-tag.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-</a>
-
-[@plurid/elementql-tag][elementql-tag]
-
-[elementql-tag]: https://github.com/plurid/elementql/tree/master/packages/elementql-tag
-
-
-
 [@plurid/elementql-specification][elementql-specification] • specification
 
 [elementql-specification]: https://github.com/plurid/elementql/tree/master/packages/elementql-specification
@@ -488,23 +478,24 @@ Uses [Terser](https://github.com/terser/terser) to minify the element files.
 
 ## Usage
 
-    import elementQLClientReact, {
-        elementQL
-    } from '@plurid/elementql-client-react';
+``` typescript
+import elementQLClientReact, {
+    elementQL
+} from '@plurid/elementql-client-react';
 
-    const elementQLClient = elementQLClientReact({
-        url: 'https://api.example.com/elementql',
-    });
+const elementQLClient = elementQLClientReact({
+    url: 'https://api.example.com/elementql',
+});
 
-    const DIV = elementQL`
-        import {
-            <Div>
-        }
-    `;
+const DIV = elementQL`
+    import {
+        <Div>
+    }
+`;
 
-    // gets a React Function Component
-    const Div = await elementQL.get(DIV);
-
+// gets a React Function Component
+const Div = await elementQL.get(DIV);
+```
 
 @plurid/elementql-client-react uses @plurid/elementql-client under the hood to inject the script/style
 
