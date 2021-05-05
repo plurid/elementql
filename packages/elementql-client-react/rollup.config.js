@@ -6,6 +6,9 @@ import pkg from './package.json';
 
 export default {
     input: 'source/index.ts',
+    external: [
+        'react',
+    ],
     output: [
         {
             file: pkg.main,
@@ -21,4 +24,4 @@ export default {
         }
     ],
     plugins,
-}
+};
