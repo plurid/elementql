@@ -1,7 +1,10 @@
-import ElementQLClientReact from '..';
+// #region imports
+    import ElementQLClientReact from '../';
+// #endregion imports
 
 
 
+// #region module
 describe('ElementQLClientReact Client basic', () => {
     it('works', () => {
         const options = {
@@ -11,3 +14,4 @@ describe('ElementQLClientReact Client basic', () => {
         expect(true).toBe(true);
     });
 });
+// #endregion module
