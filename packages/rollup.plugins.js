@@ -4,6 +4,7 @@ import depsExternal from 'rollup-plugin-peer-deps-external';
 // import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 // import replace from '@rollup/plugin-replace';
+import { terser } from 'rollup-plugin-terser';
 
 
 
@@ -24,6 +25,14 @@ const plugins = [
         clean: true
     }),
     commonjs(),
+    terser({
+        mangle: false,
+        compress: false,
+        format: {
+            beautify: true,
+            comments: false,
+        },
+    }),
 ];
 
 
