@@ -1,22 +1,31 @@
-import React, {
-    useState,
-    useEffect,
-} from 'react';
+// #region imports
+    // #region libraries
+    import React, {
+        useState,
+        useEffect,
+    } from 'react';
 
-import ElementQLClient from '@plurid/elementql-client-react';
+    import ElementQLClient from '@plurid/elementql-client-react';
+    // #endregion libraries
+// #endregion imports
 
 
 
-const useElementQL = (
+// #region module
+const useElementQL = <R = any>(
     client: ElementQLClient,
-    request: any,
+    request: R,
     type: 'json' | 'elementql',
-): undefined | Record<string, React.FC<any>> => {
-    /** state */
-    const [Elements, setElements] = useState<any>();
+): Record<string, React.FC<any>> | undefined => {
+    // #region state
+    const [
+        Elements,
+        setElements,
+    ] = useState<Record<string, React.FC<any>> | undefined>();
+    // #endregion state
 
 
-    /** effects */
+    // #region effects
     useEffect(() => {
         let mounted = true;
 
@@ -42,11 +51,15 @@ const useElementQL = (
             mounted = false;
         }
     }, []);
+    // #endregion effects
 
 
-    /** return */
     return Elements;
 }
+// #endregion module
 
 
+
+// #region exports
 export default useElementQL;
+// #endregion exports

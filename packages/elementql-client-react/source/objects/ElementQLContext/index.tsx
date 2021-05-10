@@ -7,7 +7,7 @@
 
 
     // #region internal
-    import ElementQLProviderContext from './context';
+    import ElementQLContext from './context';
     // #endregion internal
 // #endregion imports
 
@@ -41,14 +41,14 @@ class ElementQLProvider extends Component<
         } = this.properties;
 
         return (
-            <ElementQLProviderContext.Provider
+            <ElementQLContext.Provider
                 value={{
                     elements,
                     getElement: this.getElement,
                 }}
             >
                 {children}
-            </ElementQLProviderContext.Provider>
+            </ElementQLContext.Provider>
         );
     }
 
@@ -66,5 +66,10 @@ class ElementQLProvider extends Component<
 
 
 // #region exports
-export default ElementQLProvider;
+const ElementQL = {
+    Provider: ElementQLProvider,
+    Consumer: ElementQLContext.Consumer,
+};
+
+export default ElementQL;
 // #endregion exports

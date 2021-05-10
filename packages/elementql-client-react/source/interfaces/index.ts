@@ -1,3 +1,4 @@
+// #region module
 export interface ElementQLClientReactOptions {
     url: string;
 }
@@ -15,3 +16,4 @@ declare global {
         elementql: ElementQLElements;
     }
 }
+// #endregion module

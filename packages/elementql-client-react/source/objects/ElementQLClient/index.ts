@@ -1,12 +1,20 @@
-import ElementQLClient from '@plurid/elementql-client';
-
-import {
-    ElementQLClientReactOptions,
-    InternalElementQLClientReactOptions,
-} from '../../interfaces';
+// #region imports
+    // #region libraries
+    import ElementQLClient from '@plurid/elementql-client';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        ElementQLClientReactOptions,
+        InternalElementQLClientReactOptions,
+    } from '../../interfaces';
+    // #endregion external
+// #endregion imports
 
+
+
+// #region module
 class ElementQLClientReact {
     private client: ElementQLClient;
     private options: InternalElementQLClientReactOptions;
@@ -102,6 +110,10 @@ window.elementql.${safeName} = ${safeName};
         return response;
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default ElementQLClientReact;
+// #endregion exports
