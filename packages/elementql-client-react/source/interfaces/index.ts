@@ -1,9 +1,16 @@
 // #region module
-export interface ElementQLClientReactOptions {
+export interface ElementQLClientOptions {
     url: string;
+
+    /**
+     * Wait for Elements to be loaded on window (in milliseconds).
+     *
+     * Default `700`.
+     */
+    loadTimeout?: number;
 }
 
-export type InternalElementQLClientReactOptions = Required<ElementQLClientReactOptions>;
+export type InternalElementQLClientOptions = Required<ElementQLClientOptions>;
 
 
 export interface ElementQLElements {

@@ -6,8 +6,8 @@
 
     // #region external
     import {
-        ElementQLClientReactOptions,
-        InternalElementQLClientReactOptions,
+        ElementQLClientOptions,
+        InternalElementQLClientOptions,
     } from '../../interfaces';
     // #endregion external
 // #endregion imports
@@ -17,17 +17,20 @@
 // #region module
 class ElementQLClientReact {
     private client: ElementQLClient;
-    private options: InternalElementQLClientReactOptions;
+    private options: InternalElementQLClientOptions;
 
     constructor(
-        options: ElementQLClientReactOptions,
+        options: ElementQLClientOptions,
     ) {
         const clientOptions = {
             url: options.url,
         };
 
         this.client = new ElementQLClient(clientOptions);
-        this.options = options;
+        this.options = {
+            url: options.url,
+            loadTimeout: options.loadTimeout ?? 700,
+        };
     }
 
     /**
@@ -35,6 +38,7 @@ class ElementQLClientReact {
      * Returns an object of elements if the elementsRequest contains multiple elements.
      *
      * @param elementsRequest
+     * @param type
      */
     public async get(
         elementsRequest: any,
@@ -99,7 +103,7 @@ window.elementql.${safeName} = ${safeName};
             setTimeout(() => {
                 const Elements = window.elementql;
                 resolve(Elements);
-            }, 700);
+            }, this.options.loadTimeout);
         });
 
         const response = {

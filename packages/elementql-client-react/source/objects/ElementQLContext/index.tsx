@@ -69,6 +69,7 @@ class ElementQLProvider extends Component<
 const ElementQL = {
     Provider: ElementQLProvider,
     Consumer: ElementQLContext.Consumer,
+    RawProvider: ElementQLContext.Provider,
 };
 
 export default ElementQL;
