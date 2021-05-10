@@ -504,3 +504,29 @@ and returns window.elementQL.Div which is a React function component
 
 
 the React component should be exported wrapped around a HoC withElementQL which will make the component available on window
+
+
+
+### ElementQL Context
+
+``` typescript
+const SomeProvidedElement = () => (
+    <ElementQL.Provider
+        elements={{
+            SomeElement: () => (<div>some element</div>),
+        }}
+    >
+        <ElementQL.Consumer>
+            {(context) => {
+                const SomeElement = context?.getElement('SomeElement');
+
+                if (!SomeElement) {
+                    return (<></>);
+                }
+
+                return (<SomeElement />);
+            }}
+        </ElementQL.Consumer>
+    </ElementQL.Provider>
+);
+```
