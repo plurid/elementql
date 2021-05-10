@@ -5,7 +5,7 @@
         useEffect,
     } from 'react';
 
-    import ElementQLClient from '@plurid/elementql-client-react';
+    import ElementQLClient from '../objects/ElementQLClient';
     // #endregion libraries
 // #endregion imports
 

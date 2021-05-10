@@ -8,7 +8,12 @@
     import {
         ElementQLClientOptions,
         InternalElementQLClientOptions,
-    } from '../../interfaces';
+        ElementQLGetOptions,
+    } from '../../data/interfaces';
+
+    import {
+        DEFAULT_LOAD_TIMEOUT,
+    } from '../../data/constants';
     // #endregion external
 // #endregion imports
 
@@ -29,7 +34,7 @@ class ElementQLClientReact {
         this.client = new ElementQLClient(clientOptions);
         this.options = {
             url: options.url,
-            loadTimeout: options.loadTimeout ?? 700,
+            loadTimeout: options.loadTimeout ?? DEFAULT_LOAD_TIMEOUT,
         };
     }
 
@@ -43,6 +48,7 @@ class ElementQLClientReact {
     public async get(
         elementsRequest: any,
         type: 'elementql' | 'json' = 'elementql',
+        options?: ElementQLGetOptions,
     ) {
         const {
             status,
@@ -103,7 +109,7 @@ window.elementql.${safeName} = ${safeName};
             setTimeout(() => {
                 const Elements = window.elementql;
                 resolve(Elements);
-            }, this.options.loadTimeout);
+            }, options?.loadTimeout ?? this.options.loadTimeout);
         });
 
         const response = {
