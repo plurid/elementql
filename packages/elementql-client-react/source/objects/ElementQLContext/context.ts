@@ -7,16 +7,16 @@
 
 
 // #region module
-export interface IElementQLProviderContext {
+export interface IElementQLContext {
     elements: Record<string, React.FC<any>>;
     getElement: (name: string) => React.FC<any> | undefined;
 }
 
-const ElementQLProviderContext = React.createContext<IElementQLProviderContext | undefined>(undefined);
+const ElementQLContext = React.createContext<IElementQLContext | undefined>(undefined);
 // #endregion module
 
 
 
 // #region exports
-export default ElementQLProviderContext;
+export default ElementQLContext;
 // #endregion exports
