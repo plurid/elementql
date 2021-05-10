@@ -1,7 +1,7 @@
 // #region imports
     // #region internal
     import ElementQLClient from './objects/ElementQLClient';
-    import ElementQLContext from './objects/ElementQLContext';
+    import ElementQL from './objects/ElementQLContext';
     // #endregion internal
 // #endregion imports
 
@@ -12,6 +12,6 @@ export * from './hooks';
 
 export {
     ElementQLClient,
-    ElementQLContext,
+    ElementQL,
 };
 // #endregion exports
