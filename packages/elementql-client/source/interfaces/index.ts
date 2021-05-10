@@ -5,4 +5,9 @@ export interface ElementQLClientOptions {
 
 
 export type ElementQLElements<C = any> = Record<string, C>;
+
+
+export type ElementQLWindow = typeof window & {
+    elementql: ElementQLElements;
+};
 // #endregion module

@@ -1,5 +1,8 @@
+// #region module
 // https://stackoverflow.com/a/39008859
-export const injectScript = (src: string) => {
+export const injectScript = (
+    src: string,
+) => {
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.async = true;
@@ -12,7 +15,9 @@ export const injectScript = (src: string) => {
 }
 
 
-export const injectStyle = (href: string) => {
+export const injectStyle = (
+    href: string,
+) => {
     return new Promise((resolve, reject) => {
         const link = document.createElement("link");
         link.type = 'text/css';
@@ -24,3 +29,4 @@ export const injectStyle = (href: string) => {
         document.head.appendChild(link);
     });
 }
+// #endregion module

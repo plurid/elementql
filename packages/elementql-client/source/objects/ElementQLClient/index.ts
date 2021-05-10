@@ -1,14 +1,20 @@
-import {
-    ElementQLClientOptions,
-} from '../../interfaces';
+// #region imports
+    // #region external
+    import {
+        ElementQLClientOptions,
+        ElementQLWindow,
+    } from '../../interfaces';
 
-import {
-    injectScript,
-    injectStyle,
-} from '../../utilities';
+    import {
+        injectScript,
+        injectStyle,
+    } from '../../utilities';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 class ElementQLClient {
     private url: string;
 
@@ -54,14 +60,13 @@ class ElementQLClient {
             }
         }
 
-        if (window.elementql) {
-            if (window.elementql.element) {
-                return window.elementql.element;
-            }
-        }
+        // if ((window as ElementQLWindow).elementql) {
+        //     if ((window as ElementQLWindow).elementql[element]) {
+        //         return (window as ElementQLWindow).elementql[element];
+        //     }
+        // }
 
-        return {
-        };
+        return {};
     }
 
     private async getWithJSON(
@@ -83,6 +88,10 @@ class ElementQLClient {
         return elementsData;
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default ElementQLClient;
+// #endregion exports
