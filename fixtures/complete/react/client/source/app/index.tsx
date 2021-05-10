@@ -18,7 +18,7 @@ import {
 
 const elementQLClient = new ElementQLClient({
     url: 'http://localhost:21100/elementql',
-    loadTimeout: 100,
+    // loadTimeout: 100,
 });
 
 const ElementQLJSONRequest = {
