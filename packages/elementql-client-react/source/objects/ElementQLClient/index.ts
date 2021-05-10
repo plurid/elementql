@@ -13,6 +13,7 @@
 
     import {
         DEFAULT_LOAD_TIMEOUT,
+        DEFAULT_LOAD_RETRIES,
         DEFAULT_RECORD_OBJECT,
     } from '../../data/constants';
     // #endregion external
@@ -36,6 +37,7 @@ class ElementQLClientReact {
         this.options = {
             url: options.url,
             loadTimeout: options.loadTimeout ?? DEFAULT_LOAD_TIMEOUT,
+            loadRetries: options.loadRetries ?? DEFAULT_LOAD_RETRIES,
             recordObject: options.recordObject || DEFAULT_RECORD_OBJECT,
         };
     }
@@ -54,6 +56,7 @@ class ElementQLClientReact {
     ) {
         const recordObject = options?.recordObject || this.options.recordObject;
         const loadTimeout = options?.loadTimeout ?? this.options.loadTimeout;
+        const loadRetries = options?.loadRetries ?? this.options.loadRetries;
 
         const {
             status,
@@ -110,12 +113,30 @@ window.${recordObject}.${safeName} = ${safeName};
             }
         }
 
-        const Elements = await new Promise((resolve, _) => {
-            setTimeout(() => {
-                const Elements = window.elementql;
-                resolve(Elements);
-            }, loadTimeout);
-        });
+        let Elements: any | undefined;
+        let loadTries = 0;
+
+        while (!Elements && loadTries < loadRetries) {
+            const load = async () => {
+                const Elements = await new Promise((resolve, _) => {
+                    setTimeout(() => {
+                        const Elements = window.elementql;
+                        resolve(Elements);
+                    }, loadTimeout);
+                });
+
+                return Elements;
+            }
+
+            Elements = await load();
+            loadTries += 1;
+        }
+
+        if (!Elements) {
+            return {
+                status: false,
+            };
+        }
 
         const response = {
             status: true,

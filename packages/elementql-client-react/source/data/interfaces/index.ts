@@ -20,6 +20,13 @@ export interface ElementQLClientOptions {
     loadTimeout?: number;
 
     /**
+     * The number of tries to wait for element load on window.
+     *
+     * Default `100`.
+     */
+    loadRetries?: number;
+
+    /**
      * Name of the object onto which elements are recorded on window.
      *
      * Default `elementql`.
@@ -32,6 +39,7 @@ export type InternalElementQLClientOptions = Required<ElementQLClientOptions>;
 
 export interface ElementQLGetOptions {
     loadTimeout?: number;
+    loadRetries?: number;
     recordObject?: string;
 }
 
