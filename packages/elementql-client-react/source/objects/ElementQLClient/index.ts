@@ -96,6 +96,14 @@ class ElementQLClientReact {
                 switch (type) {
                     case '.js':
                         {
+                            // Force check if already defined.
+                            if (
+                                (window as any)[recordObject] &&
+                                (window as any)[recordObject][name]
+                            ) {
+                                break;
+                            }
+
                             const elementModule = document.createElement('script');
                             elementModule.type = 'module';
                             elementModule.text =
