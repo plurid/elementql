@@ -1,6 +1,6 @@
 {
     "name": "@plurid/elementql-client-react",
-    "version": "0.0.0-0",
+    "version": "0.0.0-1",
     "description": "ElementQL Client for React",
     "keywords": [
         "elementql",
@@ -43,7 +43,7 @@
         "@plurid/elementql-client": "*"
     },
     "devDependencies": {
-        "@plurid/elementql-client": "^0.0.0-0",
+        "@plurid/elementql-client": "^0.0.0-1",
         "@rollup/plugin-commonjs": "^19.0.0",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^13.0.0",
