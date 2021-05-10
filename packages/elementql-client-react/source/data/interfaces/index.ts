@@ -1,3 +1,13 @@
+// #region imports
+    // #region libraries
+    import {
+        ElementQLElements,
+    } from '@plurid/elementql-client';
+    // #endregion libraries
+// #endregion imports
+
+
+
 // #region module
 export interface ElementQLClientOptions {
     url: string;
@@ -8,6 +18,13 @@ export interface ElementQLClientOptions {
      * Default `100`.
      */
     loadTimeout?: number;
+
+    /**
+     * Name of the object onto which elements are recorded on window.
+     *
+     * Default `elementql`.
+     */
+    recordObject?: string;
 }
 
 export type InternalElementQLClientOptions = Required<ElementQLClientOptions>;
@@ -15,17 +32,13 @@ export type InternalElementQLClientOptions = Required<ElementQLClientOptions>;
 
 export interface ElementQLGetOptions {
     loadTimeout?: number;
-}
-
-
-export interface ElementQLElements {
-    [key: string]: any;
+    recordObject?: string;
 }
 
 
 declare global {
     interface Window {
-        elementql: ElementQLElements;
+        elementql: ElementQLElements<React.FC<any>>;
     }
 }
 // #endregion module

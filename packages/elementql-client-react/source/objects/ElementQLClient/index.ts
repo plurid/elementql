@@ -13,6 +13,7 @@
 
     import {
         DEFAULT_LOAD_TIMEOUT,
+        DEFAULT_RECORD_OBJECT,
     } from '../../data/constants';
     // #endregion external
 // #endregion imports
@@ -35,6 +36,7 @@ class ElementQLClientReact {
         this.options = {
             url: options.url,
             loadTimeout: options.loadTimeout ?? DEFAULT_LOAD_TIMEOUT,
+            recordObject: options.recordObject || DEFAULT_RECORD_OBJECT,
         };
     }
 
@@ -50,6 +52,9 @@ class ElementQLClientReact {
         type: 'elementql' | 'json' = 'elementql',
         options?: ElementQLGetOptions,
     ) {
+        const recordObject = options?.recordObject || this.options.recordObject;
+        const loadTimeout = options?.loadTimeout ?? this.options.loadTimeout;
+
         const {
             status,
             data,
@@ -95,8 +100,8 @@ class ElementQLClientReact {
 `
 import ${safeName} from '${this.options.url}${safeURL}';
 
-window.elementql = window.elementql || {};
-window.elementql.${safeName} = ${safeName};
+window.${recordObject} = window.${recordObject} || {};
+window.${recordObject}.${safeName} = ${safeName};
 `;
 
                             document.body.appendChild(elementModule);
@@ -109,7 +114,7 @@ window.elementql.${safeName} = ${safeName};
             setTimeout(() => {
                 const Elements = window.elementql;
                 resolve(Elements);
-            }, options?.loadTimeout ?? this.options.loadTimeout);
+            }, loadTimeout);
         });
 
         const response = {
