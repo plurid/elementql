@@ -42,7 +42,7 @@
         "typescript": "^4.2.4"
     },
     "dependencies": {
-        "@plurid/elementql": "^0.0.0-0",
+        "@plurid/elementql": "^0.0.0-1",
         "@plurid/plurid-functions": "^0.0.0-3",
         "open": "^8.0.8",
         "portscanner": "^2.2.0",
