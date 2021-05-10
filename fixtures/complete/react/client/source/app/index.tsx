@@ -4,7 +4,8 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 
-import ElementQLClient, {
+import {
+    ElementQLClient,
     useElementQL,
 } from '@plurid/elementql-client-react';
 
@@ -17,6 +18,7 @@ import ElementQLClient, {
 
 const elementQLClient = new ElementQLClient({
     url: 'http://localhost:21100/elementql',
+    loadTimeout: 100,
 });
 
 const ElementQLJSONRequest = {
