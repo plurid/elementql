@@ -1,3 +1,4 @@
+// #region module
 export interface BootloaderConfiguration {
     globals: Record<string, string>;
     origins: BootloaderConfigurationOrigins;
@@ -14,3 +15,4 @@ export interface UseLibrariesOptions {
     libraries: Record<string, any>;
     buildDirectory: string;
 }
+// #endregion module

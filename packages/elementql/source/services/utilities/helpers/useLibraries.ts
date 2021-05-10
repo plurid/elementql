@@ -1,15 +1,23 @@
-import {
-    promises as fs,
-} from 'fs';
+// #region imports
+    // #region libraries
+    import {
+        promises as fs,
+    } from 'fs';
 
-import path from 'path';
-
-import {
-    UseLibrariesOptions,
-} from '../../../data/interfaces';
-
+    import path from 'path';
+    // #endregion libraries
 
 
+    // #region external
+    import {
+        UseLibrariesOptions,
+    } from '../../../data/interfaces';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
 const useLibraries = async (
     options: UseLibrariesOptions,
 ) => {
@@ -76,6 +84,10 @@ const useLibraries = async (
         console.log(`\n\tCould not port node_modules libraries to the application folder.\n`, error);
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default useLibraries;
+// #endregion exports

@@ -1,9 +1,14 @@
-import {
-    Libraries,
-} from '../interfaces';
+// #region imports
+    // #region external
+    import {
+        Libraries,
+    } from '../interfaces';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 const libraries: Libraries = {
     react: {
         version: 'latest',
@@ -18,6 +23,10 @@ const libraries: Libraries = {
         production: './node_modules/react-dom/umd/react-dom.production.min.js',
     },
 };
+// #endregion module
 
 
+
+// #region exports
 export default libraries;
+// #endregion exports

@@ -1,9 +1,14 @@
-import {
-    BootloaderConfiguration,
-} from '../../../data/interfaces';
+// #region imports
+    // #region external
+    import {
+        BootloaderConfiguration,
+    } from '../../../data/interfaces';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 const bootloader = async (
     configuration: BootloaderConfiguration,
 ) => {
@@ -37,6 +42,10 @@ const bootloader = async (
         console.error('Service worker registration failed', error.stack);
     }
 }
+// #endregion module
 
 
+
+// #region exports
 export default bootloader;
+// #endregion exports

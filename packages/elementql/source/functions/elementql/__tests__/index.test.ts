@@ -1,7 +1,12 @@
-import elementql from '../';
+// #region imports
+    // #region external
+    import elementql from '../';
+    // #endregion external
+// #endregion imports
 
 
 
+// #region module
 describe('elementql', () => {
     it('imports an <element>', () => {
         const element = elementql`
@@ -41,3 +46,4 @@ describe('elementql', () => {
         expect(element.length).toBe(2);
     });
 });
+// #endregion module

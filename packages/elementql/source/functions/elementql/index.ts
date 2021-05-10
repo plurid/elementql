@@ -1,3 +1,4 @@
+// #region module
 const elementql = (
     literals: TemplateStringsArray,
     ...placeholders: any[]
@@ -6,6 +7,10 @@ const elementql = (
     // console.log(placeholders);
     return literals;
 }
+// #endregion module
 
 
+
+// #region exports
 export default elementql;
+// #endregion exports
