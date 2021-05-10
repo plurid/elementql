@@ -1,15 +1,8 @@
+// #region module
 export interface ElementQLClientOptions {
     url: string;
 }
 
 
-export interface ElementQLElements {
-    [key: string]: any;
-}
-
-
-declare global {
-    interface Window {
-        elementql: ElementQLElements;
-    }
-}
+export type ElementQLElements<C = any> = Record<string, C>;
+// #endregion module
