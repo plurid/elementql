@@ -509,7 +509,12 @@ the React component should be exported wrapped around a HoC withElementQL which 
 
 ### ElementQL Context
 
-``` typescript
+``` tsx
+import {
+    ElementQL,
+} from '@plurid/elementql-client-react';
+
+
 const SomeProvidedElement = () => (
     <ElementQL.Provider
         elements={{
