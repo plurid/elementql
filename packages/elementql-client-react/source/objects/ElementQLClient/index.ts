@@ -43,8 +43,7 @@ class ElementQLClientReact {
     }
 
     /**
-     * Gets a React Element from the server if the elementsRequest contains only one element.
-     * Returns an object of elements if the elementsRequest contains multiple elements.
+     * Gets React Elements from the server.
      *
      * @param elementsRequest
      * @param type
@@ -113,34 +112,74 @@ window.${recordObject}.${safeName} = ${safeName};
             }
         }
 
-        let Elements: any | undefined;
+        let WindowElements: any | undefined;
         let loadTries = 0;
+        let requestedElementsLoaded = false;
 
-        while (!Elements && loadTries < loadRetries) {
-            const load = async () => {
-                const Elements = await new Promise((resolve, _) => {
-                    setTimeout(() => {
-                        const Elements = window.elementql;
-                        resolve(Elements);
-                    }, loadTimeout);
-                });
+        const loadElements = async () => {
+            const WindowElements = await new Promise((resolve, _) => {
+                setTimeout(() => {
+                    const WindowElements = (window as any)[recordObject];
+                                              // |
+                                              // |- account for `recordObject` not being `elementql`
 
-                return Elements;
-            }
+                    resolve(WindowElements);
+                }, loadTimeout);
+            });
 
-            Elements = await load();
-            loadTries += 1;
+            return WindowElements;
         }
 
-        if (!Elements) {
+        while (
+            !WindowElements
+            && !requestedElementsLoaded
+            && loadTries < loadRetries
+        ) {
+            loadTries += 1;
+
+            WindowElements = await loadElements();
+
+            if (WindowElements) {
+                let elementsCheckedAndLoaded = true;
+
+                for (const element of elements) {
+                    const {
+                        name,
+                    } = element;
+                    if (!WindowElements[name]) {
+                        elementsCheckedAndLoaded = false;
+                    }
+                }
+
+                if (elementsCheckedAndLoaded) {
+                    requestedElementsLoaded = true;
+                }
+            }
+
+            if (
+                requestedElementsLoaded
+            ) {
+                break;
+            }
+        }
+
+        if (!WindowElements) {
             return {
                 status: false,
             };
         }
 
+        const RequestedElements: Record<string, React.FC<any>> = {};
+        for (const element of elements) {
+            const {
+                name,
+            } = element;
+            RequestedElements[name] = WindowElements[name];
+        }
+
         const response = {
             status: true,
-            Elements,
+            Elements: RequestedElements,
         };
 
         return response;
