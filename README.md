@@ -1,5 +1,7 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/elementql/master/about/identity/elementql-logo.png" height="250px">
+    <a target="_blank" href="https://elements.plurid.cloud">
+        <img src="https://raw.githubusercontent.com/plurid/elementql/master/about/identity/elementql-logo.png" height="250px">
+    </a>
     <br />
     <br />
     <a target="_blank" href="https://github.com/plurid/elementql/blob/master/LICENSE">
