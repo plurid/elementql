@@ -1,0 +1,9 @@
+packages:
+  - 'global'
+  - elementql
+  - elementql-client
+  - elementql-client-react
+  - elementql-org
+  - elementql-parser
+  - elementql-server-node
+  - elementql-server-expres

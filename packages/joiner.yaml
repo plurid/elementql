@@ -4,7 +4,7 @@ packages:
 
 package:
   manager: yarn
-  publisher: npm
+  publisher: pnpm
   ignore:
     - packages/elementql-server-go
     - packages/elementql-server-python
